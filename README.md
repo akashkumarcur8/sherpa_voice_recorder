@@ -1,11 +1,6 @@
 # 🎙️ Sherpa Voice Recorder
 
 <div align="center">
-
-![Flutter]([https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white](https://play-lh.googleusercontent.com/KgMpdpXgWYF11AJ0_ysCoSoV7rDLGVkncRix3QcS1wpLl2ARS9lfyscZF1rQd38ehmVd=w1052-h592-rw))
-![Dart]([https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white](https://play-lh.googleusercontent.com/kVNQgcPufcmwh7kT1YnEsviJqj0xRGRiK66Yh2SfhQlhSZ_eryJvmZDSxE80P3Ha2Q=w1052-h592-rw))
-![Firebase]([https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black](https://play-lh.googleusercontent.com/-JSHKDVbHNqjzi7i0tvoFRxHsyjrY_1MI_H2jJcZkR1f-2fC8aAsgLBbb8gfQhhdwhHc=w1052-h592-rw))
-
 **Revolutionize sales performance with Sherpa, the industry's most comprehensive conversation analytics platform**
 
 [Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Platforms](#-supported-platforms) • [Contributing](#-contributing)
