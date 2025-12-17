@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "149833327235",
+    "project_id": "sherpa-22244",
+    "storage_bucket": "sherpa-22244.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:149833327235:android:37df584a9326d2c84f71b6",
+        "android_client_info": {
+          "package_name": "com.cur8.sherpa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYCIGe8W9INZ5Lv2OuHTukHTYmF3udTd4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:149833327235:android:b823725e36443d454f71b6",
+        "android_client_info": {
+          "package_name": "com.sherpa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYCIGe8W9INZ5Lv2OuHTukHTYmF3udTd4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

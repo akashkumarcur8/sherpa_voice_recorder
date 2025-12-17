@@ -1,0 +1,104 @@
+
+name: mice_activeg
+description: "Sherpa Voice Recorder."
+publish_to: 'none' # Prevents accidental publication to pub.dev
+
+version: 1.1.5+23
+
+environment:
+  sdk: '>=3.4.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons:
+  flutter_sound:
+  record:
+  permission_handler:
+  wakelock_plus:
+  flutter_timer_countdown:
+  shared_preferences:
+  get:
+  path_provider:
+  dio:
+  internet_connection_checker:
+  flutter_foreground_task:
+  flutter_background_service:
+  connectivity_plus:
+  firebase_core:
+  firebase_analytics:
+  onesignal_flutter: ^5.3.3
+  flutter_local_notifications:
+  hive:
+  hive_flutter:
+
+  image_picker:
+  file_picker:
+  video_player:
+  battery_plus:
+  firebase_performance:
+  intl:
+  dots_indicator:
+  web_socket_channel:
+  omni_datetime_picker:
+  sqflite:
+  path:
+  http:
+  flutter_svg:
+  flutter_markdown:
+  fl_chart: ^1.0.0
+  google_maps_flutter: ^2.12.3
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
+  fluttertoast:
+    git:
+      url: https://github.com/MarlonJD/FlutterToast.git
+      ref: patch-1
+
+
+#  aws_client: ^0.7.0
+
+
+#  speech_to_text: ^7.0.0
+
+
+
+
+
+
+
+
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - asset/images/
+    - asset/icons/lightbulb.svg
+    - asset/icons/edit_note.svg
+    - asset/icons/small_bulb.svg
+    - asset/icons/stars.svg
+    - asset/icons/map.svg
+    - asset/icons/complaint.svg
+    - asset/icons/delivery_tracker.svg
+    - asset/icons/faq_guide.svg
+    - asset/icons/home.svg
+    - asset/icons/history.svg
+    - asset/icons/analytics.svg
+    - asset/icons/ticket.svg
+    - asset/icons/profile.svg
+    - asset/icons/setting.svg
+
+
+
+
+
+
+
