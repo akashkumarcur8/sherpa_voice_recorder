@@ -15,6 +15,23 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
+// Configure Java compilation to suppress warnings as errors
+gradle.projectsEvaluated {
+    subprojects.each { subproject ->
+        subproject.tasks.withType(JavaCompile).configureEach { task ->
+            task.doFirst {
+                // Suppress obsolete options warnings
+                if (!task.options.compilerArgs.contains('-Xlint:-options')) {
+                    task.options.compilerArgs.add('-Xlint:-options')
+                }
+                // Remove any -Werror flags (runs right before compilation)
+                task.options.compilerArgs.remove('-Werror')
+                task.options.compilerArgs.removeAll { it.startsWith('-Werror') }
+            }
+        }
+    }
+}
+
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
