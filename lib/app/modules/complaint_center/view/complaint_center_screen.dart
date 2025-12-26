@@ -55,7 +55,7 @@ class ComplaintCenterScreen extends StatelessWidget {
                             child: ComplaintStatsCard(
                               count: controller.resolvedCount.value.toString(),
                               label: 'Resolved\nComplaints',
-                              backgroundColor: const Color(0xFFD4F8E8),
+                              backgroundColor:  Colors.white,
                               textColor: Colors.black,
                               isSelected: controller.selectedFilter.value ==
                                   ComplaintFilter.resolved,

@@ -73,7 +73,7 @@ class RecordingHeader extends StatelessWidget {
                  color: Colors.white, size: 28);
            }
            }),
-            ],
+            ],  
           ),
           const SizedBox(height: 20),
           Text(

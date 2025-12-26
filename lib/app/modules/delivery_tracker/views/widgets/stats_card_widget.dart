@@ -7,6 +7,7 @@ class StatsCardWidget extends StatelessWidget {
   final Color? backgroundColor;
   final Color? borderColor;
   final VoidCallback? onTap;
+  final bool isSelected;
 
   const StatsCardWidget({
     Key? key,
@@ -15,27 +16,31 @@ class StatsCardWidget extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.onTap,
+    this.isSelected = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         decoration: BoxDecoration(
-          color: backgroundColor ?? AppColors.white,
+          color: isSelected
+              ? AppColors.white
+              : backgroundColor ?? AppColors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: borderColor ?? AppColors.lightGrey,
-            width: 1,
+            color: isSelected ? const Color(0xFF5B6BC6) : Colors.grey.shade300,
+            width: isSelected ? 2 : 1,
           ),
           // Add shadow for clickable effect
           boxShadow: onTap != null
               ? [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
+              color: const Color(0xFF5B6BC6).withOpacity(0.3),
+              blurRadius: 8,
               offset: const Offset(0, 2),
             ),
           ]

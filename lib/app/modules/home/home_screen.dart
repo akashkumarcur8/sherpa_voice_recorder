@@ -579,7 +579,6 @@ class HomeScreen extends StatelessWidget {
     });
   }
 
-
   void _toggleRecording() {
     if (controller.isRecording.value) {
       controller.stopRecordingManually();
