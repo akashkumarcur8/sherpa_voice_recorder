@@ -66,13 +66,13 @@ class DeliveryTrackerService {
   }
 
   /// Send reminder to agents with pending deliveries
-  Future<bool> sendReminder(List<String> agentIds) async {
+  Future<bool> sendReminder(List<String> userIds) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/send-reminder'),
+        Uri.parse('$baseUrl/notify-users'),
         headers: _headers,
         body: json.encode({
-          'agent_ids': agentIds,
+          'userIds': userIds,
         }),
       ).timeout(
         const Duration(seconds: 30),

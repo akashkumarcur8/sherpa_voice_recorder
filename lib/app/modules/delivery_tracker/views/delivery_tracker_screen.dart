@@ -154,7 +154,8 @@ class DeliveryTrackerScreen extends GetView<DeliveryTrackerController> {
             child: StatsCardWidget(
               value: stats.pending.toString(),
               label: 'Pending',
-              onTap: () => controller.filterAgents('Pending'),
+              isSelected: controller.selectedCardIndex.value == 0,
+              onTap: () => controller.selectCard(0, 'Pending'),
             ),
           ),
           const SizedBox(width: 12),
@@ -162,9 +163,10 @@ class DeliveryTrackerScreen extends GetView<DeliveryTrackerController> {
             child: StatsCardWidget(
               value: stats.delivered.toString(),
               label: 'Delivered',
-              backgroundColor: AppColors.success.withOpacity(0.1),
-              borderColor: AppColors.success,
-              onTap: () => controller.filterAgents('Delivered'),
+              // backgroundColor: AppColors.success.withOpacity(0.1),
+              // borderColor: AppColors.success,
+              isSelected: controller.selectedCardIndex.value == 1,
+              onTap: () => controller.selectCard(1, 'Delivered'),
             ),
           ),
           const SizedBox(width: 12),
@@ -172,7 +174,8 @@ class DeliveryTrackerScreen extends GetView<DeliveryTrackerController> {
             child: StatsCardWidget(
               value: stats.totalAgents.toString(),
               label: 'Total Agents',
-              onTap: () => controller.filterAgents('Select Option'),
+              isSelected: controller.selectedCardIndex.value == 2,
+              onTap: () => controller.selectCard(2, 'Select Option'),
             ),
           ),
         ],

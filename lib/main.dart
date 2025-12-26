@@ -15,7 +15,6 @@ import 'app/routes/app_routes.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 
-
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   // Set preferred orientations

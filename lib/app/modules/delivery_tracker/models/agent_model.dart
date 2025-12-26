@@ -5,11 +5,14 @@ enum DeviceStatus { pending, delivered }
 class AgentModel {
   final String agentName;
   final String agentId;
+  final String userId;
   final DeviceStatus deviceStatus;
+
 
   AgentModel({
     required this.agentName,
     required this.agentId,
+    required this.userId,
     required this.deviceStatus,
   });
 
@@ -17,6 +20,7 @@ class AgentModel {
     return AgentModel(
       agentName: json['agentName'] ?? '',
       agentId: json['agentId'] ?? '',
+      userId: json['userId'] ?? '',
       deviceStatus: json['deviceStatus'] == 'delivered'
           ? DeviceStatus.delivered
           : DeviceStatus.pending,
@@ -27,6 +31,7 @@ class AgentModel {
     return {
       'agentName': agentName,
       'agentId': agentId,
+      'userId': userId,
       'deviceStatus':
       deviceStatus == DeviceStatus.delivered ? 'delivered' : 'pending',
     };
@@ -35,11 +40,13 @@ class AgentModel {
   AgentModel copyWith({
     String? agentName,
     String? agentId,
+    String? userId,
     DeviceStatus? deviceStatus,
   }) {
     return AgentModel(
       agentName: agentName ?? this.agentName,
       agentId: agentId ?? this.agentId,
+      userId: userId ?? this.userId,
       deviceStatus: deviceStatus ?? this.deviceStatus,
     );
   }

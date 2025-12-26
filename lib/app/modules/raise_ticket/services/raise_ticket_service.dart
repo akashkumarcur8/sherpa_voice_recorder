@@ -1,13 +1,10 @@
 
 
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
-
 import '../models/ticket_model.dart';
 
 class RaiseTicketService {
-
 
   static const String baseUrl = 'http://35.154.144.116:8000/api';
 

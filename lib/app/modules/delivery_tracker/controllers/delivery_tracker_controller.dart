@@ -7,6 +7,7 @@ import '../services/delivery_tracker_service.dart';
 
 class DeliveryTrackerController extends GetxController {
   final DeliveryTrackerService _service = DeliveryTrackerService();
+  var selectedCardIndex = Rxn<int>();
 
   // Observable variables
   final Rx<DeliveryStatsModel> stats = DeliveryStatsModel(
@@ -34,6 +35,12 @@ class DeliveryTrackerController extends GetxController {
     super.onInit();
     loadUserData();
     loadData();
+  }
+
+
+  void selectCard(int index, String filter) {
+    selectedCardIndex.value = index;
+    filterAgents(filter);
   }
 
   // Load user data from SharedPreferences
@@ -123,7 +130,7 @@ class DeliveryTrackerController extends GetxController {
     try {
       // Get all pending agent IDs
       final pendingAgentIds = pendingAgents
-          .map((agent) => agent.agentId)
+          .map((agent) => agent.userId)
           .toList();
 
       if (pendingAgentIds.isEmpty) {
