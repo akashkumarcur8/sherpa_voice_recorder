@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,7 +6,7 @@ import 'package:mice_activeg/app/modules/home/controllers/statistics_data_contro
 import '../../../core/services/audio_service.dart';
 import '../../../core/services/storage/sharedPrefHelper.dart';
 import '../../../core/services/websocket_service.dart';
-import '../../../core/services/upload_service.dart';
+import '../../../core/services/storage/upload_service.dart';
 import '../notification_helper.dart';
 import 'mice_blinking_controller.dart';
 
@@ -19,7 +18,8 @@ class HomeController extends GetxController {
 
   // Controllers
   late final StatisticsDataController statsController;
-  final MiceBlinkingController miceBlinkingController = Get.put(MiceBlinkingController());
+  final MiceBlinkingController miceBlinkingController =
+      Get.put(MiceBlinkingController());
 
   // Platform channels
   static const platform2 = MethodChannel('audio_device_channel');
@@ -33,12 +33,8 @@ class HomeController extends GetxController {
   final empName = ''.obs;
   final email = ''.obs;
 
-
-
-
   // 🎯 RECORDING MODE TRACKING
   final RxString recordingMode = "".obs;
-
 
   // User data
   String username = "";
@@ -57,7 +53,6 @@ class HomeController extends GetxController {
     super.onInit();
     statsController = Get.put(StatisticsDataController());
     _initialize();
-
   }
 
   @override
@@ -78,7 +73,7 @@ class HomeController extends GetxController {
   Future<void> _loadUserData() async {
     username = await SharedPrefHelper.getpref("username") ?? "";
     empName.value = await SharedPrefHelper.getpref("email") ?? "";
-    email.value  = await SharedPrefHelper.getpref("emp_name") ?? "";
+    email.value = await SharedPrefHelper.getpref("emp_name") ?? "";
     storeName = await SharedPrefHelper.getpref("store_name") ?? "";
     empType = await SharedPrefHelper.getpref("emp_type") ?? "";
     companyId = await SharedPrefHelper.getpref("company_id") ?? "NA";
@@ -134,7 +129,6 @@ class HomeController extends GetxController {
       print('✅ Device recording started - Mode: ${recordingMode.value}');
 
       ctx!.showSuccessSnackBar("Your call is now live.");
-
     } catch (e) {
       print('❌ Error in device start: $e');
     }
@@ -206,7 +200,7 @@ class HomeController extends GetxController {
       recordingMode.value = "";
 
       print('✅ Manual recording stopped');
-    ctx!.showSuccessSnackBar("The call has been disconnected.");
+      ctx!.showSuccessSnackBar("The call has been disconnected.");
     } catch (e) {
       print('❌ Error in manual stop: $e');
     }
@@ -227,7 +221,8 @@ class HomeController extends GetxController {
       // Show notification
       NotificationHelper.showNotification(
         title: "Recording Stopped!! ⚠️",
-        body: "The receiver has been disconnected. Plug it back in to resume recording seamlessly. 🚀",
+        body:
+            "The receiver has been disconnected. Plug it back in to resume recording seamlessly. 🚀",
         sound: "plugout",
         channelId: "3",
       );
@@ -305,13 +300,13 @@ class HomeController extends GetxController {
   void _startDeviceMonitoring() {
     _deviceMonitorTimer?.cancel();
 
-    _deviceMonitorTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+    _deviceMonitorTimer =
+        Timer.periodic(const Duration(seconds: 1), (timer) async {
       final isWiredConnected = await _isWiredAudioDeviceConnected();
       final isOtgConnected = await _isOtgDeviceConnected();
       final isDeviceConnected = isWiredConnected || isOtgConnected;
 
       if (isDeviceConnected) {
-
         if (!isRecording.value) {
           await _startRecordingByDevice();
         } else {
@@ -322,12 +317,8 @@ class HomeController extends GetxController {
           }
           // Device mode mein already hai - Continue recording
         }
-
       } else {
-
         if (isRecording.value) {
-
-
           if (recordingMode.value == "device") {
             // DEVICE mode mein hai - Device disconnect pe STOP KARO
             await _stopRecordingByDevice();

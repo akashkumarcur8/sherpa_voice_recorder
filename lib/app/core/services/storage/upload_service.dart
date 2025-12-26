@@ -1,10 +1,8 @@
-
 import 'dart:async';
 import 'package:dio/dio.dart' as dio;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import '../../modules/home/notification_helper.dart';
-import 'audio_service.dart';
-
+import '../../../modules/home/notification_helper.dart';
+import '../audio_service.dart';
 
 class UploadService {
   static final UploadService _instance = UploadService._internal();
@@ -32,9 +30,8 @@ class UploadService {
   void startPeriodicUpload({bool isRealtime = false}) {
     _uploadTimer?.cancel();
 
-    final duration = isRealtime
-        ? const Duration(minutes: 31)
-        : const Duration(minutes: 31);
+    final duration =
+        isRealtime ? const Duration(minutes: 31) : const Duration(minutes: 31);
 
     _uploadTimer = Timer.periodic(duration, (timer) async {
       final startTimeStamp = DateTime.now().millisecondsSinceEpoch -
@@ -56,11 +53,11 @@ class UploadService {
 
   /// Upload audio data to server
   Future<void> uploadAudioData(
-      int startTimeStamp, {
-        String? userId,
-        String? companyId,
-        bool isDisconnection = false,
-      }) async {
+    int startTimeStamp, {
+    String? userId,
+    String? companyId,
+    bool isDisconnection = false,
+  }) async {
     if (_audioService.currentFilePath == null) {
       print('⚠️ No file path available for upload');
       return;
@@ -109,7 +106,6 @@ class UploadService {
           data: formData,
         );
 
-
         if (response.statusCode == 201) {
           print('✅ Upload successful: ${response.data}');
           _lastUploadedPosition = totalFileSize;
@@ -142,12 +138,12 @@ class UploadService {
 
   /// Save data locally when internet is unavailable
   Future<void> _saveDataLocally(
-      List<int> newBytes,
-      int startTime,
-      int endTime,
-      String? userId,
-      String? companyId,
-      ) async {
+    List<int> newBytes,
+    int startTime,
+    int endTime,
+    String? userId,
+    String? companyId,
+  ) async {
     await _storageService.saveUploadData(
       timestamp: endTime.toString(),
       data: {
