@@ -1,71 +1,269 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../core/constants/app_colors.dart';
+import 'controllers/faq_controller.dart';
 
-class FAQScreen extends StatefulWidget {
+class FAQScreen extends GetView<FAQController> {
   const FAQScreen({super.key});
 
   @override
-  _FAQScreenState createState() => _FAQScreenState();
-}
-
-class _FAQScreenState extends State<FAQScreen> {
-  String searchQuery = "";
-
-  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: const Color(0xFF565ADD),
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text(
-            'FAQ Guide',
-            style: TextStyle(color: Colors.white),
+    Get.put(FAQController());
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      appBar: AppBar(
+        backgroundColor: AppColors.primary,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: AppColors.white),
+        title: const Text(
+          'FAQ Guide',
+          style: TextStyle(
+            color: AppColors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Search FAQs",
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          // Search Bar Section
+          Container(
+            color: AppColors.primary,
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.shadow,
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
                   ),
+                ],
+              ),
+              child: Obx(
+                () => TextField(
+                  controller: controller.searchController,
+                  decoration: InputDecoration(
+                    hintText: "Search FAQs...",
+                    hintStyle: const TextStyle(
+                      color: AppColors.textHint,
+                      fontSize: 14,
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: AppColors.textSecondary,
+                      size: 22,
+                    ),
+                    suffixIcon: controller.searchQuery.value.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(
+                              Icons.clear,
+                              color: AppColors.textSecondary,
+                              size: 20,
+                            ),
+                            onPressed: controller.clearSearch,
+                          )
+                        : null,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(
+                        color: AppColors.primary,
+                        width: 2,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: AppColors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
+                  ),
+                  onChanged: controller.updateSearchQuery,
                 ),
-                onChanged: (query) {
-                  setState(() {
-                    searchQuery = query.toLowerCase();
-                  });
-                },
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(8.0),
-                itemCount: faqData.length,
-                itemBuilder: (context, index) {
-                  if (faqData[index]["question"]!.toLowerCase().contains(searchQuery)) {
-                    return Card(
-                      child: ExpansionTile(
-                        title: Text(
-                          faqData[index]["question"]!,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(faqData[index]["answer"]!),
+          ),
+
+          // Results Count
+          Obx(
+            () => controller.searchQuery.value.isNotEmpty
+                ? Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Row(
+                      children: [
+                        Text(
+                          "${controller.filteredFAQs.length} result${controller.filteredFAQs.length != 1 ? 's' : ''} found",
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ),
+
+          // FAQ List
+          Expanded(
+            child: Obx(
+              () => controller.filteredFAQs.isEmpty
+                  ? _buildEmptyState()
+                  : ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: controller.filteredFAQs.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 12),
+                      itemBuilder: (context, index) {
+                        return _buildFAQCard(
+                            context, controller.filteredFAQs[index], index);
+                      },
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFAQCard(
+      BuildContext buildContext, Map<String, String> faq, int index) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.border,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Theme(
+        data: Theme.of(buildContext).copyWith(
+          dividerColor: Colors.transparent,
+          expansionTileTheme: const ExpansionTileThemeData(
+            iconColor: AppColors.primary,
+            collapsedIconColor: AppColors.textSecondary,
+            textColor: AppColors.textPrimary,
+            collapsedTextColor: AppColors.textPrimary,
+          ),
+        ),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          leading: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(
+              Icons.help_outline,
+              color: AppColors.primary,
+              size: 20,
+            ),
+          ),
+          title: Text(
+            faq["question"]!,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+              height: 1.4,
+            ),
+          ),
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.extraLightGrey,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.info_outline,
+                    color: AppColors.primary,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      faq["answer"]!,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textSecondary,
+                        height: 1.5,
+                        letterSpacing: 0.2,
                       ),
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: const BoxDecoration(
+                color: AppColors.extraLightGrey,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.search_off,
+                size: 40,
+                color: AppColors.textHint,
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              "No FAQs found",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              "Try searching with different keywords",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
               ),
             ),
           ],
@@ -74,17 +272,3 @@ class _FAQScreenState extends State<FAQScreen> {
     );
   }
 }
-
-final List<Map<String, String>> faqData = [
-  {"question": "What is Sherpa?", "answer": "Sherpa is a powerful audio recording app designed for high-quality voice capture. It features automatic noise reduction and seamless cloud sync when connected to the internet."},
-  {"question": "How do I start recording in Sherpa?", "answer": "Simply open the app and tap the Record button. Your recording will start instantly, and Sherpa will handle automatic noise reduction for a clearer sound."},
-  {"question": "Where are my recordings saved?", "answer": "If your device is offline, recordings are saved locally. If you are connected to the internet, Sherpa automatically syncs your recordings to our secure cloud server for backup."},
-  {"question": "Unable to use an external microphone or Bluetooth device?", "answer": "Ensure your microphone is properly connected, and that Sherpa has the required microphone permissions in your device settings."},
-  {"question": "How can I reduce background noise in my recordings?", "answer": "Sherpa automatically applies AI-powered noise reduction, so you don’t need to enable anything manually."},
-  {"question": "Does Sherpa support stereo recording?", "answer": "No, Sherpa currently supports only mono recording to maintain optimized performance and clarity."},
-  {"question": "How do I export my recordings to an SD card?", "answer": "Sherpa does not support direct SD card storage. However, you can manually move your recordings from the local storage folder."},
-  {"question": "What is the default exporting format in Sherpa?", "answer": "Sherpa saves recordings in MP3 format to ensure compatibility and optimized file size."},
-  {"question": "What is the maximum recording duration?", "answer": "Sherpa allows unlimited recording time, depending on your device's available storage."},
-  {"question": "Can I edit my recordings within the app?", "answer": "No, Sherpa does not have an editing feature. However, you can export your recordings and edit them using third-party apps."},
-  {"question": "Does Sherpa support cloud backup?", "answer": "Yes! If you are connected to the internet, Sherpa automatically syncs your recordings to our secure cloud server for backup and easy access."}
-];

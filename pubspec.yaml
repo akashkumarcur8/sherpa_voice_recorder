@@ -96,6 +96,7 @@ flutter:
     - asset/icons/ticket.svg
     - asset/icons/profile.svg
     - asset/icons/setting.svg
+    - asset/icons/calender.svg
 
 
 

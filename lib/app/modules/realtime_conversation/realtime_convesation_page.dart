@@ -1,32 +1,22 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
-import 'package:intl/intl.dart';
 import 'package:mice_activeg/app/modules/realtime_conversation/realtime_conversation_controller.dart';
 import 'package:mice_activeg/app/modules/realtime_conversation/realtime_conversation_model.dart';
-
-
-
-
-
+import '../../widgets/filter_bottom_sheet_widget.dart';
 
 class SessionListScreen extends GetView<RealtimeConvesationController> {
-   SessionListScreen({ super.key });
+  SessionListScreen({super.key});
 
   // controllers for date inputs
   final _startCtrl = TextEditingController();
-  final _endCtrl   = TextEditingController();
-
-
-
+  final _endCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     Get.put(RealtimeConvesationController());
 
     // for responsive sizing
@@ -35,7 +25,8 @@ class SessionListScreen extends GetView<RealtimeConvesationController> {
     return Obx(() {
       if (controller.isOffline.value) {
         return const Scaffold(
-          body: Center(child: Text("You are offline", style: TextStyle(fontSize: 18))),
+          body: Center(
+              child: Text("You are offline", style: TextStyle(fontSize: 18))),
         );
       }
       if (controller.isLoading.value) {
@@ -44,235 +35,305 @@ class SessionListScreen extends GetView<RealtimeConvesationController> {
         );
       }
       return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: const Color(0xFF565ADD),
-            iconTheme: const IconThemeData(color: Colors.white),
-            title: const Text(
-              'Conversation Centre',
-              style: TextStyle(color: Colors.white),
-            ),
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF565ADD),
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: const Text(
+            'Conversation Centre',
+            style: TextStyle(color: Colors.white),
           ),
+        ),
         body: SafeArea(
           child: Padding(
-             padding: EdgeInsets.symmetric(horizontal: w * 0.04, vertical: w * 0.02),
+            padding:
+                EdgeInsets.symmetric(horizontal: w * 0.04, vertical: w * 0.02),
             child: Column(
               children: [
                 const SizedBox(height: 20),
-            Container(
-             margin: EdgeInsets.only(left: 3.0),
-              child: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Recent Conversations',
-                            style: TextStyle(
-                              color: Color(0xFF565ADD),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                Container(
+                  margin: EdgeInsets.only(left: 3.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Recent Conversations',
+                        style: TextStyle(
+                          color: Color(0xFF565ADD),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.filter_list),
+                        onPressed: () {
+                          FilterBottomSheetWidget.show(
+                            context: context,
+                            startDateController: _startCtrl,
+                            endDateController: _endCtrl,
+                            onApply: (start, end, sortOption) {
+                              controller.applyFilter(
+                                start: start,
+                                end: end,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: controller.sessions.isEmpty
+                      ? Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: w * 0.1),
+                            child: Text(
+                              "No calls happened . Please apply a filter to view previous calls",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: w * 0.04,
+                                color: Colors.grey[600],
+                              ),
                             ),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.filter_list),
-                            onPressed: () => _filterBottomSheet(context),
-                          ),
-                        ],
-                      ),
-            ),
+                        )
+                      : ListView.builder(
+                          itemCount: controller.sessions.length,
+                          itemBuilder: (ctx, i) {
+                            final session = controller.sessions[i];
+                            final r = session.report;
+                            final totalNudges = r.categories
+                                .expand((c) => c.subcategories)
+                                .where((s) =>
+                                    s.nudges.trim().isNotEmpty &&
+                                    s.nudges != "NA")
+                                .length;
 
-
-                const SizedBox(height: 10),
-
-                Expanded(
-                  child:controller.sessions.isEmpty? Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: w * 0.1),
-                      child: Text(
-                        "No calls happened . Please apply a filter to view previous calls",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: w * 0.04,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ),
-                  ):
-                  ListView.builder(
-                    itemCount: controller.sessions.length,
-                    itemBuilder: (ctx, i) {
-                      final session = controller.sessions[i];
-                      final r = session.report;
-                      final totalNudges = r.categories
-                          .expand((c) => c.subcategories)
-                          .where((s) => s.nudges.trim().isNotEmpty && s.nudges != "NA")
-                          .length;
-
-                      return Container(
-                        margin: const EdgeInsets.symmetric(vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: const Color(0xFFE5E5E5), width: 1),
-                        ),
-                        child: InkWell(
-                          onTap: () => Get.to(() => SessionDetailScreen(session: session)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // ─── Top info section ──────────────────────────────
-                              Padding(
-                                padding: const EdgeInsets.all(18),
+                            return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                    color: const Color(0xFFE5E5E5), width: 1),
+                              ),
+                              child: InkWell(
+                                onTap: () => Get.to(() =>
+                                    SessionDetailScreen(session: session)),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: _buildRichText("Product Name: ", r.productName),
-                                        ),
-                                        IconButton(
-                                          icon: SvgPicture.asset(
-                                            'asset/icons/edit_note.svg',
-                                            width: 15,
-                                            height: 15,
-                                            semanticsLabel: 'Edit note',
-                                          ),
-                                          onPressed: () {
-                                            final nameController = TextEditingController(text: r.productName);
-                                            bool isLoading = false;
-                                            showDialog<void>(
-                                              context: ctx,
-
-                                              barrierDismissible: false,
-                                              builder: (dialogCtx) => StatefulBuilder(
-                                                builder: (dialogCtx, setState) {
-                                                  final start = TimeOfDay
-                                                      .fromDateTime(r.startTime.add(const Duration(hours: 5, minutes: 30)))
-                                                      .format(ctx);
-                                                  final end = TimeOfDay
-                                                      .fromDateTime(r.endTime.add(const Duration(hours: 5, minutes: 30)))
-                                                      .format(ctx);
-                                                  return AlertDialog(
-                                                    title: Text('Edit Product Name'),
-                                                    content: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      children: [
-                                                        TextField(
-                                                          controller: nameController,
-                                                          decoration: InputDecoration(labelText: 'Product Name'),
+                                    // ─── Top info section ──────────────────────────────
+                                    Padding(
+                                      padding: const EdgeInsets.all(18),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: _buildRichText(
+                                                    "Product Name: ",
+                                                    r.productName),
+                                              ),
+                                              IconButton(
+                                                icon: SvgPicture.asset(
+                                                  'asset/icons/edit_note.svg',
+                                                  width: 15,
+                                                  height: 15,
+                                                  semanticsLabel: 'Edit note',
+                                                ),
+                                                onPressed: () {
+                                                  final nameController =
+                                                      TextEditingController(
+                                                          text: r.productName);
+                                                  controller.isUpdating.value =
+                                                      false;
+                                                  showDialog<void>(
+                                                    context: ctx,
+                                                    barrierDismissible: false,
+                                                    builder: (dialogCtx) {
+                                                      final start = TimeOfDay
+                                                              .fromDateTime(r
+                                                                  .startTime
+                                                                  .add(const Duration(
+                                                                      hours: 5,
+                                                                      minutes:
+                                                                          30)))
+                                                          .format(ctx);
+                                                      final end = TimeOfDay
+                                                              .fromDateTime(r
+                                                                  .endTime
+                                                                  .add(const Duration(
+                                                                      hours: 5,
+                                                                      minutes:
+                                                                          30)))
+                                                          .format(ctx);
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Edit Product Name'),
+                                                        content: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            TextField(
+                                                              controller:
+                                                                  nameController,
+                                                              decoration:
+                                                                  const InputDecoration(
+                                                                      labelText:
+                                                                          'Product Name'),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 16),
+                                                            TextFormField(
+                                                              readOnly: true,
+                                                              initialValue:
+                                                                  start,
+                                                              decoration:
+                                                                  const InputDecoration(
+                                                                labelText:
+                                                                    'Start Time',
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 8),
+                                                            TextFormField(
+                                                              readOnly: true,
+                                                              initialValue: end,
+                                                              decoration:
+                                                                  const InputDecoration(
+                                                                labelText:
+                                                                    'End Time',
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                        SizedBox(height: 16),
-                                                        TextFormField(
-                                                          readOnly: true,
-                                                          initialValue: start,
-                                                          decoration: InputDecoration(
-                                                            labelText: 'Start Time',
-
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 8),
-                                                        TextFormField(
-                                                          readOnly: true,
-                                                          initialValue: end,
-                                                          decoration: InputDecoration(
-                                                            labelText: 'End Time',
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: isLoading ? null : () => Navigator.of(dialogCtx).pop(),
-                                                        child: Text('Cancel'),
-                                                      ),
-                                                      ElevatedButton(
-                                                        onPressed: isLoading
-                                                            ? null
-                                                            : () async {
-                                                          final newList = nameController.text
-                                                              .split(',')
-                                                              .map((s) => s.trim())
-                                                              .where((s) => s.isNotEmpty)
-                                                              .toList();
-                                                          if (newList.isEmpty) {
-                                                            ScaffoldMessenger.of(ctx).showSnackBar(
-                                                              SnackBar(content: Text('Please enter at least one product')),
-                                                            );
-                                                            return;
-                                                          }
-                                                          setState(() => isLoading = true);
-                                                          try {
-                                                            await controller.updateProductsIdentified(
-                                                              callId: r.callId,
-                                                              productNames: newList,
-                                                            );
-                                                            Navigator.of(dialogCtx).pop();
-                                                          } catch (e) {
-                                                            setState(() => isLoading = false);
-                                                            ScaffoldMessenger.of(ctx).showSnackBar(
-                                                              SnackBar(content: Text('Update failed: $e')),
-                                                            );
-                                                          }
-                                                        },
-                                                        child: isLoading
-                                                            ? SizedBox(
-                                                          width: 16,
-                                                          height: 16,
-                                                          child: CircularProgressIndicator(strokeWidth: 2),
-                                                        )
-                                                            : Text('Save'),
-                                                      ),
-                                                    ],
+                                                        actions: [
+                                                          Obx(() => TextButton(
+                                                                onPressed: controller
+                                                                        .isUpdating
+                                                                        .value
+                                                                    ? null
+                                                                    : () => Navigator.of(
+                                                                            dialogCtx)
+                                                                        .pop(),
+                                                                child: const Text(
+                                                                    'Cancel'),
+                                                              )),
+                                                          Obx(() =>
+                                                              ElevatedButton(
+                                                                onPressed: controller
+                                                                        .isUpdating
+                                                                        .value
+                                                                    ? null
+                                                                    : () async {
+                                                                        final newList = nameController
+                                                                            .text
+                                                                            .split(
+                                                                                ',')
+                                                                            .map((s) =>
+                                                                                s.trim())
+                                                                            .where((s) => s.isNotEmpty)
+                                                                            .toList();
+                                                                        if (newList
+                                                                            .isEmpty) {
+                                                                          ScaffoldMessenger.of(ctx)
+                                                                              .showSnackBar(
+                                                                            const SnackBar(content: Text('Please enter at least one product')),
+                                                                          );
+                                                                          return;
+                                                                        }
+                                                                        try {
+                                                                          await controller
+                                                                              .updateProductsIdentified(
+                                                                            callId:
+                                                                                r.callId,
+                                                                            productNames:
+                                                                                newList,
+                                                                          );
+                                                                          Navigator.of(dialogCtx)
+                                                                              .pop();
+                                                                        } catch (e) {
+                                                                          ScaffoldMessenger.of(ctx)
+                                                                              .showSnackBar(
+                                                                            SnackBar(content: Text('Update failed: $e')),
+                                                                          );
+                                                                        }
+                                                                      },
+                                                                child: controller
+                                                                        .isUpdating
+                                                                        .value
+                                                                    ? const SizedBox(
+                                                                        width:
+                                                                            16,
+                                                                        height:
+                                                                            16,
+                                                                        child:
+                                                                            CircularProgressIndicator(
+                                                                          strokeWidth:
+                                                                              2,
+                                                                        ),
+                                                                      )
+                                                                    : const Text(
+                                                                        'Save'),
+                                                              )),
+                                                        ],
+                                                      );
+                                                    },
                                                   );
                                                 },
                                               ),
-                                            );
-                                          },
+                                            ],
+                                          ),
+                                          const SizedBox(height: 6),
+                                          _buildRichText(
+                                            "Start & End Time: ",
+                                            "${TimeOfDay.fromDateTime(r.startTime.add(const Duration(hours: 5, minutes: 30))).format(ctx)} – "
+                                                "${TimeOfDay.fromDateTime(r.endTime.add(const Duration(hours: 5, minutes: 30))).format(ctx)}",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    // ─── Bottom “Total Nudges” bar ────────────────────
+                                    Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: w * 0.04,
+                                          vertical: w * 0.025),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFE8F0FF),
+                                        borderRadius: const BorderRadius.only(
+                                          bottomLeft: Radius.circular(15),
+                                          bottomRight: Radius.circular(15),
                                         ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 6),
-                                    _buildRichText(
-                                      "Start & End Time: ",
-                                      "${TimeOfDay.fromDateTime(r.startTime.add(const Duration(hours: 5, minutes: 30))).format(ctx)} – "
-                                          "${TimeOfDay.fromDateTime(r.endTime.add(const Duration(hours: 5, minutes: 30))).format(ctx)}",
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // ─── Bottom “Total Nudges” bar ────────────────────
-                              Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.symmetric(horizontal: w * 0.04, vertical: w * 0.025),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFE8F0FF),
-                                  borderRadius: const BorderRadius.only(
-                                    bottomLeft: Radius.circular(15),
-                                    bottomRight: Radius.circular(15),
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'asset/icons/small_bulb.svg',
-                                      semanticsLabel: 'Lightbulb outline',
-                                    ),
-                                    SizedBox(width: w * 0.03),
-                                    Text(
-                                      "Total Nudges – $totalNudges",
-                                      style: TextStyle(fontSize: w * 0.03, fontWeight: FontWeight.bold),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'asset/icons/small_bulb.svg',
+                                            semanticsLabel: 'Lightbulb outline',
+                                          ),
+                                          SizedBox(width: w * 0.03),
+                                          Text(
+                                            "Total Nudges – $totalNudges",
+                                            style: TextStyle(
+                                                fontSize: w * 0.03,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-
                 ),
               ],
             ),
@@ -281,7 +342,6 @@ class SessionListScreen extends GetView<RealtimeConvesationController> {
       );
     });
   }
-
 
   Widget _buildRichText(String label, String value) {
     return RichText(
@@ -305,312 +365,26 @@ class SessionListScreen extends GetView<RealtimeConvesationController> {
       ),
     );
   }
-
-
-   void _filterBottomSheet(BuildContext context) {
-     showModalBottomSheet(
-       backgroundColor: Colors.white,
-       context: context,
-       isScrollControlled: true,
-       shape: const RoundedRectangleBorder(
-         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-       ),
-       builder: (ctx) {
-         // local state inside sheet
-         String selectedSort = 'Newest to Oldest (Newest First)';
-         List<bool> shortcutSel = [false, false, false];
-         int appliedFilters = 0;
-         void updateCount() {
-           int c = 0;
-           if (_startCtrl.text.isNotEmpty && _endCtrl.text.isNotEmpty) c++;
-           if (selectedSort != 'Newest to Oldest (Newest First)') c++;
-           appliedFilters = c;
-         }
-
-         return StatefulBuilder(
-           builder: (c, setModal) {
-             Future<void> pickDate(TextEditingController ctrl) async {
-               final pick = await showDatePicker(
-                 context: c,
-                 initialDate: DateTime.now(),
-                 firstDate: DateTime(2000),
-                 lastDate: DateTime(2100),
-               );
-               if (pick != null) {
-                 setModal(() {
-                   ctrl.text = DateFormat('dd-MM-yyyy').format(pick);
-                   shortcutSel = [false, false, false];
-                   updateCount();
-                 });
-               }
-             }
-
-             return Padding(
-               padding: EdgeInsets.only(
-                 bottom: MediaQuery.of(c).viewInsets.bottom,
-                 left: 16, right: 16, top: 24,
-               ),
-               child: Column(
-                 mainAxisSize: MainAxisSize.min,
-                 children: [
-                   Container(
-                     width: 40, height: 4,
-                     decoration: BoxDecoration(
-                       color: Colors.grey[300],
-                       borderRadius: BorderRadius.circular(10),
-                     ),
-                   ),
-                   const SizedBox(height: 16),
-                   Align(
-                     alignment: Alignment.centerLeft,
-                     child: const Text('Filter by:', style: TextStyle(color: Colors.grey)),
-                   ),
-                   const SizedBox(height: 8),
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     children: [
-                       const Text(
-                         'Created On',
-                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                       ),
-                       TextButton(
-                         onPressed: () => setModal(() {
-                           _startCtrl.clear();
-                           _endCtrl.clear();
-                           selectedSort = 'Newest to Oldest (Newest First)';
-                           shortcutSel = [false, false, false];
-                           updateCount();
-                         }),
-                         child: const Text('Reset', style: TextStyle(color: Colors.deepPurple)),
-                       ),
-                     ],
-                   ),
-                   Row(
-                     children: [
-                       Expanded(
-                         child: _buildDateField(
-                           controller: _startCtrl,
-                           hint: 'DD-MM-YYYY',
-                           onTap: () => pickDate(_startCtrl),
-                         ),
-                       ),
-                       const SizedBox(width: 8),
-                       Expanded(
-                         child: _buildDateField(
-                           controller: _endCtrl,
-                           hint: 'DD-MM-YYYY',
-                           onTap: () => pickDate(_endCtrl),
-                         ),
-                       ),
-                     ],
-                   ),
-                   const SizedBox(height: 12),
-                   Row(
-                     children: [
-                       _dateShortcut('Today', shortcutSel[0], () {
-                         final now = DateTime.now();
-                         final f = DateFormat('dd-MM-yyyy');
-                         setModal(() {
-                           _startCtrl.text = f.format(now);
-                           _endCtrl.text   = f.format(now);
-                           shortcutSel = [true, false, false];
-                           updateCount();
-                         });
-                       }),
-                       _dateShortcut('This Week', shortcutSel[1], () {
-                         final now    = DateTime.now();
-                         final monday = now.subtract(Duration(days: now.weekday - 1));
-                         final sunday = monday.add(const Duration(days: 6));
-                         final f = DateFormat('dd-MM-yyyy');
-                         setModal(() {
-                           _startCtrl.text = f.format(monday);
-                           _endCtrl.text   = f.format(sunday);
-                           shortcutSel = [false, true, false];
-                           updateCount();
-                         });
-                       }),
-                       _dateShortcut('This Month', shortcutSel[2], () {
-                         final now   = DateTime.now();
-                         final first = DateTime(now.year, now.month, 1);
-                         final last  = DateTime(now.year, now.month + 1, 0);
-                         final f = DateFormat('dd-MM-yyyy');
-                         setModal(() {
-                           _startCtrl.text = f.format(first);
-                           _endCtrl.text   = f.format(last);
-                           shortcutSel = [false, false, true];
-                           updateCount();
-                         });
-                       }),
-                     ],
-                   ),
-                   const SizedBox(height: 12),
-                   Align(
-                     alignment: Alignment.centerLeft,
-                     child: const Text('Sort by', style: TextStyle(color: Colors.grey)),
-                   ),
-                   const SizedBox(height: 8),
-                   Container(
-                     padding: const EdgeInsets.symmetric(horizontal: 12),
-                     decoration: BoxDecoration(
-                       color: const Color(0xFFFAFAFA),
-                       borderRadius: BorderRadius.circular(12),
-                       border: Border.all(color: const Color(0xFFECEDF0), width: 0.9),
-                     ),
-                     child: DropdownButton<String>(
-                       isExpanded: true,
-                       underline: const SizedBox(),
-                       value: selectedSort,
-                       items: const [
-                         DropdownMenuItem(
-                           value: 'Newest to Oldest (Newest First)',
-                           child: Text('Newest to Oldest (Newest First)'),
-                         ),
-                         DropdownMenuItem(
-                           value: 'Oldest to Newest',
-                           child: Text('Oldest to Newest'),
-                         ),
-                       ],
-                       onChanged: (v) => setModal(() {
-                         selectedSort = v!;
-                         updateCount();
-                       }),
-                     ),
-                   ),
-                   const SizedBox(height: 16),
-
-
-                   const SizedBox(height: 16),
-                   Row(
-                     children: [
-                       Expanded(
-                         child: ElevatedButton(
-                           style: ElevatedButton.styleFrom(
-                             backgroundColor: const Color(0xFFE5E5FF),
-                             shape: RoundedRectangleBorder(
-                               borderRadius: BorderRadius.circular(12),
-                             ),
-                           ),
-                           onPressed: () => setModal(() {
-                             _startCtrl.clear();
-                             _endCtrl.clear();
-                             selectedSort = 'Newest to Oldest (Newest First)';
-                             shortcutSel = [false, false, false];
-                             updateCount();
-                           }),
-                           child: const Text('Reset All',
-                               style: TextStyle(color: Color(0xFF565ADD))),
-                         ),
-                       ),
-                       const SizedBox(width: 12),
-                       Expanded(
-                         child: ElevatedButton(
-                           style: ElevatedButton.styleFrom(
-                             backgroundColor: const Color(0xFF565ADD),
-                             shape: RoundedRectangleBorder(
-                               borderRadius: BorderRadius.circular(12),
-                             ),
-                           ),
-                           onPressed: () {
-                             // parse dates
-
-                             final start = DateFormat('dd-MM-yyyy')
-                                 .parse(_startCtrl.text);
-                             final end = DateFormat('dd-MM-yyyy')
-                                 .parse(_endCtrl.text);
-                             controller.applyFilter(
-                               start: start,
-                               end: end,
-                             );
-                             Navigator.pop(c);
-                           },
-                           child: Text(
-                             appliedFilters > 0
-                                 ? 'Apply Filters ($appliedFilters)'
-                                 : 'Apply Filters',
-                             style: const TextStyle(color: Colors.white),
-                           ),
-                         ),
-                       ),
-                     ],
-                   ),
-                   const SizedBox(height: 16),
-                 ],
-               ),
-             );
-           },
-         );
-       },
-     );
-   }
-
-   Widget _buildDateField({
-     required TextEditingController controller,
-     required String hint,
-     required VoidCallback onTap,
-   }) {
-     return TextField(
-       controller: controller,
-       readOnly: true,
-       onTap: onTap,
-       decoration: InputDecoration(
-         hintText: hint,
-         suffixIcon: const Icon(Icons.calendar_today, size: 20),
-         contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-         border: OutlineInputBorder(
-           borderRadius: BorderRadius.circular(12),
-           borderSide: const BorderSide(color: Color(0xFFECEDF0)),
-         ),
-       ),
-     );
-   }
-
-   Widget _dateShortcut(String label, bool selected, VoidCallback onTap) {
-     return Expanded(
-       child: GestureDetector(
-         onTap: onTap,
-         child: Container(
-           margin: const EdgeInsets.only(right: 8),
-           padding: const EdgeInsets.symmetric(vertical: 10),
-           decoration: BoxDecoration(
-             color: selected ? const Color(0xFF565ADD) : const Color(0xFFF5F5F5),
-             borderRadius: BorderRadius.circular(8),
-           ),
-           child: Center(
-             child: Text(
-               label,
-               style: TextStyle(
-                 color: selected ? Colors.white : Colors.black87,
-                 fontWeight: FontWeight.w500,
-               ),
-             ),
-           ),
-         ),
-       ),
-     );
-   }
-
-
 }
 
 class SessionDetailScreen extends StatelessWidget {
   final Session session;
-  const SessionDetailScreen({ required this.session, super.key });
+  const SessionDetailScreen({required this.session, super.key});
 
   @override
   Widget build(BuildContext context) {
-
-
     final w = MediaQuery.of(context).size.width;
 
-    final items = <Map<String,String>>[];
+    final items = <Map<String, String>>[];
     for (final cat in session.report.categories) {
       for (final sub in cat.subcategories) {
-        if(sub.nudges.trim().isNotEmpty){
-        items.add({
-          'category': cat.name,
-          'subcategory': sub.name,
-          'nudges': sub.nudges.trim(),
-        });}
+        if (sub.nudges.trim().isNotEmpty) {
+          items.add({
+            'category': cat.name,
+            'subcategory': sub.name,
+            'nudges': sub.nudges.trim(),
+          });
+        }
       }
     }
 
@@ -624,126 +398,121 @@ class SessionDetailScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: items.isEmpty?
-      Center(
-        child: Text(
-          "No nudges found for this conversation.",
-          style: TextStyle(
-            fontSize: w * 0.05,
-            color: Colors.grey[600],
-          ),
-        ),
-      )
-          : ListView.separated(
-        padding: EdgeInsets.all(w * 0.04),
-        itemCount: items.length,
-        separatorBuilder: (_, __) => SizedBox(height: w * 0.04),
-        itemBuilder: (ctx, i) {
-          final it = items[i];
-
-          final hasNudge = it['nudges']!.isNotEmpty && it['nudges'] != "NA";
-          final borderColor = hasNudge ? Colors.green : Colors.red;
-
-          // indent from left edge of container to align under text:
-          final textIndent = w * 0.09; // equals icon (0.06w) + spacing (0.03w)
-
-          return Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: borderColor, width: 1),
-              borderRadius: BorderRadius.circular(12),
-               color: Color(0xffF8FFF9),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(w * 0.04),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Icon + Category title
-                  Row(
-                    children: [
-              SvgPicture.asset(
-                'asset/icons/small_bulb.svg',
-                 width: w * 0.06,
-                 height: w * 0.06,
-                 color: const Color(0xFF1db33b),
-                semanticsLabel: 'Lightbulb outline',
+      body: items.isEmpty
+          ? Center(
+              child: Text(
+                "No nudges found for this conversation.",
+                style: TextStyle(
+                  fontSize: w * 0.05,
+                  color: Colors.grey[600],
+                ),
               ),
-                      SizedBox(width: w * 0.03),
-                      Expanded(
-                        child: Text(
-                          it['category']!,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: w * 0.035,
-                          ),
-                        ),
-                      ),
-                    ],
+            )
+          : ListView.separated(
+              padding: EdgeInsets.all(w * 0.04),
+              itemCount: items.length,
+              separatorBuilder: (_, __) => SizedBox(height: w * 0.04),
+              itemBuilder: (ctx, i) {
+                final it = items[i];
+
+                final hasNudge =
+                    it['nudges']!.isNotEmpty && it['nudges'] != "NA";
+                final borderColor = hasNudge ? Colors.green : Colors.red;
+
+                // indent from left edge of container to align under text:
+                final textIndent =
+                    w * 0.09; // equals icon (0.06w) + spacing (0.03w)
+
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: borderColor, width: 1),
+                    borderRadius: BorderRadius.circular(12),
+                    color: Color(0xffF8FFF9),
                   ),
-
-                  SizedBox(height: w * 0.02),
-
-                  // Subcategory, aligned under the category text
-                  Padding(
-                    padding: EdgeInsets.only(left: textIndent),
-                    child: Text(
-                      it['subcategory']!,
-                      style: TextStyle(
-                        fontSize: w * 0.03,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: w * 0.03),
-
-                  // Bullet + nudge (or fallback), also aligned under the text
-                  Padding(
-                    padding: EdgeInsets.only(left: textIndent),
-                    child: hasNudge
-                        ? Row(
+                  child: Padding(
+                    padding: EdgeInsets.all(w * 0.04),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "• ",
-                          style: TextStyle(
-                             // fontSize: w * 0.045,
-                            height: 1.2,
-                          ),
+                        // Icon + Category title
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              'asset/icons/small_bulb.svg',
+                              width: w * 0.06,
+                              height: w * 0.06,
+                              color: const Color(0xFF1db33b),
+                              semanticsLabel: 'Lightbulb outline',
+                            ),
+                            SizedBox(width: w * 0.03),
+                            Expanded(
+                              child: Text(
+                                it['category']!,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: w * 0.035,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Expanded(
+
+                        SizedBox(height: w * 0.02),
+
+                        // Subcategory, aligned under the category text
+                        Padding(
+                          padding: EdgeInsets.only(left: textIndent),
                           child: Text(
-                            it['nudges']!,
+                            it['subcategory']!,
                             style: TextStyle(
                               fontSize: w * 0.03,
-                              height: 1.2,
+                              color: Colors.grey[700],
                             ),
                           ),
                         ),
+
+                        SizedBox(height: w * 0.03),
+
+                        // Bullet + nudge (or fallback), also aligned under the text
+                        Padding(
+                          padding: EdgeInsets.only(left: textIndent),
+                          child: hasNudge
+                              ? Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "• ",
+                                      style: TextStyle(
+                                        // fontSize: w * 0.045,
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        it['nudges']!,
+                                        style: TextStyle(
+                                          fontSize: w * 0.03,
+                                          height: 1.2,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Text(
+                                  "No nudge available",
+                                  style: TextStyle(
+                                    fontSize: w * 0.042,
+                                    // fontStyle: FontStyle.italic,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                        ),
                       ],
-                    )
-                        : Text(
-                      "No nudge available",
-                      style: TextStyle(
-                        fontSize: w * 0.042,
-                        // fontStyle: FontStyle.italic,
-                        color: Colors.grey[500],
-                      ),
                     ),
                   ),
-                ],
-              ),
+                );
+              },
             ),
-          );
-        },
-      ),
-
-
     );
   }
-
-
-
-
-
 }
