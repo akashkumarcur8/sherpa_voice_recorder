@@ -23,6 +23,7 @@ class AppColors {
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
   static const Color rosePink = Color(0xFFD6D9FF);
+  static const Color lightPurple = Color(0xFFE5E5FF);
 
   // Grey Scale
   static const Color grey = Color(0xFF9E9E9E);
@@ -34,16 +35,20 @@ class AppColors {
   static const Color background = Color(0xFFF5F5F5);
   static const Color cardBackground = Color(0xFFFFFFFF);
   static const Color scaffoldBackground = Color(0xFFFAFAFA);
+  static const Color iconBackground = Color(0xFFEFEFEF);
 
   // Text Colors
   static const Color textPrimary = Color(0xFF212121);
+  static const Color textPrimaryLight = Color(0xFF31373D);
   static const Color textSecondary = Color(0xFF757575);
+  static const Color textLabel = Color(0xFF555E67);
   static const Color textHint = Color(0xFFBDBDBD);
   static const Color textDisabled = Color(0xFFE0E0E0);
 
   // Border Colors
   static const Color border = Color(0xFFE0E0E0);
   static const Color divider = Color(0xFFBDBDBD);
+  static const Color inputBorder = Color(0xFFECEDF0);
 
   // Transparent
   static const Color transparent = Colors.transparent;

@@ -7,14 +7,14 @@ import 'package:intl/intl.dart';
 import 'package:mice_activeg/app/modules/realtime_conversation/realtime_conversation_model.dart';
 
 import '../../core/services/storage/sharedPrefHelper.dart';
-class RealtimeConvesationController extends GetxController {
 
+class RealtimeConvesationController extends GetxController {
   var sessions = <Session>[].obs;
   var isLoading = true.obs;
   var isOffline = false.obs;
+  var isUpdating = false.obs;
   final _connectivity = Connectivity();
   var appliedFilterCount = 0.obs;
-
 
   @override
   void onInit() {
@@ -34,31 +34,19 @@ class RealtimeConvesationController extends GetxController {
 
   Future<void> fetchSessions() async {
     try {
-      final now = DateTime.now();
-
-      // Compute one month ago:
-      final year  = now.month > 1 ? now.year : now.year - 1;
-      final month = now.month > 1 ? now.month - 1 : 12;
-      // Clamp the day so we don't overflow shorter months (e.g. Feb 30 → Feb 28/29):
-      final lastDayOfTargetMonth = DateTime(year, month + 1, 0).day;
-      final day = now.day <= lastDayOfTargetMonth ? now.day : lastDayOfTargetMonth;
-
-      final oneMonthAgo = DateTime(year, month, day);
-
       isLoading.value = true;
       var userEmail = await SharedPrefHelper.getpref("email");
       var companyId = await SharedPrefHelper.getpref("company_id");
 
-
       final uri = Uri.parse("https://devreal.darwix.ai/api/sessions/");
       final body = jsonEncode({
         "user_id": userEmail,
-        "company_id":companyId,
+        "company_id": companyId,
         "start_time": DateFormat('yyyy-MM-dd').format(DateTime.now()),
         "end_time": DateFormat('yyyy-MM-dd').format(DateTime.now())
       });
       final resp = await https.post(uri,
-          headers: { "Content-Type": "application/json" }, body: body);
+          headers: {"Content-Type": "application/json"}, body: body);
       if (resp.statusCode == 200) {
         final data = jsonDecode(resp.body);
         List jsonList = data is List ? data : [data];
@@ -67,17 +55,16 @@ class RealtimeConvesationController extends GetxController {
         throw Exception("Failed with code ${resp.statusCode}");
       }
     } catch (e) {
-      Get.snackbar("You are offline", "Please check Your internet connection", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar("You are offline", "Please check Your internet connection",
+          snackPosition: SnackPosition.BOTTOM);
     } finally {
       isLoading.value = false;
     }
   }
 
-
   Future<void> applyFilter({
     required DateTime start,
     required DateTime end,
-
   }) async {
     try {
       isLoading.value = true;
@@ -85,16 +72,14 @@ class RealtimeConvesationController extends GetxController {
       var companyId = await SharedPrefHelper.getpref("company_id");
 
       // update filter badge
-      appliedFilterCount.value =
-          (start != null && end != null ? 1 : 0) ;
+      appliedFilterCount.value = 1;
       // call your same endpoint but with filter params:
       final uri = Uri.parse("https://devreal.darwix.ai/api/sessions/");
       final body = {
         "user_id": userEmail,
         "start_time": DateFormat('yyyy-MM-dd').format(start),
         "end_time": DateFormat('yyyy-MM-dd').format(end),
-        "company_id":companyId
-
+        "company_id": companyId
       };
       final resp = await https.post(uri,
           headers: {"Content-Type": "application/json"},
@@ -102,34 +87,28 @@ class RealtimeConvesationController extends GetxController {
       if (resp.statusCode == 200) {
         final data = jsonDecode(resp.body);
         List jsonList = data is List ? data : [data];
-        sessions.value =
-            jsonList.map((j) => Session.fromJson(j)).toList();
+        sessions.value = jsonList.map((j) => Session.fromJson(j)).toList();
       } else {
         throw Exception("Error ${resp.statusCode}");
       }
     } catch (e) {
-      Get.snackbar("You are offline", "Please check Your internet connection", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar("You are offline", "Please check Your internet connection",
+          snackPosition: SnackPosition.BOTTOM);
     } finally {
       isLoading.value = false;
     }
   }
-
-
-
-
-
 
   /// Call the PUT API and then update the matching Session in [sessions].
   Future<void> updateProductsIdentified({
     required String callId,
     required List<String> productNames,
   }) async {
-    isLoading.value = true;
+    isUpdating.value = true;
     try {
       final companyId = await SharedPrefHelper.getpref("company_id");
       final dio = Dio(BaseOptions(
         baseUrl: 'https://devreal.darwix.ai',
-
         headers: {'Content-Type': 'application/json'},
       ));
 
@@ -147,7 +126,7 @@ class RealtimeConvesationController extends GetxController {
         final String newValue = resp.data['new_value'] as String;
 
         // find the session in our list
-        final idx = sessions.indexWhere((s) => s.report.callId  == callId);
+        final idx = sessions.indexWhere((s) => s.report.callId == callId);
         if (idx != -1) {
           final old = sessions[idx];
           final updatedReport = old.report.copyWith(productName: newValue);
@@ -167,10 +146,9 @@ class RealtimeConvesationController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
     } finally {
-      isLoading.value = false;
+      isUpdating.value = false;
     }
   }
-
 
   // Future<void> syncAllConversations() async {
   //   const int numericUserId = 134;

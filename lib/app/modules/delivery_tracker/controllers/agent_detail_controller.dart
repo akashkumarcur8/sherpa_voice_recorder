@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/agent_detail_model.dart';
@@ -31,7 +30,6 @@ class AgentDetailController extends GetxController {
 
       // Convert to model
       agentDetail.value = AgentDetailModel.fromJson(data);
-
     } catch (e) {
       // Show error message
       Get.snackbar(
@@ -87,4 +85,3 @@ class AgentDetailController extends GetxController {
     await loadAgentDetails(agentId);
   }
 }
-

@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import '../../../data/providers/ApiService.dart';
-import '../conversation_controller.dart';
+import '../controller/conversation_controller.dart';
 
 class ConversationViewBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<SessionController>(
-          () => SessionController(ApiService()),
+      () => SessionController(ApiService()),
     );
   }
 }
