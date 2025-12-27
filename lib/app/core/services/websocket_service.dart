@@ -1,8 +1,8 @@
 // lib/core/services/websocket_service.dart
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer' as developer;
 import 'dart:typed_data';
-import 'package:flutter_sound/flutter_sound.dart';
 import 'package:web_socket_channel/io.dart';
 
 class WebSocketService {
@@ -12,6 +12,7 @@ class WebSocketService {
 
   IOWebSocketChannel? _channel;
   StreamController<Uint8List>? _audioController;
+  StreamSubscription<Uint8List>? _audioSubscription;
 
   // Remove separate recorder - we'll use AudioService's recorder
   bool get isConnected => _channel != null;
@@ -37,29 +38,45 @@ class WebSocketService {
       _channel = IOWebSocketChannel.connect(wsUrl);
 
       if (_channel == null) {
-        print('❌ Failed to create WebSocket channel');
+        developer.log('Failed to create WebSocket channel',
+            name: 'WebSocketService');
         return false;
       }
 
-      print('🌐 WebSocket connected successfully');
+      developer.log('WebSocket connected successfully',
+          name: 'WebSocketService');
 
       // Create stream controller for audio chunks
       _audioController = StreamController<Uint8List>();
 
       // Listen to audio chunks and send via WebSocket
-      _audioController!.stream.listen(
-            (data) {
-          print('📤 Sending ${data.length} bytes to WebSocket');
-          _channel!.sink.add(data);
+      _audioSubscription = _audioController!.stream.listen(
+        (data) {
+          // Check if channel is still open before sending
+          if (_channel != null) {
+            try {
+              developer.log('Sending ${data.length} bytes to WebSocket',
+                  name: 'WebSocketService');
+              _channel!.sink.add(data);
+            } catch (e) {
+              developer.log('Error sending to WebSocket (may be closed): $e',
+                  name: 'WebSocketService', level: 900);
+              // Cancel subscription if channel is closed
+              _audioSubscription?.cancel();
+              _audioSubscription = null;
+            }
+          }
         },
         onError: (e) {
-          print('❌ Stream error: $e');
+          developer.log('Stream error: $e',
+              name: 'WebSocketService', level: 1000);
         },
       );
 
       return true;
     } catch (e) {
-      print('❌ Error connecting to WebSocket: $e');
+      developer.log('Error connecting to WebSocket: $e',
+          name: 'WebSocketService', level: 1000);
       return false;
     }
   }
@@ -76,7 +93,31 @@ class WebSocketService {
     required String fullName,
   }) async {
     try {
-      // Send disconnect payload if channel is open
+      developer.log('Starting WebSocket disconnect...',
+          name: 'WebSocketService');
+
+      // Step 1: Cancel stream subscription FIRST to stop sending data
+      if (_audioSubscription != null) {
+        developer.log('Cancelling audio stream subscription...',
+            name: 'WebSocketService');
+        await _audioSubscription!.cancel();
+        _audioSubscription = null;
+        developer.log('Audio stream subscription cancelled',
+            name: 'WebSocketService');
+      }
+
+      // Step 2: Close stream controller to prevent new data
+      if (_audioController != null) {
+        developer.log('Closing stream controller...', name: 'WebSocketService');
+        await _audioController!.close();
+        _audioController = null;
+        developer.log('StreamController closed', name: 'WebSocketService');
+      }
+
+      // Step 3: Wait a bit for any pending operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      // Step 4: Send disconnect payload if channel is still open
       if (_channel != null) {
         final disconnectPayload = jsonEncode({
           "user_id": email,
@@ -88,28 +129,44 @@ class WebSocketService {
         });
 
         try {
-          print('📤 Sending disconnect payload...');
+          developer.log('Sending disconnect payload...',
+              name: 'WebSocketService');
           _channel!.sink.add(disconnectPayload);
-          print('✅ Disconnect payload sent');
+          developer.log('Disconnect payload sent', name: 'WebSocketService');
+
+          // Wait briefly to ensure server receives the message
+          await Future.delayed(const Duration(milliseconds: 200));
         } catch (e) {
-          print('❌ Failed to send disconnect payload: $e');
+          developer.log(
+              'Failed to send disconnect payload (channel may be closed): $e',
+              name: 'WebSocketService',
+              level: 900);
         }
 
-        // Wait briefly to ensure server receives the message
-        await Future.delayed(const Duration(milliseconds: 200));
-
-        // Close WebSocket
-        await _channel!.sink.close();
-        _channel = null;
-        print('🔒 WebSocket channel closed');
+        // Step 5: Close WebSocket channel
+        try {
+          await _channel!.sink.close();
+          _channel = null;
+          developer.log('WebSocket channel closed', name: 'WebSocketService');
+        } catch (e) {
+          developer.log('Error closing WebSocket channel: $e',
+              name: 'WebSocketService', level: 900);
+          _channel = null;
+        }
       }
 
-      // Close stream controller
-      await _audioController?.close();
+      developer.log('WebSocket disconnect completed', name: 'WebSocketService');
+    } catch (e, stackTrace) {
+      developer.log('Error disconnecting from WebSocket: $e',
+          name: 'WebSocketService', level: 1000);
+      developer.log('Stack trace: $stackTrace',
+          name: 'WebSocketService', level: 1000);
+      // Clean up even if there's an error
+      _audioSubscription?.cancel();
+      _audioSubscription = null;
+      _audioController?.close();
       _audioController = null;
-      print('🧹 StreamController closed');
-    } catch (e) {
-      print('❌ Error disconnecting from WebSocket: $e');
+      _channel = null;
     }
   }
 

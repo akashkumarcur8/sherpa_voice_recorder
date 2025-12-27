@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'dart:developer' as developer;
 import 'dart:math' as math;
-import 'package:get/get_core/src/get_main.dart';
 import '../leaderboard/leaderboard_dashboard.dart';
 import 'analytics_controller.dart';
+import '../../widgets/custom_bottom_navigation.dart';
+import '../home/controllers/home_controller.dart';
+import '../../routes/app_routes.dart';
+import '../../core/utils/recording_helper.dart';
 
 class AnalyticsDashboard extends StatefulWidget {
   const AnalyticsDashboard({super.key});
 
   @override
-  _AnalyticsDashboardState createState() => _AnalyticsDashboardState();
+  AnalyticsDashboardState createState() => AnalyticsDashboardState();
 }
 
-class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
+class AnalyticsDashboardState extends State<AnalyticsDashboard> {
   String currentDateRange = 'Last 7 Days';
 
   // Current data that changes based on filter
@@ -26,13 +30,17 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
   int avgProductScore = 23;
   int avgBehaviorScore = 15;
 
-  List<String> chartLabels = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
-
+  List<String> chartLabels = [
+    'Sun',
+    'Mon',
+    'Tues',
+    'Wed',
+    'Thurs',
+    'Fri',
+    'Sat'
+  ];
 
   final AnalyticsController c = Get.put(AnalyticsController());
-
-
-
 
   void _showFilterBottomSheet() {
     String selectedRange = currentDateRange;
@@ -61,9 +69,10 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     right: 20,
                     bottom: MediaQuery.of(context).viewInsets.bottom + 20,
                   ),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
                   ),
                   child: Column(
                     children: [
@@ -71,9 +80,9 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       Container(
                         width: 40,
                         height: 4,
-                        margin: EdgeInsets.only(bottom: 16),
+                        margin: const EdgeInsets.only(bottom: 16),
                         decoration: BoxDecoration(
-                          color: Color(0xFFD7D7D7),
+                          color: const Color(0xFFD7D7D7),
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -82,18 +91,20 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             'Filter Analytics',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           IconButton(
-                            icon: Icon(Icons.close, color: Color(0xFF9D9D9D)),
+                            icon: const Icon(Icons.close,
+                                color: Color(0xFF9D9D9D)),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
                         ],
                       ),
 
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
                       // Date range options
                       Expanded(
@@ -104,19 +115,21 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                             final range = ranges[i];
                             final isSelected = range == selectedRange;
                             return GestureDetector(
-                              onTap: () => setModalState(() => selectedRange = range),
+                              onTap: () =>
+                                  setModalState(() => selectedRange = range),
                               child: Container(
-                                margin: EdgeInsets.only(bottom: 8),
-                                padding: EdgeInsets.all(16),
+                                margin: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? Color(0xFF565ADD).withOpacity(0.1)
-                                      : Color(0xFFF8F9FC),
+                                      ? const Color(0xFF565ADD)
+                                          .withValues(alpha: 0.1)
+                                      : const Color(0xFFF8F9FC),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                     color: isSelected
-                                        ? Color(0xFF565ADD)
-                                        : Color(0xFFEBEBEB),
+                                        ? const Color(0xFF565ADD)
+                                        : const Color(0xFFEBEBEB),
                                     width: isSelected ? 2 : 1,
                                   ),
                                 ),
@@ -124,20 +137,27 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                                   children: [
                                     Icon(
                                       Icons.calendar_today,
-                                      color: isSelected ? Color(0xFF565ADD) : Color(0xFF9D9D9D),
+                                      color: isSelected
+                                          ? const Color(0xFF565ADD)
+                                          : const Color(0xFF9D9D9D),
                                       size: 20,
                                     ),
-                                    SizedBox(width: 12),
+                                    const SizedBox(width: 12),
                                     Text(
                                       range,
                                       style: TextStyle(
-                                        color: isSelected ? Color(0xFF565ADD) : Color(0xFF1A1A1A),
-                                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                        color: isSelected
+                                            ? const Color(0xFF565ADD)
+                                            : const Color(0xFF1A1A1A),
+                                        fontWeight: isSelected
+                                            ? FontWeight.w600
+                                            : FontWeight.normal,
                                       ),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     if (isSelected)
-                                      Icon(Icons.check_circle, color: Color(0xFF565ADD), size: 20),
+                                      const Icon(Icons.check_circle,
+                                          color: Color(0xFF565ADD), size: 20),
                                   ],
                                 ),
                               ),
@@ -155,15 +175,18 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                             Navigator.of(context).pop();
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF565ADD),
-                            padding: EdgeInsets.symmetric(vertical: 16),
+                            backgroundColor: const Color(0xFF565ADD),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Apply Filter',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,color: Colors.white),
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
                           ),
                         ),
                       ),
@@ -179,8 +202,8 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
   }
 // ────────────────────────────────────────────────────────────────────────────────
 
-
-  List<Widget> _buildDateRangeOptions(String selectedRange, StateSetter setModalState) {
+  List<Widget> _buildDateRangeOptions(
+      String selectedRange, StateSetter setModalState) {
     final ranges = [
       'Last 7 Days',
       'Last 14 Days',
@@ -199,13 +222,17 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
           });
         },
         child: Container(
-          margin: EdgeInsets.only(bottom: 8),
-          padding: EdgeInsets.all(16),
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isSelected ? Color(0xFF565ADD).withOpacity(0.1) : Color(0xFFF8F9FC),
+            color: isSelected
+                ? const Color(0xFF565ADD).withValues(alpha: 0.1)
+                : const Color(0xFFF8F9FC),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? Color(0xFF565ADD) : Color(0xFFEBEBEB),
+              color: isSelected
+                  ? const Color(0xFF565ADD)
+                  : const Color(0xFFEBEBEB),
               width: isSelected ? 2 : 1,
             ),
           ),
@@ -213,20 +240,24 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
             children: [
               Icon(
                 Icons.calendar_today,
-                color: isSelected ? Color(0xFF565ADD) : Color(0xFF9D9D9D),
+                color: isSelected
+                    ? const Color(0xFF565ADD)
+                    : const Color(0xFF9D9D9D),
                 size: 20,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Text(
                 range,
                 style: TextStyle(
-                  color: isSelected ? Color(0xFF565ADD) : Color(0xFF1A1A1A),
+                  color: isSelected
+                      ? const Color(0xFF565ADD)
+                      : const Color(0xFF1A1A1A),
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               if (isSelected)
-                Icon(
+                const Icon(
                   Icons.check_circle,
                   color: Color(0xFF565ADD),
                   size: 20,
@@ -261,21 +292,22 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
   //   ];
   // }
 
-  Widget _buildSuggestionCard(String title, String description, IconData icon, Color color) {
+  Widget _buildSuggestionCard(
+      String title, String description, IconData icon, Color color) {
     return Container(
-      margin: EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -284,21 +316,21 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
               size: 20,
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF1A1A1A),
                   ),
                 ),
                 Text(
                   description,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF9D9D9D),
                     fontSize: 12,
                   ),
@@ -310,9 +342,6 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
       ),
     );
   }
-
-
-
 
   void _applyFilter(String dateRange) {
     setState(() {
@@ -343,8 +372,6 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
     c.fetchFilterAnalytics(days: days);
   }
-
-
 
   // void _applyFilter(String dateRange) {
   //   setState(() {
@@ -462,15 +489,15 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
         child: Material(
           color: Colors.transparent,
           child: Container(
-            padding: EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Color(0xFF1A1A1A),
+              color: const Color(0xFF1A1A1A),
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 8,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -480,27 +507,27 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
               children: [
                 Text(
                   day,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     Container(
                       width: 8,
                       height: 8,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Color(0xFF565ADD),
                         shape: BoxShape.circle,
                       ),
                     ),
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Text(
                       'Score: $score',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ],
                 ),
@@ -513,7 +540,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
     overlay.insert(overlayEntry);
 
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       overlayEntry.remove();
     });
   }
@@ -556,33 +583,56 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
   //   );
   // }
 
-
-
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Color(0xFF565ADD),
-      iconTheme: const IconThemeData(color: Colors.white),
-     ),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF565ADD),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: Obx(() {
         if (c.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         return SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeaderCard(),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 _buildTodaysAnalytics(),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 _buildAgentAnalytics(),
               ],
             ),
           ),
         );
       }),
+      bottomNavigationBar: Obx(() => CustomBottomNavigation(
+            isRecording: Get.isRegistered<HomeController>()
+                ? Get.find<HomeController>().isRecording.value
+                : false,
+            onMicPressed: () {
+              // Check current recording state before navigation
+              final isCurrentlyRecording = Get.isRegistered<HomeController>()
+                  ? Get.find<HomeController>().isRecording.value
+                  : false;
+
+              developer.log(
+                  'Analytics: Mic button pressed - isRecording: $isCurrentlyRecording',
+                  name: 'AnalyticsDashboard');
+
+              // Schedule recording toggle (start or stop) based on current state
+              // If recording, we'll stop. If not recording, we'll start.
+              scheduleRecordingToggleAfterNavigation(
+                  'Analytics', !isCurrentlyRecording);
+
+              // Redirect to home screen
+              Get.offAllNamed(Routes.home);
+            },
+            isMicEnabled: false,
+          )),
     );
   }
 
@@ -590,14 +640,14 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [Color(0xFF565ADD), Color(0xFFD4B2FB)],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       child: Row(
         children: [
           Expanded(
@@ -612,8 +662,8 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 //     fontWeight: FontWeight.w600,
                 //   ),
                 // ),
-                SizedBox(height: 8),
-                Text(
+                const SizedBox(height: 8),
+                const Text(
                   'Leaderboard Live',
                   style: TextStyle(
                     color: Color(0xFFFFD51A),
@@ -621,7 +671,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
+                const Text(
                   'See Your Score Now.',
                   style: TextStyle(
                     color: Color(0xFFFFD51A),
@@ -629,14 +679,14 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton.icon(
                   onPressed: () {
-                    Get.to(LeaderboardScreen());
+                    Get.to(const LeaderboardScreen());
                     // Add this delay if needed
                   },
-                  icon: Text('📊', style: TextStyle(fontSize: 14)),
-                  label: Text(
+                  icon: const Text('📊', style: TextStyle(fontSize: 14)),
+                  label: const Text(
                     'View Details',
                     style: TextStyle(
                       color: Color(0xFF565ADD),
@@ -645,17 +695,18 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor: Color(0xFF565ADD),
+                    foregroundColor: const Color(0xFF565ADD),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           _buildTrophyIcon(),
         ],
       ),
@@ -669,19 +720,17 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
           'asset/icons/stars.svg',
           fit: BoxFit.cover,
         ),
-        Container(
-         child: Image.asset(
-            'asset/images/trophy.png',
-            fit: BoxFit.contain,
-            semanticLabel: 'Trophy icon',
-            // optional: you can tint the SVG:
-            // color: Colors.amber,
-            // semanticsLabel: 'Trophy icon',
-          ),
-          // child: CustomPaint(
-          //   painter: TrophyPainter(),
-          // ),
+        Image.asset(
+          'asset/images/trophy.png',
+          fit: BoxFit.contain,
+          semanticLabel: 'Trophy icon',
+          // optional: you can tint the SVG:
+          // color: Colors.amber,
+          // semanticsLabel: 'Trophy icon',
         ),
+        // child: CustomPaint(
+        //   painter: TrophyPainter(),
+        // ),
         // Positioned(
         //   top: -8,
         //   right: -8,
@@ -737,17 +786,18 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
   //   );
   // }
 
-
-
   Widget _buildTodaysAnalytics() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Today\'s Analytics', style: TextStyle(
-                      color: Color(0xFF565ADD),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),),
+        Text(
+          'Today\'s Analytics',
+          style: TextStyle(
+            color: Color(0xFF565ADD),
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         SizedBox(height: 16),
         Row(
           children: [
@@ -802,13 +852,13 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
             // Filter Button
             InkWell(
               onTap: () {
-                 _showFilterBottomSheet();
+                _showFilterBottomSheet();
               },
               borderRadius: BorderRadius.circular(8),
               child: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Color(0xFF565ADD).withOpacity(0.1),
+                  color: Color(0xFF565ADD).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -841,7 +891,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
           ],
         ),
         SizedBox(height: 16),
-         _buildChartCard(),
+        _buildChartCard(),
         SizedBox(height: 16),
         _buildScoreCards(),
       ],
@@ -970,13 +1020,17 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       getTitlesWidget: (v, _) {
                         final i = v.toInt();
                         return i < c.chartLabels.length
-                            ? Text(c.chartLabels[i], style: TextStyle(fontSize: 10, color: Color(0xFF9D9D9D)))
+                            ? Text(c.chartLabels[i],
+                                style: TextStyle(
+                                    fontSize: 10, color: Color(0xFF9D9D9D)))
                             : Text('');
                       },
                     ),
                   ),
-                  rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles:
+                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles:
+                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
@@ -989,8 +1043,8 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          Color(0xFFB1BFFF).withOpacity(0.8),
-                          Color(0xFFB1BFFF).withOpacity(0.1),
+                          Color(0xFFB1BFFF).withValues(alpha: 0.8),
+                          Color(0xFFB1BFFF).withValues(alpha: 0.1),
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -1012,14 +1066,19 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 lineTouchData: LineTouchData(
                   enabled: true,
                   handleBuiltInTouches: false,
-                  touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
-                    if (event is FlTapUpEvent && touchResponse != null && touchResponse.lineBarSpots != null) {
+                  touchCallback:
+                      (FlTouchEvent event, LineTouchResponse? touchResponse) {
+                    if (event is FlTapUpEvent &&
+                        touchResponse != null &&
+                        touchResponse.lineBarSpots != null) {
                       final spot = touchResponse.lineBarSpots!.first;
                       final index = spot.spotIndex;
 
                       // Get the position of the touch
-                      final RenderBox renderBox = context.findRenderObject() as RenderBox;
-                      final position = renderBox.globalToLocal(event.localPosition);
+                      final RenderBox renderBox =
+                          context.findRenderObject() as RenderBox;
+                      final position =
+                          renderBox.globalToLocal(event.localPosition);
 
                       _showTooltip(context, index, position);
                     }
@@ -1033,7 +1092,10 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 ),
                 minY: 0,
                 //maxY: 30,
-                maxY: c.chartSpots.map((s) => s.y).fold(0.0, (a, b) => b > a ? b : a) + 5,
+                maxY: c.chartSpots
+                        .map((s) => s.y)
+                        .fold(0.0, (a, b) => b > a ? b : a) +
+                    5,
               ),
             ),
           ),
@@ -1054,16 +1116,17 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
   //   );
   // }
 
-
   Widget _buildScoreCards() => Column(
-    children: [
-      _buildScoreCard('Agent\'s Score',      c.agentScore.value.toString()),
-      SizedBox(height: 12),
-      _buildScoreCard('Avg Product Score',  c.avgProductScore.value.toString()),
-      SizedBox(height: 12),
-      _buildScoreCard('Avg Behavior Score', c.avgBehaviorScore.value.toString()),
-    ],
-  );
+        children: [
+          _buildScoreCard('Agent\'s Score', c.agentScore.value.toString()),
+          SizedBox(height: 12),
+          _buildScoreCard(
+              'Avg Product Score', c.avgProductScore.value.toString()),
+          SizedBox(height: 12),
+          _buildScoreCard(
+              'Avg Behavior Score', c.avgBehaviorScore.value.toString()),
+        ],
+      );
 
   Widget _buildScoreCard(String title, String score) {
     return Container(

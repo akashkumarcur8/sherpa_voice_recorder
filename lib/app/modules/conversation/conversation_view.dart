@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'dart:developer' as developer;
 import '../../core/services/storage/sharedPrefHelper.dart';
 import '../../data/providers/ApiService.dart';
 import '../home/controllers/statistics_data_controller.dart';
+import '../home/controllers/home_controller.dart';
 import '../realtime_conversation/realtime_convesation_page.dart';
 import 'controller/conversation_controller.dart';
 import '../../widgets/filter_bottom_sheet_widget.dart';
+import '../../widgets/custom_bottom_navigation.dart';
+import '../../routes/app_routes.dart';
+import '../../core/utils/recording_helper.dart';
 import 'widgets/mark_conversation_dialog.dart';
 
 class ConversationView extends StatefulWidget {
@@ -408,6 +413,29 @@ class _ConversationViewState extends State<ConversationView> {
             ),
           ),
         ),
+        bottomNavigationBar: Obx(() => CustomBottomNavigation(
+              isRecording: Get.isRegistered<HomeController>()
+                  ? Get.find<HomeController>().isRecording.value
+                  : false,
+              onMicPressed: () {
+                // Check current recording state before navigation
+                final isCurrentlyRecording = Get.isRegistered<HomeController>()
+                    ? Get.find<HomeController>().isRecording.value
+                    : false;
+
+                developer.log(
+                    '📱 Conversation: Mic button pressed - isRecording: $isCurrentlyRecording');
+
+                // Schedule recording toggle (start or stop) based on current state
+                // If recording, we'll stop. If not recording, we'll start.
+                scheduleRecordingToggleAfterNavigation(
+                    'Conversation', !isCurrentlyRecording);
+
+                // Redirect to home screen
+                Get.offAllNamed(Routes.home);
+              },
+              isMicEnabled: false,
+            )),
       ),
     );
   }

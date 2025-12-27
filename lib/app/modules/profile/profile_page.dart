@@ -1,23 +1,27 @@
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/services/storage/sharedPrefHelper.dart';
 import '../../routes/app_routes.dart';
 import '../leaderboard/leaderboard_dashboard.dart';
+import '../../widgets/custom_bottom_navigation.dart';
+import '../home/controllers/home_controller.dart';
+import '../../core/utils/recording_helper.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  ProfileScreenState createState() => ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class ProfileScreenState extends State<ProfileScreen> {
   String activeTab = 'badge';
-  String username="";
-  String email="";
-  String emp_name ="";
-  String storeName="";
-  String designation="";
+  String username = "";
+  String email = "";
+  String empName = "";
+  String storeName = "";
+  String designation = "";
 
   @override
   void initState() {
@@ -33,20 +37,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var fetchstorename = await SharedPrefHelper.getpref("store_name");
     var fetchdesignation = await SharedPrefHelper.getpref("designation");
 
-
-
-
     setState(() {
-     username = fetchedUsername;
+      username = fetchedUsername;
       email = fetchEmail;
-      emp_name = fetchempname;
+      empName = fetchempname;
       storeName = fetchstorename;
       designation = fetchdesignation;
-
     });
   }
-
-
 
   void handleTabClick(String tab) {
     if (tab == 'leaderboard') {
@@ -63,20 +61,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget renderBadgeView() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: GridView.count(
         crossAxisCount: 3,
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
         children: [
-          _buildBadgeItem(Icons.access_time, Color(0xFF5EDEC3), Color(0xFFC9F2E9)),
-          _buildBadgeItem(Icons.bar_chart, Color(0xFFFFC93D), Color(0xFFFFF9C2)),
-          _buildBadgeItem(Icons.public, Color(0xFF6BB8FF), Color(0xFFD6F0FF)),
-          _buildBadgeItem(Icons.emoji_events, Color(0xFFFF6B84), Color(0xFFFFD6DD)),
-          _buildBadgeItem(Icons.extension, Color(0xFF6A5AE0), Color(0xFFC4D0FB)),
-          _buildBadgeItem(Icons.lock, Color(0xFF7B7676), Color(0xFFEBEBEB)),
+          _buildBadgeItem(Icons.access_time, const Color(0xFF5EDEC3),
+              const Color(0xFFC9F2E9)),
+          _buildBadgeItem(Icons.bar_chart, const Color(0xFFFFC93D),
+              const Color(0xFFFFF9C2)),
+          _buildBadgeItem(
+              Icons.public, const Color(0xFF6BB8FF), const Color(0xFFD6F0FF)),
+          _buildBadgeItem(Icons.emoji_events, const Color(0xFFFF6B84),
+              const Color(0xFFFFD6DD)),
+          _buildBadgeItem(Icons.extension, const Color(0xFF6A5AE0),
+              const Color(0xFFC4D0FB)),
+          _buildBadgeItem(
+              Icons.lock, const Color(0xFF7B7676), const Color(0xFFEBEBEB)),
         ],
       ),
     );
@@ -100,11 +104,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget renderStatisticsView() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: Column(
         children: [
           // Congratulations Message
-          Column(
+          const Column(
             children: [
               Text(
                 "You've handled a total of",
@@ -124,10 +128,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           // Circular Progress
-          Container(
+          const SizedBox(
             width: 128,
             height: 128,
             child: Stack(
@@ -140,7 +144,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     value: 27 / 30,
                     strokeWidth: 8,
                     backgroundColor: Color(0xFFEBEBEB),
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF565ADD)),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xFF565ADD)),
                   ),
                 ),
                 Text(
@@ -154,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           // Stats Cards
           Row(
@@ -164,9 +169,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: Color(0xFFEBEBEB)),
+                    side: const BorderSide(color: Color(0xFFEBEBEB)),
                   ),
-                  child: Padding(
+                  child: const Padding(
                     padding: EdgeInsets.all(16),
                     child: Column(
                       children: [
@@ -193,11 +198,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [Color(0xFF565ADD), Color(0xFF6A5AE0)],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
@@ -206,11 +211,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   child: Stack(
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.all(16),
                         child: Column(
                           children: [
-                            Icon(Icons.phone_disabled, color: Colors.white, size: 24),
+                            Icon(Icons.phone_disabled,
+                                color: Colors.white, size: 24),
                             SizedBox(height: 8),
                             Text(
                               "21",
@@ -237,11 +243,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Container(
                           width: 24,
                           height: 24,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Color(0xFFFF6B84),
                             shape: BoxShape.circle,
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               "8",
                               style: TextStyle(
@@ -289,11 +295,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
-
-
       body: Column(
         children: [
-
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -301,7 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Header with background
                   Container(
                     height: 192,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       // color: Color(0xFF565ADD),
                       gradient: LinearGradient(
                         colors: [Color(0xFF565ADD), Color(0xFF6A5AE0)],
@@ -330,23 +333,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // Profile Avatar
                   Transform.translate(
-                    offset: Offset(0, -48),
+                    offset: const Offset(0, -48),
                     child: Container(
                       width: 96,
                       height: 96,
                       decoration: BoxDecoration(
-                        color: Color(0xFFDFDFDF),
+                        color: const Color(0xFFDFDFDF),
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 4),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 8,
-                            offset: Offset(0, 4),
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.person,
                         color: Color(0xFF7B7676),
                         size: 40,
@@ -356,33 +359,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // User Info
                   Transform.translate(
-                    offset: Offset(0, -32),
+                    offset: const Offset(0, -32),
                     child: Column(
                       children: [
                         Text(
-                          emp_name,
-                          style: TextStyle(
+                          empName,
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF1A1A1A),
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
                               width: 8,
                               height: 8,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Color(0xFF565ADD),
                                 shape: BoxShape.circle,
                               ),
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Text(
                               storeName,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: Color(0xFF565ADD),
                               ),
@@ -395,24 +398,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // Stats Card
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [Color(0xFF565ADD), Color(0xFF6A5AE0)],
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Padding(
+                      child: const Padding(
                         padding: EdgeInsets.all(16),
                         child: Row(
                           children: [
                             Expanded(
                               child: Column(
                                 children: [
-                                  Icon(Icons.star, color: Colors.white, size: 24),
+                                  Icon(Icons.star,
+                                      color: Colors.white, size: 24),
                                   SizedBox(height: 4),
                                   Text(
                                     "POINTS",
@@ -435,7 +439,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  Icon(Icons.public, color: Colors.white, size: 24),
+                                  Icon(Icons.public,
+                                      color: Colors.white, size: 24),
                                   SizedBox(height: 4),
                                   Text(
                                     "TOTAL RANK",
@@ -458,7 +463,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  Icon(Icons.bar_chart, color: Colors.white, size: 24),
+                                  Icon(Icons.bar_chart,
+                                      color: Colors.white, size: 24),
                                   SizedBox(height: 4),
                                   Text(
                                     "STOREWISE RANK",
@@ -484,14 +490,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
 
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
                   // Navigation Tabs
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _buildTab("Badge", "badge"),
-                      SizedBox(width: 32),
+                      const SizedBox(width: 32),
                       // _buildTab("Statistics", "statistics"),
                       // SizedBox(width: 32),
                       _buildTab("Leaderboard", "leaderboard"),
@@ -504,44 +510,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // User Details
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 28,vertical: 32),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 28, vertical: 32),
                     child: Align(
-                      alignment: Alignment.centerLeft, // Explicitly aligning to the left
+                      alignment: Alignment
+                          .centerLeft, // Explicitly aligning to the left
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start, // Keep this for the left alignment of the text
+                        crossAxisAlignment: CrossAxisAlignment
+                            .start, // Keep this for the left alignment of the text
                         children: [
-                          _buildUserDetail("Name", emp_name),
-                          SizedBox(height: 8,),
-
+                          _buildUserDetail("Name", empName),
+                          const SizedBox(
+                            height: 8,
+                          ),
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
                             thickness: 0.2, // Thin line
                             indent: 0, // Left indentation
                             endIndent: 0, // Right indentation
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           _buildUserDetail("Email", email),
-                          SizedBox(height: 8,),
-
+                          const SizedBox(
+                            height: 8,
+                          ),
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
                             thickness: 0.2, // Thin line
                             indent: 0, // Left indentation
                             endIndent: 0, // Right indentation
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           _buildUserDetail("Company Name", storeName),
-                          SizedBox(height: 8,),
-
+                          const SizedBox(
+                            height: 8,
+                          ),
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
                             thickness: 0.2, // Thin line
                             indent: 0, // Left indentation
                             endIndent: 0, // Right indentation
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           _buildUserDetail("Position", designation),
-                          SizedBox(height: 8,),
+                          const SizedBox(
+                            height: 8,
+                          ),
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
                             thickness: 0.2, // Thin line
@@ -553,41 +567,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
 
-
                   // Sign Out Button
 
-                   Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                      child: SizedBox(
-                        
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () async{
-                            await SharedPrefHelper.setIsloginValue(false);
-                            Get.offAll(Routes.login);                          },
-                          style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            side: BorderSide(color: Color(0xFFEBEBEB)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 32),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: () async {
+                          await SharedPrefHelper.setIsloginValue(false);
+                          Get.offAll(Routes.login);
+                        },
+                        style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            side: const BorderSide(color: Color(0xFFEBEBEB)),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
-
-
                             ),
-                            backgroundColor: Color(0XFFF6F6F6)
-
-                          ),
-                          child: Text(
-                            "Sign Out",
-                            style: TextStyle(
+                            backgroundColor: const Color(0XFFF6F6F6)),
+                        child: const Text(
+                          "Sign Out",
+                          style: TextStyle(
                               color: Color(0xFF1A1A1A),
                               fontWeight: FontWeight.w600,
-                              fontSize: 18
-                            ),
-                          ),
+                              fontSize: 18),
                         ),
                       ),
                     ),
-
+                  ),
 
                   const SizedBox(height: 80), // Space for bottom navigation
                 ],
@@ -596,35 +604,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      // bottomNavigationBar: Container(
-      //   height: 80,
-      //   decoration: BoxDecoration(
-      //     color: Colors.white,
-      //     border: Border(top: BorderSide(color: Color(0xFFEBEBEB))),
-      //   ),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //     children: [
-      //       _buildBottomNavItem(Icons.home, "Home", false),
-      //       _buildBottomNavItem(Icons.trending_up, "Analytics", false),
-      //       Container(
-      //         width: 56,
-      //         height: 56,
-      //         decoration: BoxDecoration(
-      //           gradient: LinearGradient(
-      //             colors: [Color(0xFF565ADD), Color(0xFF6A5AE0)],
-      //             begin: Alignment.centerLeft,
-      //             end: Alignment.centerRight,
-      //           ),
-      //           shape: BoxShape.circle,
-      //         ),
-      //         child: Icon(Icons.mic, color: Colors.white, size: 24),
-      //       ),
-      //       _buildBottomNavItem(Icons.history, "History", false),
-      //       _buildBottomNavItem(Icons.person, "Profile", true),
-      //     ],
-      //   ),
-      // ),
+      bottomNavigationBar: Obx(() => CustomBottomNavigation(
+            isRecording: Get.isRegistered<HomeController>()
+                ? Get.find<HomeController>().isRecording.value
+                : false,
+            onMicPressed: () {
+              // Check current recording state before navigation
+              final isCurrentlyRecording = Get.isRegistered<HomeController>()
+                  ? Get.find<HomeController>().isRecording.value
+                  : false;
+
+              developer.log(
+                  '📱 Profile: Mic button pressed - isRecording: $isCurrentlyRecording',
+                  name: 'ProfileScreen');
+
+              // Schedule recording toggle (start or stop) based on current state
+              // If recording, we'll stop. If not recording, we'll start.
+              scheduleRecordingToggleAfterNavigation(
+                  'Profile', !isCurrentlyRecording);
+
+              // Redirect to home screen
+              Get.offAllNamed(Routes.home);
+            },
+            isMicEnabled: false,
+          )),
     );
   }
 
@@ -638,15 +641,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title,
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              color: isActive ? Color(0xFF565ADD) : Color(0xFF9D9D9D),
+              color:
+                  isActive ? const Color(0xFF565ADD) : const Color(0xFF9D9D9D),
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           if (isActive)
             Container(
               width: 20,
               height: 2,
-              color: Color(0xFF565ADD),
+              color: const Color(0xFF565ADD),
             ),
         ],
       ),
@@ -659,16 +663,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: Color(0xFF565ADD),
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w500,
             color: Color(0xFF1A1A1A),
           ),
@@ -676,5 +680,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
-
 }

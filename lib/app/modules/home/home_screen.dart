@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -9,12 +10,13 @@ import '../live_nudges/widget_page.dart';
 import 'controllers/home_controller.dart';
 import 'controllers/mark_conversation_controller.dart';
 import 'widgets/recording_header.dart';
+import '../../widgets/custom_bottom_navigation.dart';
 import '../../routes/app_routes.dart';
 import '../setting/setting_screen_view.dart';
 import '../../core/services/storage/sharedPrefHelper.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({super.key});
 
   final HomeController controller = Get.put(HomeController());
   final LocationController locationController = Get.put(LocationController());
@@ -23,8 +25,17 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => _showExitDialog(context),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          final shouldPop = await _showExitDialog(context);
+          if (shouldPop == true) {
+            // Use Get.back() which is safer for async operations
+            Get.back();
+          }
+        }
+      },
       child: SafeArea(
         child: Scaffold(
           key: scaffoldKey,
@@ -134,7 +145,10 @@ class HomeScreen extends StatelessWidget {
             onTap: () => Get.to(() => SettingsPage()),
           ),
           ListTile(
-            leading: const Icon(Icons.logout,weight: 22,),
+            leading: const Icon(
+              Icons.logout,
+              weight: 22,
+            ),
             title: const Text('Sign Out'),
             onTap: () async {
               await SharedPrefHelper.setIsloginValue(false);
@@ -368,14 +382,15 @@ class HomeScreen extends StatelessWidget {
                 child: Obx(() {
                   return InkWell(
                     onTap: () async {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      await Future.delayed(const Duration(milliseconds: 100));
-
+                      // Validate before async gap to avoid BuildContext usage across async gaps
                       if (!conversationController.formKey.currentState!
                           .validate()) {
                         _showValidationToast(context);
                         return;
                       }
+
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      await Future.delayed(const Duration(milliseconds: 100));
 
                       var message = await conversationController.submitForm();
 
@@ -580,9 +595,14 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _toggleRecording() {
+    developer.log(
+        '_toggleRecording called - isRecording: ${controller.isRecording.value}',
+        name: 'HomeScreen');
     if (controller.isRecording.value) {
+      developer.log('Calling stopRecordingManually...', name: 'HomeScreen');
       controller.stopRecordingManually();
     } else {
+      developer.log('Calling startRecordingManually...', name: 'HomeScreen');
       controller.startRecordingManually();
     }
   }
@@ -604,7 +624,7 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 30,
-                      backgroundColor: Colors.red.withOpacity(0.1),
+                      backgroundColor: Colors.red.withValues(alpha: 0.1),
                       child: const Icon(Icons.exit_to_app,
                           color: Colors.red, size: 30),
                     ),
