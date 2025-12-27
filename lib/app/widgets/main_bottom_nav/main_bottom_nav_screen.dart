@@ -4,7 +4,7 @@ import '../../modules/home/home_screen.dart';
 import '../../modules/analytics/analytics_widget.dart';
 import '../../modules/conversation/conversation_view.dart';
 import '../../modules/profile/profile_page.dart';
-import '../custom_bottom_navigation.dart';
+import 'custom_bottom_navigation.dart';
 import '../../modules/home/controllers/home_controller.dart';
 import '../../core/utils/recording_helper.dart';
 import 'main_bottom_nav_controller.dart';

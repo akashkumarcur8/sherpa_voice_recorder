@@ -9,7 +9,7 @@ import '../home/controllers/home_controller.dart';
 import '../realtime_conversation/realtime_convesation_page.dart';
 import 'controller/conversation_controller.dart';
 import '../../widgets/filter_bottom_sheet_widget.dart';
-import '../../widgets/custom_bottom_navigation.dart';
+import '../../widgets/main_bottom_nav/custom_bottom_navigation.dart';
 import '../../routes/app_routes.dart';
 import '../../core/utils/recording_helper.dart';
 import 'widgets/mark_conversation_dialog.dart';
