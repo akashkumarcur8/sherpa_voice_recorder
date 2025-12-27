@@ -1,5 +1,4 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
-import 'package:mice_activeg/app/modules/home/home_screen.dart';
 import '../modules/analytics/analytics_widget.dart';
 import '../modules/analytics/bindings/analytics_binding.dart';
 import '../modules/complaint_center/bindings/complaint_center_binding.dart';
@@ -18,6 +17,8 @@ import '../modules/profile/profile_page.dart';
 import '../modules/raise_ticket/bindings/raise_ticket_binding.dart';
 import '../modules/raise_ticket/views/raise_ticket_screen.dart';
 import '../modules/splash_screen/SpleshScreen.dart';
+import '../widgets/main_bottom_nav/main_bottom_nav_screen.dart';
+import '../widgets/main_bottom_nav/bindings/main_bottom_nav_binding.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -30,10 +31,36 @@ class AppPages {
       name: Routes.onboarding,
       page: () => OnboardingScreen(),
     ),
+    // Main Bottom Navigation Screen - Uses IndexedStack to keep all screens in memory
+    // This prevents reloading when switching between bottom nav tabs
     GetPage(
       name: Routes.home,
-      page: () =>  HomeScreen(),
-      binding: HomeBinding(),
+      page: () => const MainBottomNavScreen(),
+      bindings: [
+        MainBottomNavBinding(),
+        HomeBinding(),
+        AnalyticsBinding(),
+        ConversationViewBinding(),
+      ],
+    ),
+
+    // Keep individual routes for direct navigation (optional, for backward compatibility)
+    // These can be removed if you always want to use MainBottomNavScreen
+    GetPage(
+      name: Routes.analyticsDashboard,
+      page: () => const AnalyticsDashboard(),
+      binding: AnalyticsBinding(),
+    ),
+
+    GetPage(
+      name: Routes.conversationView,
+      page: () => const ConversationView(),
+      binding: ConversationViewBinding(),
+    ),
+
+    GetPage(
+      name: Routes.profile,
+      page: () => const ProfileScreen(),
     ),
 
     GetPage(
@@ -61,25 +88,8 @@ class AppPages {
     ),
 
     GetPage(
-      name: Routes.analyticsDashboard,
-      page: () => const AnalyticsDashboard(),
-      binding: AnalyticsBinding(),
-    ),
-
-    GetPage(
-      name: Routes.conversationView,
-      page: () => const ConversationView(),
-      binding: ConversationViewBinding(),
-    ),
-
-    GetPage(
-      name: Routes.profile,
-      page: () => const ProfileScreen(),
-    ),
-
-    GetPage(
       name: Routes.login,
-      page: () =>  const LoginView(),
+      page: () => const LoginView(),
       binding: LoginBinding(),
     ),
   ];

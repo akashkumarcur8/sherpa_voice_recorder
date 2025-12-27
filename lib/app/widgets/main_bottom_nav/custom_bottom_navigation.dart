@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../routes/app_routes.dart';
+import 'main_bottom_nav/main_bottom_nav_controller.dart';
 
 class CustomBottomNavigation extends StatelessWidget {
   final bool isRecording;
@@ -19,6 +20,12 @@ class CustomBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Try to get the MainBottomNavController if we're in the main bottom nav screen
+    final MainBottomNavController? navController =
+        Get.isRegistered<MainBottomNavController>()
+            ? Get.find<MainBottomNavController>()
+            : null;
+
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -27,35 +34,52 @@ class CustomBottomNavigation extends StatelessWidget {
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(Icons.home, 'Home', _currentRoute == Routes.home,
-                  Routes.home),
-              _buildNavItem(
-                  Icons.bar_chart,
-                  'Analytics',
-                  _currentRoute == Routes.analyticsDashboard,
-                  Routes.analyticsDashboard),
-              _buildMicButton(),
-              _buildNavItem(
-                  Icons.history,
-                  'History',
-                  _currentRoute == Routes.conversationView,
-                  Routes.conversationView),
-              _buildNavItem(Icons.person, 'Profile',
-                  _currentRoute == Routes.profile, Routes.profile),
-            ],
-          ),
+          child: Obx(() {
+            // Use controller's current index if available, otherwise fall back to route checking
+            final int currentIndex = navController?.currentIndex.value ??
+                _getIndexFromRoute(_currentRoute);
+
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(Icons.home, 'Home', currentIndex == 0,
+                    Routes.home, 0, navController),
+                _buildNavItem(Icons.bar_chart, 'Analytics', currentIndex == 1,
+                    Routes.analyticsDashboard, 1, navController),
+                _buildMicButton(),
+                _buildNavItem(Icons.history, 'History', currentIndex == 2,
+                    Routes.conversationView, 2, navController),
+                _buildNavItem(Icons.person, 'Profile', currentIndex == 3,
+                    Routes.profile, 3, navController),
+              ],
+            );
+          }),
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(
-      IconData icon, String label, bool isActive, String route) {
+  // Helper method to get index from route when controller is not available
+  int _getIndexFromRoute(String route) {
+    if (route == Routes.home) return 0;
+    if (route == Routes.analyticsDashboard) return 1;
+    if (route == Routes.conversationView) return 2;
+    if (route == Routes.profile) return 3;
+    return 0; // Default to home
+  }
+
+  Widget _buildNavItem(IconData icon, String label, bool isActive, String route,
+      int index, MainBottomNavController? navController) {
     return InkWell(
-      onTap: () => Get.toNamed(route),
+      onTap: () {
+        // If we have the nav controller, use it to switch indices (persistent navigation)
+        // Otherwise, use regular Get.toNamed (fallback for direct navigation)
+        if (navController != null) {
+          navController.changeIndex(index);
+        } else {
+          Get.toNamed(route);
+        }
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Column(

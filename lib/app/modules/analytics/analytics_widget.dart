@@ -6,10 +6,6 @@ import 'dart:developer' as developer;
 import 'dart:math' as math;
 import '../leaderboard/leaderboard_dashboard.dart';
 import 'analytics_controller.dart';
-import '../../widgets/custom_bottom_navigation.dart';
-import '../home/controllers/home_controller.dart';
-import '../../routes/app_routes.dart';
-import '../../core/utils/recording_helper.dart';
 
 class AnalyticsDashboard extends StatefulWidget {
   const AnalyticsDashboard({super.key});
@@ -609,30 +605,31 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
           ),
         );
       }),
-      bottomNavigationBar: Obx(() => CustomBottomNavigation(
-            isRecording: Get.isRegistered<HomeController>()
-                ? Get.find<HomeController>().isRecording.value
-                : false,
-            onMicPressed: () {
-              // Check current recording state before navigation
-              final isCurrentlyRecording = Get.isRegistered<HomeController>()
-                  ? Get.find<HomeController>().isRecording.value
-                  : false;
-
-              developer.log(
-                  'Analytics: Mic button pressed - isRecording: $isCurrentlyRecording',
-                  name: 'AnalyticsDashboard');
-
-              // Schedule recording toggle (start or stop) based on current state
-              // If recording, we'll stop. If not recording, we'll start.
-              scheduleRecordingToggleAfterNavigation(
-                  'Analytics', !isCurrentlyRecording);
-
-              // Redirect to home screen
-              Get.offAllNamed(Routes.home);
-            },
-            isMicEnabled: false,
-          )),
+      // Bottom navigation is handled by MainBottomNavScreen when used in IndexedStack
+      // bottomNavigationBar: Obx(() => CustomBottomNavigation(
+      //       isRecording: Get.isRegistered<HomeController>()
+      //           ? Get.find<HomeController>().isRecording.value
+      //           : false,
+      //       onMicPressed: () {
+      //         // Check current recording state before navigation
+      //         final isCurrentlyRecording = Get.isRegistered<HomeController>()
+      //             ? Get.find<HomeController>().isRecording.value
+      //             : false;
+      //
+      //         developer.log(
+      //             'Analytics: Mic button pressed - isRecording: $isCurrentlyRecording',
+      //             name: 'AnalyticsDashboard');
+      //
+      //         // Schedule recording toggle (start or stop) based on current state
+      //         // If recording, we'll stop. If not recording, we'll start.
+      //         scheduleRecordingToggleAfterNavigation(
+      //             'Analytics', !isCurrentlyRecording);
+      //
+      //         // Redirect to home screen
+      //         Get.offAllNamed(Routes.home);
+      //       },
+      //       isMicEnabled: false,
+      //     )),
     );
   }
 
@@ -790,7 +787,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Today\'s Analytics',
           style: TextStyle(
             color: Color(0xFF565ADD),
@@ -798,7 +795,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Row(
           children: [
             Expanded(
@@ -808,7 +805,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 Icons.phone,
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: _buildMetricCard(
                 'Today\'s Avg Score',
@@ -832,7 +829,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Agent Analytics',
                   style: TextStyle(
                     color: Color(0xFF565ADD),
@@ -842,7 +839,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 ),
                 Text(
                   '($currentDateRange)',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF9D9D9D),
                     fontSize: 14,
                   ),
@@ -856,12 +853,12 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
               },
               borderRadius: BorderRadius.circular(8),
               child: Container(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Color(0xFF565ADD).withValues(alpha: 0.1),
+                  color: const Color(0xFF565ADD).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.tune,
                   color: Color(0xFF565ADD),
                   size: 20,
@@ -870,7 +867,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Row(
           children: [
             Expanded(
@@ -880,7 +877,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 Icons.phone,
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: _buildMetricCard(
                 'Avg Score',
@@ -890,9 +887,9 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _buildChartCard(),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _buildScoreCards(),
       ],
     );
@@ -900,9 +897,9 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
   Widget _buildMetricCard(String title, String value, IconData icon) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFFEBEBEB),
+        color: const Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -910,18 +907,18 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF9D9D9D),
               fontSize: 12,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 value,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFF1A1A1A),
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -929,7 +926,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
               ),
               Icon(
                 icon,
-                color: Color(0xFF565ADD),
+                color: const Color(0xFF565ADD),
                 size: 32,
               ),
             ],
@@ -941,9 +938,9 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
   Widget _buildChartCard() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFFEBEBEB),
+        color: const Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -954,13 +951,13 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
               Container(
                 width: 8,
                 height: 8,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFF565ADD),
                   shape: BoxShape.circle,
                 ),
               ),
-              SizedBox(width: 8),
-              Text(
+              const SizedBox(width: 8),
+              const Text(
                 'AGENT\'S SCORE',
                 style: TextStyle(
                   color: Color(0xFF1A1A1A),
@@ -968,8 +965,8 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              Spacer(),
-              Text(
+              const Spacer(),
+              const Text(
                 'Tap points for details',
                 style: TextStyle(
                   color: Color(0xFF9D9D9D),
@@ -979,12 +976,12 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
               ),
             ],
           ),
-          SizedBox(height: 16),
-          Container(
+          const SizedBox(height: 16),
+          SizedBox(
             height: 120,
             child: LineChart(
               LineChartData(
-                gridData: FlGridData(show: false),
+                gridData: const FlGridData(show: false),
                 titlesData: FlTitlesData(
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
@@ -993,7 +990,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       getTitlesWidget: (value, meta) {
                         return Text(
                           value.toInt().toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xFF9D9D9D),
                             fontSize: 10,
                           ),
@@ -1021,30 +1018,30 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         final i = v.toInt();
                         return i < c.chartLabels.length
                             ? Text(c.chartLabels[i],
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 10, color: Color(0xFF9D9D9D)))
-                            : Text('');
+                            : const Text('');
                       },
                     ),
                   ),
-                  rightTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
                   LineChartBarData(
                     spots: c.chartSpots,
                     isCurved: true,
-                    color: Color(0xFF565ADD),
+                    color: const Color(0xFF565ADD),
                     barWidth: 2,
                     belowBarData: BarAreaData(
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          Color(0xFFB1BFFF).withValues(alpha: 0.8),
-                          Color(0xFFB1BFFF).withValues(alpha: 0.1),
+                          const Color(0xFFB1BFFF).withValues(alpha: 0.8),
+                          const Color(0xFFB1BFFF).withValues(alpha: 0.1),
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -1055,7 +1052,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       getDotPainter: (spot, percent, barData, index) {
                         return FlDotCirclePainter(
                           radius: 6,
-                          color: Color(0xFF565ADD),
+                          color: const Color(0xFF565ADD),
                           strokeWidth: 2,
                           strokeColor: Colors.white,
                         );
@@ -1119,10 +1116,10 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
   Widget _buildScoreCards() => Column(
         children: [
           _buildScoreCard('Agent\'s Score', c.agentScore.value.toString()),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           _buildScoreCard(
               'Avg Product Score', c.avgProductScore.value.toString()),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           _buildScoreCard(
               'Avg Behavior Score', c.avgBehaviorScore.value.toString()),
         ],
@@ -1130,9 +1127,9 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
   Widget _buildScoreCard(String title, String score) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFFEBEBEB),
+        color: const Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -1140,7 +1137,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF1A1A1A),
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -1148,7 +1145,7 @@ class AnalyticsDashboardState extends State<AnalyticsDashboard> {
           ),
           Text(
             score,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF1A1A1A),
               fontSize: 24,
               fontWeight: FontWeight.bold,

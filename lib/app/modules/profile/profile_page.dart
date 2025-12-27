@@ -4,9 +4,6 @@ import 'package:get/get.dart';
 import '../../core/services/storage/sharedPrefHelper.dart';
 import '../../routes/app_routes.dart';
 import '../leaderboard/leaderboard_dashboard.dart';
-import '../../widgets/custom_bottom_navigation.dart';
-import '../home/controllers/home_controller.dart';
-import '../../core/utils/recording_helper.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -577,7 +574,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       child: OutlinedButton(
                         onPressed: () async {
                           await SharedPrefHelper.setIsloginValue(false);
-                          Get.offAll(Routes.login);
+                          Get.offAllNamed(Routes.login);
                         },
                         style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -604,30 +601,31 @@ class ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Obx(() => CustomBottomNavigation(
-            isRecording: Get.isRegistered<HomeController>()
-                ? Get.find<HomeController>().isRecording.value
-                : false,
-            onMicPressed: () {
-              // Check current recording state before navigation
-              final isCurrentlyRecording = Get.isRegistered<HomeController>()
-                  ? Get.find<HomeController>().isRecording.value
-                  : false;
-
-              developer.log(
-                  '📱 Profile: Mic button pressed - isRecording: $isCurrentlyRecording',
-                  name: 'ProfileScreen');
-
-              // Schedule recording toggle (start or stop) based on current state
-              // If recording, we'll stop. If not recording, we'll start.
-              scheduleRecordingToggleAfterNavigation(
-                  'Profile', !isCurrentlyRecording);
-
-              // Redirect to home screen
-              Get.offAllNamed(Routes.home);
-            },
-            isMicEnabled: false,
-          )),
+      // Bottom navigation is handled by MainBottomNavScreen when used in IndexedStack
+      // bottomNavigationBar: Obx(() => CustomBottomNavigation(
+      //       isRecording: Get.isRegistered<HomeController>()
+      //           ? Get.find<HomeController>().isRecording.value
+      //           : false,
+      //       onMicPressed: () {
+      //         // Check current recording state before navigation
+      //         final isCurrentlyRecording = Get.isRegistered<HomeController>()
+      //             ? Get.find<HomeController>().isRecording.value
+      //             : false;
+      //
+      //         developer.log(
+      //             '📱 Profile: Mic button pressed - isRecording: $isCurrentlyRecording',
+      //             name: 'ProfileScreen');
+      //
+      //         // Schedule recording toggle (start or stop) based on current state
+      //         // If recording, we'll stop. If not recording, we'll start.
+      //         scheduleRecordingToggleAfterNavigation(
+      //             'Profile', !isCurrentlyRecording);
+      //
+      //         // Redirect to home screen
+      //         Get.offAllNamed(Routes.home);
+      //       },
+      //       isMicEnabled: false,
+      //     )),
     );
   }
 

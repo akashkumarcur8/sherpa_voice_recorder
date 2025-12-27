@@ -413,29 +413,30 @@ class _ConversationViewState extends State<ConversationView> {
             ),
           ),
         ),
-        bottomNavigationBar: Obx(() => CustomBottomNavigation(
-              isRecording: Get.isRegistered<HomeController>()
-                  ? Get.find<HomeController>().isRecording.value
-                  : false,
-              onMicPressed: () {
-                // Check current recording state before navigation
-                final isCurrentlyRecording = Get.isRegistered<HomeController>()
-                    ? Get.find<HomeController>().isRecording.value
-                    : false;
-
-                developer.log(
-                    '📱 Conversation: Mic button pressed - isRecording: $isCurrentlyRecording');
-
-                // Schedule recording toggle (start or stop) based on current state
-                // If recording, we'll stop. If not recording, we'll start.
-                scheduleRecordingToggleAfterNavigation(
-                    'Conversation', !isCurrentlyRecording);
-
-                // Redirect to home screen
-                Get.offAllNamed(Routes.home);
-              },
-              isMicEnabled: false,
-            )),
+        // Bottom navigation is handled by MainBottomNavScreen when used in IndexedStack
+        // bottomNavigationBar: Obx(() => CustomBottomNavigation(
+        //       isRecording: Get.isRegistered<HomeController>()
+        //           ? Get.find<HomeController>().isRecording.value
+        //           : false,
+        //       onMicPressed: () {
+        //         // Check current recording state before navigation
+        //         final isCurrentlyRecording = Get.isRegistered<HomeController>()
+        //             ? Get.find<HomeController>().isRecording.value
+        //             : false;
+        //
+        //         developer.log(
+        //             '📱 Conversation: Mic button pressed - isRecording: $isCurrentlyRecording');
+        //
+        //         // Schedule recording toggle (start or stop) based on current state
+        //         // If recording, we'll stop. If not recording, we'll start.
+        //         scheduleRecordingToggleAfterNavigation(
+        //             'Conversation', !isCurrentlyRecording);
+        //
+        //         // Redirect to home screen
+        //         Get.offAllNamed(Routes.home);
+        //       },
+        //       isMicEnabled: false,
+        //     )),
       ),
     );
   }

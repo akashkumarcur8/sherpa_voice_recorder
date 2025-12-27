@@ -10,7 +10,6 @@ import '../live_nudges/widget_page.dart';
 import 'controllers/home_controller.dart';
 import 'controllers/mark_conversation_controller.dart';
 import 'widgets/recording_header.dart';
-import '../../widgets/custom_bottom_navigation.dart';
 import '../../routes/app_routes.dart';
 import '../setting/setting_screen_view.dart';
 import '../../core/services/storage/sharedPrefHelper.dart';
@@ -81,10 +80,11 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          bottomNavigationBar: Obx(() => CustomBottomNavigation(
-                isRecording: controller.isRecording.value,
-                onMicPressed: () => _toggleRecording(),
-              )),
+          // Bottom navigation is handled by MainBottomNavScreen when used in IndexedStack
+          // bottomNavigationBar: Obx(() => CustomBottomNavigation(
+          //       isRecording: controller.isRecording.value,
+          //       onMicPressed: () => _toggleRecording(),
+          //     )),
         ),
       ),
     );
