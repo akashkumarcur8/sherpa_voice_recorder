@@ -1,8 +1,8 @@
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../routes/app_routes.dart';
-import 'main_bottom_nav/main_bottom_nav_controller.dart';
+import '../../routes/app_routes.dart';
+import 'main_bottom_nav_controller.dart';
 
 class CustomBottomNavigation extends StatelessWidget {
   final bool isRecording;
