@@ -72,6 +72,7 @@ class DeliveryTrackerService {
         Uri.parse('$baseUrl/notify-users'),
         headers: _headers,
         body: json.encode({
+          'notification_type': 'send-reminder',
           'userIds': userIds,
         }),
       ).timeout(
