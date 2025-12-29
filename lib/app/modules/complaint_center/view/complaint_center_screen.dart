@@ -2,21 +2,67 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/complaint_controller.dart';
 import 'widgets/complaint_header.dart';
-import 'widgets/complaint_stats_card.dart';
+import '../../../core/constants/app_text_styles.dart';
 import 'widgets/complaint_list_item.dart';
+import 'widgets/complaint_filter_bar.dart';
+import 'widgets/complaint_search_bar.dart';
 
 class ComplaintCenterScreen extends StatelessWidget {
   const ComplaintCenterScreen({Key? key}) : super(key: key);
+
+  FilterType _mapFilterType(ComplaintFilter filter) {
+    switch (filter) {
+      case ComplaintFilter.all:
+        return FilterType.all;
+      case ComplaintFilter.pending:
+        return FilterType.pending;
+      case ComplaintFilter.closed:
+        return FilterType.closed;
+      case ComplaintFilter.last7Days:
+        return FilterType.last7Days;
+      case ComplaintFilter.last30Days:
+        return FilterType.last30Days;
+      case ComplaintFilter.resolved:
+        return FilterType.closed; // Map resolved to closed
+    }
+  }
+
+  ComplaintFilter _mapComplaintFilter(FilterType filterType) {
+    switch (filterType) {
+      case FilterType.all:
+        return ComplaintFilter.all;
+      case FilterType.pending:
+        return ComplaintFilter.pending;
+      case FilterType.closed:
+        return ComplaintFilter.closed;
+      case FilterType.last7Days:
+        return ComplaintFilter.last7Days;
+      case FilterType.last30Days:
+        return ComplaintFilter.last30Days;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ComplaintController());
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           const ComplaintHeader(),
+          Obx(() => ComplaintFilterBar(
+                selectedFilter: _mapFilterType(controller.selectedFilter.value),
+                onFilterChanged: (filterType) {
+                  controller.applyFilter(_mapComplaintFilter(filterType));
+                },
+              )),
+          ComplaintSearchBar(
+            controller: controller.searchController,
+            onChanged: (query) {
+              controller.searchComplaints(query);
+            },
+          ),
           Expanded(
             child: Obx(() {
               if (controller.isLoading.value) {
@@ -36,55 +82,103 @@ class ComplaintCenterScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ComplaintStatsCard(
-                              count: controller.pendingCount.value.toString(),
-                              label: 'Pending\nComplaints',
-                              backgroundColor: Colors.white,
-                              textColor: Colors.black,
-                              isSelected: controller.selectedFilter.value ==
-                                  ComplaintFilter.pending,
-                              onTap: () => controller.applyFilter(
-                                  ComplaintFilter.pending),
-                            ),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                            width: 1,
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: ComplaintStatsCard(
-                              count: controller.resolvedCount.value.toString(),
-                              label: 'Resolved\nComplaints',
-                              backgroundColor:  Colors.white,
-                              textColor: Colors.black,
-                              isSelected: controller.selectedFilter.value ==
-                                  ComplaintFilter.resolved,
-                              onTap: () => controller.applyFilter(
-                                  ComplaintFilter.resolved),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: ComplaintStatsCard(
-                              count: controller.totalCount.value.toString(),
-                              label: 'Total\nComplaints',
-                              backgroundColor: Colors.white,
-                              textColor: Colors.black,
-                              isSelected: controller.selectedFilter.value ==
-                                  ComplaintFilter.all,
-                              onTap: () => controller.applyFilter(
-                                  ComplaintFilter.all),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Total Complaints',
+                                    style:
+                                        AppTextStyles.interRegular10.copyWith(
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    controller.totalCount.value.toString(),
+                                    style:
+                                        AppTextStyles.interSemiBold20.copyWith(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                            Flexible(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Resolved Complaints',
+                                    style:
+                                        AppTextStyles.interRegular10.copyWith(
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    controller.resolvedCount.value.toString(),
+                                    style:
+                                        AppTextStyles.interSemiBold20.copyWith(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Pending Complaints',
+                                    style:
+                                        AppTextStyles.interRegular10.copyWith(
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    controller.pendingCount.value.toString(),
+                                    style:
+                                        AppTextStyles.interSemiBold20.copyWith(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 24),
                       Text(
                         controller.filterTitle,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF5B6BC6),
+                        style: AppTextStyles.interSemiBold14.copyWith(
+                          color: const Color(0xFF1A1A1A),
                         ),
                       ),
                       const SizedBox(height: 16),

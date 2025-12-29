@@ -68,23 +68,22 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Manrope
+      fonts:
+        - asset: asset/fonts/manrope-bold.otf
+          weight: 700
+    - family: Inter
+      fonts:
+        - asset: asset/fonts/Inter_18pt-Regular.ttf
+          weight: 400
+        - asset: asset/fonts/Inter_18pt-Medium.ttf
+          weight: 500
+        - asset: asset/fonts/Inter_18pt-SemiBold.ttf
+          weight: 600
   assets:
     - asset/images/
-    - asset/icons/lightbulb.svg
-    - asset/icons/edit_note.svg
-    - asset/icons/small_bulb.svg
-    - asset/icons/stars.svg
-    - asset/icons/map.svg
-    - asset/icons/complaint.svg
-    - asset/icons/delivery_tracker.svg
-    - asset/icons/faq_guide.svg
-    - asset/icons/home.svg
-    - asset/icons/history.svg
-    - asset/icons/analytics.svg
-    - asset/icons/ticket.svg
-    - asset/icons/profile.svg
-    - asset/icons/setting.svg
-    - asset/icons/calender.svg
+    - asset/icons/
 
 
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../core/constants/app_text_styles.dart';
 
 class ComplaintHeader extends StatelessWidget {
   const ComplaintHeader({Key? key}) : super(key: key);
@@ -13,19 +14,20 @@ class ComplaintHeader extends StatelessWidget {
       ),
       child: SafeArea(
         bottom: false,
-        child: Row(
+        child: Stack(
+          alignment: Alignment.center,
           children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Get.back(),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Get.back(),
+              ),
             ),
-            const SizedBox(width: 8),
-            const Text(
+            Text(
               'Complaint Center',
-              style: TextStyle(
+              style: AppTextStyles.manropeBold20.copyWith(
                 color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
               ),
             ),
           ],

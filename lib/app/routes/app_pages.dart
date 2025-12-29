@@ -13,7 +13,7 @@ import '../modules/delivery_tracker/views/delivery_tracker_screen.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/view/login_view.dart';
-import '../modules/onboarding/onboarding_screen.dart';
+import '../modules/home/onboarding/onboarding_screen.dart';
 import '../modules/profile/profile_page.dart';
 import '../modules/raise_ticket/bindings/raise_ticket_binding.dart';
 import '../modules/raise_ticket/views/raise_ticket_screen.dart';
@@ -32,54 +32,46 @@ class AppPages {
     ),
     GetPage(
       name: Routes.home,
-      page: () =>  HomeScreen(),
+      page: () => HomeScreen(),
       binding: HomeBinding(),
     ),
-
     GetPage(
       name: Routes.deliveryTracker,
       page: () => const DeliveryTrackerScreen(),
       binding: DeliveryTrackerBinding(),
     ),
-
     GetPage(
       name: Routes.agentDetail,
       page: () => const AgentDetailScreen(),
       binding: AgentDetailBinding(),
     ),
-
     GetPage(
       name: Routes.raiseTicket,
       page: () => const RaiseTicketScreen(),
       binding: RaiseTicketBinding(),
     ),
-
     GetPage(
       name: Routes.complaintcenter,
       page: () => const ComplaintCenterScreen(),
       binding: ComplaintCenterBinding(),
     ),
-
     GetPage(
       name: Routes.analyticsDashboard,
       page: () => const AnalyticsDashboard(),
       binding: AnalyticsBinding(),
     ),
-
     GetPage(
       name: Routes.conversationView,
       page: () => const ConversationView(),
       binding: ConversationViewBinding(),
     ),
-
     GetPage(
       name: Routes.profile,
       page: () => const ProfileScreen(),
     ),
-
     GetPage(
       name: Routes.login,
-      page: () =>  const LoginView(),
+      page: () => const LoginView(),
       binding: LoginBinding(),
     ),
   ];
