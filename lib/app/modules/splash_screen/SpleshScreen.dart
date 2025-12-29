@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../core/services/storage/sharedPrefHelper.dart';
 import '../../routes/app_routes.dart';
-import '../onboarding/onboarding_screen.dart';
+import '../home/onboarding/onboarding_screen.dart';
 
 class SpleshScreen extends StatefulWidget {
   const SpleshScreen({super.key});
