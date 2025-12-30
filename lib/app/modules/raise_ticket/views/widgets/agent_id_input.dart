@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../controllers/raise_ticket_controller.dart';
 
 class AgentIdInput extends GetView<RaiseTicketController> {
-  const AgentIdInput({Key? key}) : super(key: key);
+  const AgentIdInput({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,14 +14,14 @@ class AgentIdInput extends GetView<RaiseTicketController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
-          text: TextSpan(
+          text: const TextSpan(
             text: AppStrings.agentId,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: AppColors.textPrimary,
             ),
-            children: const [
+            children:  [
               TextSpan(
                 text: AppStrings.requiredField,
                 style: TextStyle(
@@ -38,6 +39,18 @@ class AgentIdInput extends GetView<RaiseTicketController> {
             hintStyle: TextStyle(
               color: AppColors.textHint,
               fontSize: 14,
+            ),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.all(12),
+              child: SvgPicture.asset(
+                'asset/icons/person.svg',
+                width: 20,
+                height: 20,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.textSecondary,
+                  BlendMode.srcIn,
+                ),
+              ),
             ),
             filled: true,
             fillColor: AppColors.cardBackground,

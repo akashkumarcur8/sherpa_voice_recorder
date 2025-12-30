@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import '../models/complaint_model.dart';
 import '../models/complaint_response.dart';
 import '../services/complaint_service.dart';
@@ -8,6 +10,16 @@ enum ComplaintFilter { all, pending, resolved, closed, last7Days, last30Days }
 
 class ComplaintController extends GetxController {
   final ComplaintService _service = ComplaintService();
+  final Logger _logger = Logger(
+    printer: PrettyPrinter(
+      methodCount: 0,
+      errorMethodCount: 5,
+      lineLength: 50,
+      colors: true,
+      printEmojis: true,
+      dateTimeFormat: DateTimeFormat.none,
+    ),
+  );
 
   // Replace these with actual values from your auth/user management
   final int managerId = 4973;
@@ -24,6 +36,7 @@ class ComplaintController extends GetxController {
   final Rx selectedFilter = ComplaintFilter.all.obs;
   final RxString searchQuery = ''.obs;
   final TextEditingController searchController = TextEditingController();
+  Timer? _searchDebounceTimer;
 
   @override
   void onInit() {
@@ -33,6 +46,7 @@ class ComplaintController extends GetxController {
 
   @override
   void onClose() {
+    _searchDebounceTimer?.cancel();
     searchController.dispose();
     super.onClose();
   }
@@ -41,36 +55,73 @@ class ComplaintController extends GetxController {
     try {
       isLoading.value = true;
 
-      final ComplaintResponse response = await _service.fetchComplaints(
-        managerId: managerId,
-        companyId: companyId,
-      );
+      // Determine API parameters based on current filter
+      String? statusParam;
+      String? dateRangeParam;
 
-      if (response.status) {
-        // Store complaints
-        pendingComplaints.value = response.pendingComplaints as List<ComplaintModel>;
-        resolvedComplaints.value = response.resolvedComplaints as List<ComplaintModel>;
-
-        // Update statistics
-        pendingCount.value = response.statistics.pending;
-        resolvedCount.value = response.statistics.resolved;
-        totalCount.value = response.statistics.total;
-
-        // Apply current filter
-        applyFilter(selectedFilter.value);
-      } else {
-        Get.snackbar(
-          'Error',
-          response.message,
-          snackPosition: SnackPosition.BOTTOM,
-        );
+      switch (selectedFilter.value) {
+        case ComplaintFilter.pending:
+          statusParam = 'pending';
+          break;
+        case ComplaintFilter.resolved:
+          statusParam = 'resolved';
+          break;
+        case ComplaintFilter.closed:
+          statusParam = 'closed';
+          break;
+        case ComplaintFilter.last7Days:
+          dateRangeParam = 'last7Days';
+          break;
+        case ComplaintFilter.last30Days:
+          dateRangeParam = 'last30Days';
+          break;
+        case ComplaintFilter.all:
+        default:
+          // No filter params - get all
+          break;
       }
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to load complaints: $e',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+
+      // If there's a search query, use search API
+      if (searchQuery.value.isNotEmpty) {
+        final searchResults = await _service.searchComplaints(
+          managerId: managerId,
+          companyId: companyId,
+          query: searchQuery.value,
+        );
+        displayedComplaints.value = searchResults;
+        
+        // Update counts from search results
+        pendingCount.value = searchResults.where((c) => c.status.toLowerCase() == 'pending').length;
+        resolvedCount.value = searchResults.where((c) => c.status.toLowerCase() == 'resolved').length;
+        totalCount.value = searchResults.length;
+      } else {
+        // Use main complaints API with filters
+        final ComplaintResponse response = await _service.fetchComplaints(
+          managerId: managerId,
+          companyId: companyId,
+          status: statusParam,
+          dateRange: dateRangeParam,
+        );
+
+        if (response.status) {
+          // Store complaints
+          pendingComplaints.value = response.pendingComplaints as List<ComplaintModel>;
+          resolvedComplaints.value = response.resolvedComplaints as List<ComplaintModel>;
+
+          // Update statistics
+          pendingCount.value = response.statistics.pending;
+          resolvedCount.value = response.statistics.resolved;
+          totalCount.value = response.statistics.total;
+
+          // Display based on filter
+          _updateDisplayedComplaints();
+        } else {
+          _logger.w('⚠️ ComplaintController: API returned status false: ${response.message}');
+        }
+      }
+    } catch (e, stackTrace) {
+      _logger.e('❌ ComplaintController: Error fetching complaints: $e', error: e, stackTrace: stackTrace);
+      // Don't show technical errors to users - just log them
     } finally {
       isLoading.value = false;
     }
@@ -78,62 +129,52 @@ class ComplaintController extends GetxController {
 
   void applyFilter(ComplaintFilter filter) {
     selectedFilter.value = filter;
-    _applyFilterAndSearch();
+    // Clear search when changing filter
+    searchQuery.value = '';
+    searchController.clear();
+    fetchComplaintsData();
   }
 
   void searchComplaints(String query) {
+    // Cancel previous timer
+    _searchDebounceTimer?.cancel();
+    
     searchQuery.value = query;
-    _applyFilterAndSearch();
+    
+    if (query.isEmpty) {
+      // If search is cleared, reload with current filter immediately
+      fetchComplaintsData();
+    } else {
+      // Debounce search API calls - wait 500ms after user stops typing
+      _searchDebounceTimer = Timer(const Duration(milliseconds: 500), () {
+        fetchComplaintsData();
+      });
+    }
   }
 
-  void _applyFilterAndSearch() {
-    List<ComplaintModel> filteredComplaints;
-
+  void _updateDisplayedComplaints() {
     switch (selectedFilter.value) {
       case ComplaintFilter.pending:
-        filteredComplaints = List.from(pendingComplaints);
+        displayedComplaints.value = List.from(pendingComplaints);
         break;
       case ComplaintFilter.resolved:
       case ComplaintFilter.closed:
-        filteredComplaints = List.from(resolvedComplaints);
+        displayedComplaints.value = List.from(resolvedComplaints);
         break;
       case ComplaintFilter.last7Days:
-        final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
-        filteredComplaints = [
-          ...pendingComplaints,
-          ...resolvedComplaints,
-        ].where((complaint) {
-          return complaint.dateTime.isAfter(sevenDaysAgo);
-        }).toList();
-        break;
       case ComplaintFilter.last30Days:
-        final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-        filteredComplaints = [
-          ...pendingComplaints,
-          ...resolvedComplaints,
-        ].where((complaint) {
-          return complaint.dateTime.isAfter(thirtyDaysAgo);
-        }).toList();
-        break;
-      case ComplaintFilter.all:
-      default:
-        filteredComplaints = [
+        // For date range filters, API already returns filtered results
+        displayedComplaints.value = [
           ...pendingComplaints,
           ...resolvedComplaints,
         ];
         break;
-    }
-
-    // Apply search filter
-    if (searchQuery.value.isNotEmpty) {
-      final query = searchQuery.value.toLowerCase();
-      displayedComplaints.value = filteredComplaints.where((complaint) {
-        return complaint.complaintId.toLowerCase().contains(query) ||
-            complaint.agentName.toLowerCase().contains(query) ||
-            complaint.agentId.toLowerCase().contains(query);
-      }).toList();
-    } else {
-      displayedComplaints.value = filteredComplaints;
+      case ComplaintFilter.all:
+        displayedComplaints.value = [
+          ...pendingComplaints,
+          ...resolvedComplaints,
+        ];
+        break;
     }
   }
 
@@ -147,7 +188,14 @@ class ComplaintController extends GetxController {
         return 'Pending Complaints';
       case ComplaintFilter.resolved:
         return 'Resolved Complaints';
+      case ComplaintFilter.closed:
+        return 'Closed Complaints';
+      case ComplaintFilter.last7Days:
+        return 'Last 7 Days';
+      case ComplaintFilter.last30Days:
+        return 'Last 30 Days';
       case ComplaintFilter.all:
+        return 'Recent Tickets';
       default:
         return 'Recent Tickets';
     }
@@ -159,7 +207,14 @@ class ComplaintController extends GetxController {
         return 'No pending complaints found';
       case ComplaintFilter.resolved:
         return 'No resolved complaints found';
+      case ComplaintFilter.closed:
+        return 'No closed complaints found';
+      case ComplaintFilter.last7Days:
+        return 'No complaints found in last 7 days';
+      case ComplaintFilter.last30Days:
+        return 'No complaints found in last 30 days';
       case ComplaintFilter.all:
+        return 'No complaints found';
       default:
         return 'No complaints found';
     }

@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_text_styles.dart';
+import '../core/constants/app_text_styles.dart';
 
-class ComplaintSearchBar extends StatelessWidget {
+/// A reusable search bar widget with customizable hint text
+///
+/// This widget provides a consistent search input field that can be used
+/// across different screens with different hint texts.
+class AppSearchBar extends StatelessWidget {
+  /// Text editing controller for the search field
   final TextEditingController controller;
+
+  /// Callback when the search text changes
   final ValueChanged<String>? onChanged;
 
-  const ComplaintSearchBar({
+  /// Hint text to display in the search field
+  final String hintText;
+
+  const AppSearchBar({
     super.key,
     required this.controller,
     this.onChanged,
+    required this.hintText,
   });
 
   @override
@@ -26,7 +37,7 @@ class ComplaintSearchBar extends StatelessWidget {
           color: Colors.black,
         ),
         decoration: InputDecoration(
-          hintText: 'Search Ticket ID/Agent Name',
+          hintText: hintText,
           hintStyle: AppTextStyles.interRegular12.copyWith(
             color: Colors.grey.shade600,
           ),
@@ -45,4 +56,3 @@ class ComplaintSearchBar extends StatelessWidget {
     );
   }
 }
-

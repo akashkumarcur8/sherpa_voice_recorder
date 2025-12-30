@@ -1,45 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/complaint_controller.dart';
-import 'widgets/complaint_header.dart';
 import '../../../core/constants/app_text_styles.dart';
-import 'widgets/complaint_list_item.dart';
-import 'widgets/complaint_filter_bar.dart';
-import 'widgets/complaint_search_bar.dart';
+import '../../../widgets/filter_bar.dart';
+import '../../../widgets/search_bar.dart';
+import '../../../widgets/ticket_list_item.dart';
+import '../../../widgets/app_header.dart';
+import '../../../widgets/ticket_details_bottom_sheet.dart';
 
 class ComplaintCenterScreen extends StatelessWidget {
-  const ComplaintCenterScreen({Key? key}) : super(key: key);
+  const ComplaintCenterScreen({super.key});
 
-  FilterType _mapFilterType(ComplaintFilter filter) {
-    switch (filter) {
-      case ComplaintFilter.all:
-        return FilterType.all;
-      case ComplaintFilter.pending:
-        return FilterType.pending;
-      case ComplaintFilter.closed:
-        return FilterType.closed;
-      case ComplaintFilter.last7Days:
-        return FilterType.last7Days;
-      case ComplaintFilter.last30Days:
-        return FilterType.last30Days;
-      case ComplaintFilter.resolved:
-        return FilterType.closed; // Map resolved to closed
-    }
-  }
-
-  ComplaintFilter _mapComplaintFilter(FilterType filterType) {
-    switch (filterType) {
-      case FilterType.all:
-        return ComplaintFilter.all;
-      case FilterType.pending:
-        return ComplaintFilter.pending;
-      case FilterType.closed:
-        return ComplaintFilter.closed;
-      case FilterType.last7Days:
-        return ComplaintFilter.last7Days;
-      case FilterType.last30Days:
-        return ComplaintFilter.last30Days;
-    }
+  List<FilterOption> _buildFilterOptions() {
+    return [
+      const FilterOption(
+        label: 'All',
+        value: ComplaintFilter.all,
+      ),
+      const FilterOption(
+        label: 'Pending',
+        iconPath: 'asset/icons/pending.svg',
+        value: ComplaintFilter.pending,
+      ),
+      const FilterOption(
+        label: 'Closed',
+        iconPath: 'asset/icons/closed.svg',
+        value: ComplaintFilter.closed,
+      ),
+      const FilterOption(
+        label: 'Last 7 days',
+        iconPath: 'asset/icons/calender.svg',
+        value: ComplaintFilter.last7Days,
+      ),
+      const FilterOption(
+        label: 'Last 30 days',
+        iconPath: 'asset/icons/calender.svg',
+        value: ComplaintFilter.last30Days,
+      ),
+    ];
   }
 
   @override
@@ -50,15 +48,19 @@ class ComplaintCenterScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          const ComplaintHeader(),
-          Obx(() => ComplaintFilterBar(
-                selectedFilter: _mapFilterType(controller.selectedFilter.value),
-                onFilterChanged: (filterType) {
-                  controller.applyFilter(_mapComplaintFilter(filterType));
+          const AppHeader(
+            title: 'Complaint Center',
+          ),
+          Obx(() => FilterBar(
+                filters: _buildFilterOptions(),
+                selectedValue: controller.selectedFilter.value,
+                onFilterChanged: (filter) {
+                  controller.applyFilter(filter as ComplaintFilter);
                 },
               )),
-          ComplaintSearchBar(
+          AppSearchBar(
             controller: controller.searchController,
+            hintText: 'Search Ticket ID/Agent Name',
             onChanged: (query) {
               controller.searchComplaints(query);
             },
@@ -208,8 +210,27 @@ class ComplaintCenterScreen extends StatelessWidget {
                         )
                       else
                         ...controller.displayedComplaints.map((complaint) {
-                          return ComplaintListItem(complaint: complaint);
-                        }).toList(),
+                          return TicketListItem(
+                            ticketId: complaint.complaintId,
+                            dateTime: complaint.dateTime,
+                            issueRaised: complaint.issueRaised,
+                            status: complaint.status,
+                            agentName: complaint.agentName,
+                            complaintId: complaint.complaintId,
+                            onTap: () {
+                              TicketDetailsBottomSheet.show(
+                                context,
+                                ticketId: complaint.complaintId,
+                                dateTime: complaint.dateTime,
+                                issueRaised: complaint.issueRaised,
+                                description: complaint.description,
+                                status: complaint.status,
+                                agentId: complaint.agentId,
+                                agentName: complaint.agentName,
+                              );
+                            },
+                          );
+                        }),
                     ],
                   ),
                 ),

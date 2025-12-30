@@ -51,6 +51,7 @@ dependencies:
   geolocator: ^14.0.2
   geocoding: ^4.0.0
   photo_view: ^0.14.0
+  logger: ^2.0.2+1
   fluttertoast:
     git:
       url: https://github.com/MarlonJD/FlutterToast.git
@@ -73,6 +74,8 @@ flutter:
       fonts:
         - asset: asset/fonts/manrope-bold.otf
           weight: 700
+        - asset: asset/fonts/manrope-semibold.otf
+          weight: 600
     - family: Inter
       fonts:
         - asset: asset/fonts/Inter_18pt-Regular.ttf
