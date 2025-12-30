@@ -54,10 +54,17 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
-  // You can add more variations as needed:
-  // static const TextStyle manropeBold16 = TextStyle(
-  //   fontFamily: manropeBold,
-  //   fontSize: 16,
-  //   fontWeight: FontWeight.bold,
-  // );
+  // Inter Regular - Font Size 14
+  static const TextStyle interRegular14 = TextStyle(
+    fontFamily: inter,
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+  );
+
+  // Manrope SemiBold - Font Size 16
+  static const TextStyle manropeSemibold16 = TextStyle(
+    fontFamily: manropeBold,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
 }

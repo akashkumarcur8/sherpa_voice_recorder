@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_text_styles.dart';
+import '../core/constants/app_colors.dart';
+import '../core/constants/app_text_styles.dart';
 
-enum FilterType {
-  all,
-  pending,
-  closed,
-  last7Days,
-  last30Days,
-}
+/// A reusable filter bar widget that displays horizontal filter chips
+///
+/// This widget can be used with any filter type by providing a list of
+/// FilterOption objects and handling the selection via callbacks.
+class FilterBar extends StatelessWidget {
+  /// List of filter options to display
+  final List<FilterOption> filters;
 
-class ComplaintFilterBar extends StatelessWidget {
-  final FilterType selectedFilter;
-  final Function(FilterType) onFilterChanged;
+  /// Currently selected filter value (must match one of the filter values)
+  final dynamic selectedValue;
 
-  const ComplaintFilterBar({
+  /// Callback when a filter is tapped
+  final Function(dynamic) onFilterChanged;
+
+  const FilterBar({
     super.key,
-    required this.selectedFilter,
+    required this.filters,
+    required this.selectedValue,
     required this.onFilterChanged,
   });
 
@@ -30,44 +33,42 @@ class ComplaintFilterBar extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            _FilterChip(
-              label: 'All',
-              isSelected: selectedFilter == FilterType.all,
-              onTap: () => onFilterChanged(FilterType.all),
-            ),
-            const SizedBox(width: 8),
-            _FilterChip(
-              label: 'Pending',
-              iconPath: 'asset/icons/pending.svg',
-              isSelected: selectedFilter == FilterType.pending,
-              onTap: () => onFilterChanged(FilterType.pending),
-            ),
-            const SizedBox(width: 8),
-            _FilterChip(
-              label: 'Closed',
-              iconPath: 'asset/icons/closed.svg',
-              isSelected: selectedFilter == FilterType.closed,
-              onTap: () => onFilterChanged(FilterType.closed),
-            ),
-            const SizedBox(width: 8),
-            _FilterChip(
-              label: 'Last 7 days',
-              iconPath: 'asset/icons/calender.svg',
-              isSelected: selectedFilter == FilterType.last7Days,
-              onTap: () => onFilterChanged(FilterType.last7Days),
-            ),
-            const SizedBox(width: 8),
-            _FilterChip(
-              label: 'Last 30 days',
-              iconPath: 'asset/icons/calender.svg',
-              isSelected: selectedFilter == FilterType.last30Days,
-              onTap: () => onFilterChanged(FilterType.last30Days),
-            ),
+            for (int i = 0; i < filters.length; i++) ...[
+              if (i > 0) const SizedBox(width: 8),
+              _FilterChip(
+                label: filters[i].label,
+                iconPath: filters[i].iconPath,
+                isSelected: _isSelected(filters[i].value),
+                onTap: () => onFilterChanged(filters[i].value),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
+
+  bool _isSelected(dynamic value) {
+    return selectedValue == value;
+  }
+}
+
+/// Represents a single filter option in the FilterBar
+class FilterOption {
+  /// Display label for the filter
+  final String label;
+
+  /// Optional icon path (SVG asset)
+  final String? iconPath;
+
+  /// Value associated with this filter (can be enum, string, etc.)
+  final dynamic value;
+
+  const FilterOption({
+    required this.label,
+    this.iconPath,
+    required this.value,
+  });
 }
 
 class _FilterChip extends StatelessWidget {
@@ -124,4 +125,3 @@ class _FilterChip extends StatelessWidget {
     );
   }
 }
-

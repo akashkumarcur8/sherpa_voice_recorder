@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import '../../../core/services/storage/sharedPrefHelper.dart';
+import '../../../core/constants/app_text_styles.dart';
 import '../models/ticket_query_model.dart';
 import '../models/ticket_model.dart';
 import '../services/raise_ticket_service.dart';
+import 'user_tickets_controller.dart';
+
 class RaiseTicketController extends GetxController {
   // Text editing controllers
   final agentIdController = TextEditingController();
   final descriptionController = TextEditingController();
   final RaiseTicketService _raiseTicketService = RaiseTicketService();
+  final Logger _logger = Logger(
+    printer: PrettyPrinter(
+      methodCount: 0,
+      errorMethodCount: 5,
+      lineLength: 50,
+      colors: true,
+      printEmojis: true,
+      dateTimeFormat: DateTimeFormat.none,
+    ),
+  );
 
   // Observable variables
   final RxList<TicketQuery> queries = <TicketQuery>[].obs;
@@ -84,10 +98,12 @@ class RaiseTicketController extends GetxController {
     }
 
     // Validate Description (if Others is selected)
-    if (showOthersDescription.value && descriptionController.text.trim().isEmpty) {
+    if (showOthersDescription.value &&
+        descriptionController.text.trim().isEmpty) {
       descriptionError.value = 'Please enter description';
       isValid = false;
-    } else if (showOthersDescription.value && descriptionController.text.trim().length < 10) {
+    } else if (showOthersDescription.value &&
+        descriptionController.text.trim().length < 10) {
       descriptionError.value = 'Description must be at least 10 characters';
       isValid = false;
     }
@@ -96,7 +112,6 @@ class RaiseTicketController extends GetxController {
   }
 
   Future<void> submitTicket() async {
-
     if (!_validateForm()) {
       return;
     }
@@ -119,33 +134,38 @@ class RaiseTicketController extends GetxController {
         createdAt: DateTime.now(),
       );
 
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
-
-      // TODO: Replace with actual API call
+      // Call API to create ticket
       final response = await _raiseTicketService.createTicket(ticket);
 
-
       // Show success dialog
-      if(response != null && response['status'] == true){
+      if (response != null && response['status'] == true) {
+        // Close bottom sheet - use Get.back() which doesn't require context
+        // This is safer after async operations as it doesn't depend on BuildContext
+        Get.back();
+
+        // Reset form
+        _resetForm();
+
+        // Small delay to ensure bottom sheet is closed before showing dialog
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        // Show success dialog
         _showSuccessDialog();
+
+        // Refresh tickets list after dialog closes (2 seconds)
+        Future.delayed(const Duration(seconds: 2), () {
+          // Refresh tickets list if UserTicketsController is registered
+          if (Get.isRegistered<UserTicketsController>()) {
+            Get.find<UserTicketsController>().refreshTickets();
+          }
+        });
       } else {
         throw Exception('Failed to raise ticket');
       }
-
-      // Reset form after successful submission
-      Future.delayed(const Duration(seconds: 2), () {
-        _resetForm();
-      });
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to raise ticket. Please try again.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.shade100,
-        colorText: Colors.red.shade900,
-        margin: const EdgeInsets.all(16),
-      );
+    } catch (e, stackTrace) {
+      _logger.e('❌ RaiseTicketController: Error submitting ticket: $e',
+          error: e, stackTrace: stackTrace);
+      // Don't show technical errors to users - just log them
     } finally {
       isLoading.value = false;
     }
@@ -166,34 +186,36 @@ class RaiseTicketController extends GetxController {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Green tick icon
               Container(
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: Colors.green.shade50,
+                  color: Colors.lightGreen
+                      .withValues(alpha: 0.2), // Light green with 0.2 alpha
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  Icons.check_circle,
-                  color: Colors.green.shade500,
-                  size: 50,
+                child: Center(
+                  child: Image.asset(
+                    'asset/images/green_tick.png',
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Ticket Raised',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+              Text(
+                'Successful',
+                style: AppTextStyles.interSemiBold20.copyWith(
+                  color: const Color(0xFF1A1A1A),
                 ),
               ),
               const SizedBox(height: 12),
               Text(
-                "We've received your request.\nTeam will notify you shortly.",
+                'Your ticket has been raised successfully.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
+                style: AppTextStyles.interRegular14.copyWith(
                   color: Colors.grey.shade600,
                   height: 1.5,
                 ),
