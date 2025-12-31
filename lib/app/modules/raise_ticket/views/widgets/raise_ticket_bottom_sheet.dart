@@ -71,16 +71,16 @@ class RaiseTicketBottomSheet extends StatelessWidget {
                 child: SingleChildScrollView(
                   controller: scrollController,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 8),
-                      const AgentIdInput(),
-                      const SizedBox(height: 20),
-                      const QueryDropdown(),
-                      const SizedBox(height: 20),
-                      const DescriptionInput(),
-                      const SizedBox(height: 20),
+                       SizedBox(height: 8),
+                       AgentIdInput(),
+                       SizedBox(height: 20),
+                       QueryDropdown(),
+                       SizedBox(height: 20),
+                       DescriptionInput(),
+                       SizedBox(height: 20),
                     ],
                   ),
                 ),

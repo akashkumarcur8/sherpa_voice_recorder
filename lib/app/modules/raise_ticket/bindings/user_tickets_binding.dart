@@ -5,7 +5,6 @@ import 'dart:developer' as developer;
 class UserTicketsBinding extends Bindings {
   @override
   void dependencies() {
-    print('🔗 UserTicketsBinding: Registering UserTicketsController');
     developer.log(
       '🔗 UserTicketsBinding: Registering UserTicketsController',
       name: 'UserTicketsBinding',

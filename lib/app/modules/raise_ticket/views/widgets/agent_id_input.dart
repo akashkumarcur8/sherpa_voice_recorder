@@ -36,7 +36,7 @@ class AgentIdInput extends GetView<RaiseTicketController> {
           controller: controller.agentIdController,
           decoration: InputDecoration(
             hintText: AppStrings.enterYourAgentId,
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               color: AppColors.textHint,
               fontSize: 14,
             ),
