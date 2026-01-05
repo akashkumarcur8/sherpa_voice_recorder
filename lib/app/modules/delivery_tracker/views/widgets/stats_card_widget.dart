@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_text_styles.dart';
 
 class StatsCardWidget extends StatelessWidget {
   final String value;
@@ -10,14 +11,14 @@ class StatsCardWidget extends StatelessWidget {
   final bool isSelected;
 
   const StatsCardWidget({
-    Key? key,
+    super.key,
     required this.value,
     required this.label,
     this.backgroundColor,
     this.borderColor,
     this.onTap,
     this.isSelected = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class StatsCardWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.white
-              : backgroundColor ?? AppColors.white,
+              : backgroundColor ?? const Color(0xFFF2F2F7),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? const Color(0xFF5B6BC6) : Colors.grey.shade300,
@@ -38,12 +39,12 @@ class StatsCardWidget extends StatelessWidget {
           // Add shadow for clickable effect
           boxShadow: onTap != null
               ? [
-            BoxShadow(
-              color: const Color(0xFF5B6BC6).withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ]
+                  BoxShadow(
+                    color: const Color(0xFF5B6BC6).withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
               : null,
         ),
         child: Column(
@@ -51,19 +52,15 @@ class StatsCardWidget extends StatelessWidget {
           children: [
             Text(
               value,
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: AppColors.black,
+              style: AppTextStyles.manropeBold32.copyWith(
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppColors.darkGrey,
-                fontWeight: FontWeight.w500,
+              style: AppTextStyles.manropeRegular12.copyWith(
+                color: const Color(0xFF1A1A1A),
               ),
               textAlign: TextAlign.center,
               maxLines: 1,

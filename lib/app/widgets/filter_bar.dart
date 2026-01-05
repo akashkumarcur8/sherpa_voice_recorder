@@ -11,7 +11,8 @@ class FilterBar extends StatelessWidget {
   /// List of filter options to display
   final List<FilterOption> filters;
 
-  /// Currently selected filter value (must match one of the filter values)
+  /// Currently selected filter value(s)
+  /// Can be a single value or a Set of values for multiple selection
   final dynamic selectedValue;
 
   /// Callback when a filter is tapped
@@ -27,28 +28,36 @@ class FilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       color: Colors.white,
+      width: double.infinity,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            for (int i = 0; i < filters.length; i++) ...[
-              if (i > 0) const SizedBox(width: 8),
-              _FilterChip(
-                label: filters[i].label,
-                iconPath: filters[i].iconPath,
-                isSelected: _isSelected(filters[i].value),
-                onTap: () => onFilterChanged(filters[i].value),
-              ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              for (int i = 0; i < filters.length; i++) ...[
+                if (i > 0) const SizedBox(width: 8),
+                _FilterChip(
+                  label: filters[i].label,
+                  iconPath: filters[i].iconPath,
+                  isSelected: _isSelected(filters[i].value),
+                  onTap: () => onFilterChanged(filters[i].value),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
   }
 
   bool _isSelected(dynamic value) {
+    // Support both single value and Set of values
+    if (selectedValue is Set) {
+      return selectedValue.contains(value);
+    }
     return selectedValue == value;
   }
 }

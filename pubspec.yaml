@@ -72,10 +72,12 @@ flutter:
   fonts:
     - family: Manrope
       fonts:
-        - asset: asset/fonts/manrope-bold.otf
-          weight: 700
+        - asset: asset/fonts/manrope-regular.otf
+          weight: 400
         - asset: asset/fonts/manrope-semibold.otf
           weight: 600
+        - asset: asset/fonts/manrope-bold.otf
+          weight: 700
     - family: Inter
       fonts:
         - asset: asset/fonts/Inter_18pt-Regular.ttf

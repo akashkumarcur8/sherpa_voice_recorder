@@ -7,13 +7,14 @@ class AgentModel {
   final String agentId;
   final String userId;
   final DeviceStatus deviceStatus;
-
+  final String? issueDate; // Optional issue date field
 
   AgentModel({
     required this.agentName,
     required this.agentId,
     required this.userId,
     required this.deviceStatus,
+    this.issueDate,
   });
 
   factory AgentModel.fromJson(Map<String, dynamic> json) {
@@ -24,6 +25,7 @@ class AgentModel {
       deviceStatus: json['deviceStatus'] == 'delivered'
           ? DeviceStatus.delivered
           : DeviceStatus.pending,
+      issueDate: json['issueDate'] ?? json['issue_date'] ?? json['dateOfDeviceDelivery'],
     );
   }
 
@@ -34,6 +36,7 @@ class AgentModel {
       'userId': userId,
       'deviceStatus':
       deviceStatus == DeviceStatus.delivered ? 'delivered' : 'pending',
+      if (issueDate != null) 'issueDate': issueDate,
     };
   }
 
@@ -42,12 +45,14 @@ class AgentModel {
     String? agentId,
     String? userId,
     DeviceStatus? deviceStatus,
+    String? issueDate,
   }) {
     return AgentModel(
       agentName: agentName ?? this.agentName,
       agentId: agentId ?? this.agentId,
       userId: userId ?? this.userId,
       deviceStatus: deviceStatus ?? this.deviceStatus,
+      issueDate: issueDate ?? this.issueDate,
     );
   }
 

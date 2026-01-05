@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import '../../../core/services/storage/sharedPrefHelper.dart';
-import '../../../core/constants/app_text_styles.dart';
 import '../models/ticket_query_model.dart';
 import '../models/ticket_model.dart';
 import '../services/raise_ticket_service.dart';
 import 'user_tickets_controller.dart';
+import '../views/widgets/success_dialog.dart';
 
 class RaiseTicketController extends GetxController {
   // Text editing controllers
@@ -150,7 +150,10 @@ class RaiseTicketController extends GetxController {
         await Future.delayed(const Duration(milliseconds: 300));
 
         // Show success dialog
-        _showSuccessDialog();
+        SuccessDialog.show(
+          title: 'Successful',
+          message: 'Your ticket has been raised successfully.',
+        );
 
         // Refresh tickets list after dialog closes (2 seconds)
         Future.delayed(const Duration(seconds: 2), () {
@@ -171,69 +174,6 @@ class RaiseTicketController extends GetxController {
     }
   }
 
-  void _showSuccessDialog() {
-    Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Green tick icon
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Colors.lightGreen
-                      .withValues(alpha: 0.2), // Light green with 0.2 alpha
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Image.asset(
-                    'asset/images/green_tick.png',
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Successful',
-                style: AppTextStyles.interSemiBold20.copyWith(
-                  color: const Color(0xFF1A1A1A),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Your ticket has been raised successfully.',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.interRegular14.copyWith(
-                  color: Colors.grey.shade600,
-                  height: 1.5,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      barrierDismissible: false,
-    );
-
-    // Auto close dialog after 2 seconds
-    Future.delayed(const Duration(seconds: 2), () {
-      if (Get.isDialogOpen ?? false) {
-        Get.back();
-      }
-    });
-  }
 
   void _resetForm() {
     agentIdController.clear();
