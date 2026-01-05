@@ -9,12 +9,26 @@ class AppTextStyles {
   AppTextStyles._();
 
   // Font Families
-  static const String manropeBold = 'Manrope';
+  static const String manrope = 'Manrope';
   static const String inter = 'Inter';
+
+  // Manrope Bold - Font Size 32 (for stats card numbers)
+  static const TextStyle manropeBold32 = TextStyle(
+    fontFamily: manrope,
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+  );
+
+  // Manrope Regular - Font Size 12 (for stats card labels)
+  static const TextStyle manropeRegular12 = TextStyle(
+    fontFamily: manrope,
+    fontSize: 12,
+    fontWeight: FontWeight.normal,
+  );
 
   // Manrope Bold - Font Size 20
   static const TextStyle manropeBold20 = TextStyle(
-    fontFamily: manropeBold,
+    fontFamily: manrope,
     fontSize: 20,
     fontWeight: FontWeight.bold,
   );
@@ -63,8 +77,15 @@ class AppTextStyles {
 
   // Manrope SemiBold - Font Size 16
   static const TextStyle manropeSemibold16 = TextStyle(
-    fontFamily: manropeBold,
+    fontFamily: manrope,
     fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
+
+  // Manrope SemiBold - Font Size 20
+  static const TextStyle manropeSemibold20 = TextStyle(
+    fontFamily: manrope,
+    fontSize: 20,
     fontWeight: FontWeight.w600,
   );
 }

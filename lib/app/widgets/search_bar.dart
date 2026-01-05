@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/constants/app_text_styles.dart';
+import '../core/constants/app_colors.dart';
 
 /// A reusable search bar widget with customizable hint text
 ///
@@ -41,9 +42,9 @@ class AppSearchBar extends StatelessWidget {
           hintStyle: AppTextStyles.interRegular12.copyWith(
             color: Colors.grey.shade600,
           ),
-          prefixIcon: Icon(
+          suffixIcon: const Icon(
             Icons.search,
-            color: Colors.grey.shade600,
+            color: AppColors.primary,
             size: 20,
           ),
           border: InputBorder.none,
