@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_routes.dart';
 import '../../faq_guide/faq_guide.dart';
-import '../../geo_tracking/map_widget.dart';
+// import '../../geo_tracking/map_widget.dart';
 import '../controllers/delivery_tracker_controller.dart';
 import 'widgets/stats_card_widget.dart';
 import '../../../widgets/search_bar.dart';
@@ -97,17 +97,17 @@ class DeliveryTrackerScreen extends GetView<DeliveryTrackerController> {
                   currentAccountPictureSize: const Size.square(50),
                 )),
           ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'asset/icons/map.svg',
-              width: 22,
-              height: 22,
-            ),
-            title: const Text('Geo-Tracking'),
-            onTap: () {
-              Get.to(() => GeoTrackingScreen());
-            },
-          ),
+          // ListTile(
+          //   leading: SvgPicture.asset(
+          //     'asset/icons/map.svg',
+          //     width: 22,
+          //     height: 22,
+          //   ),
+          //   title: const Text('Geo-Tracking'),
+          //   onTap: () {
+          //     Get.to(() => GeoTrackingScreen());
+          //   },
+          // ),
           ListTile(
             leading: SvgPicture.asset(
               'asset/icons/delivery_tracker.svg',

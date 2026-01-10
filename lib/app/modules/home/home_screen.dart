@@ -47,7 +47,8 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               //Live Nudge Section (if applicable)
-              LiveNudgeSection(isRecording: controller.isRecording.value),
+              Obx(() =>
+                  LiveNudgeSection(isRecording: controller.isRecording.value)),
               const SizedBox(height: 20),
 
               // Statistics Header
@@ -134,7 +135,10 @@ class HomeScreen extends StatelessWidget {
             onTap: () => Get.to(() => SettingsPage()),
           ),
           ListTile(
-            leading: const Icon(Icons.logout,weight: 22,),
+            leading: const Icon(
+              Icons.logout,
+              weight: 22,
+            ),
             title: const Text('Sign Out'),
             onTap: () async {
               await SharedPrefHelper.setIsloginValue(false);

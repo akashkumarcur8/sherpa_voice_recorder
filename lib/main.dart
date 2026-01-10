@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'app/config/firebase/firebase_options.dart';
 import 'app/core/services/foreground_service.dart';
@@ -13,9 +12,9 @@ import 'app/routes/app_pages.dart';
 import 'app/routes/app_routes.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Set preferred orientations
   SystemChrome.setPreferredOrientations([
@@ -32,33 +31,38 @@ void main() async{
   );
 
   // Initialize AuthService globally and keep it permanent
-    Get.put<AuthService>(AuthService(), permanent: true);
+  Get.put<AuthService>(AuthService(), permanent: true);
 
-     await initializeService();
+  await initializeService();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  OneSignal.initialize("69513239-9dd8-4a99-bd34-866da812fa40");
+  // OneSignal.initialize("69513239-9dd8-4a99-bd34-866da812fa40");
 
-  OneSignal.Notifications.requestPermission(true);
-
+  // OneSignal.Notifications.requestPermission(true);
 
   const AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('@drawable/ic_bg_service_small');
+      AndroidInitializationSettings('@drawable/ic_bg_service_small');
+
+  const DarwinInitializationSettings initializationSettingsIOS =
+      DarwinInitializationSettings(
+    requestAlertPermission: true,
+    requestBadgePermission: true,
+    requestSoundPermission: true,
+  );
 
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
+    iOS: initializationSettingsIOS,
   );
 
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
-    onDidReceiveNotificationResponse: (NotificationResponse response) {
-    },
+    onDidReceiveNotificationResponse: (NotificationResponse response) {},
   );
-    runApp(MyApp());
-
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -68,9 +72,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: Routes.splash,
       getPages: AppPages.pages,
-
-
     );
   }
 }
-

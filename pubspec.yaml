@@ -3,7 +3,7 @@ name: mice_activeg
 description: "Sherpa Voice Recorder."
 publish_to: 'none' # Prevents accidental publication to pub.dev
 
-version: 1.1.5+23
+version: 1.1.7+31
 
 environment:
   sdk: '>=3.4.1 <4.0.0'
@@ -66,6 +66,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: false
+  ios: true
+  image_path: "asset/images/newlogo.png"
+  remove_alpha_ios: false
 
 flutter:
   uses-material-design: true

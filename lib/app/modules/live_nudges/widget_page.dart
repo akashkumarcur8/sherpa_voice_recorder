@@ -10,14 +10,12 @@ class _OngoingCallHeader extends StatelessWidget {
   final VoidCallback onToggle;
   final bool isRecording;
 
-
-
-  const _OngoingCallHeader({
-    Key? key,
-    required this.isOpen,
-    required this.onToggle,
-    required this.isRecording
-  }) : super(key: key);
+  const _OngoingCallHeader(
+      {Key? key,
+      required this.isOpen,
+      required this.onToggle,
+      required this.isRecording})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +43,16 @@ class _OngoingCallHeader extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: isRecording? Color(0xFFE2FFE9):Color(0xFFFFEFEF),
+              color: isRecording ? Color(0xFFE2FFE9) : Color(0xFFFFEFEF),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: isRecording? Color(0xFF0EC16E) :Color(0xFFFF4444),width: .2),
+              border: Border.all(
+                  color: isRecording ? Color(0xFF0EC16E) : Color(0xFFFF4444),
+                  width: .2),
               boxShadow: [
                 BoxShadow(
-                  color: isRecording? Colors.green.withOpacity(0.2):Colors.red.withOpacity(0.2),
+                  color: isRecording
+                      ? Colors.green.withOpacity(0.2)
+                      : Colors.red.withOpacity(0.2),
                   blurRadius: 8,
                   spreadRadius: 1,
                 ),
@@ -68,16 +70,17 @@ class _OngoingCallHeader extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: isRecording? Color(0xFF00E244).withOpacity(0.2):Colors.red.withOpacity(0.2),
+                          color: isRecording
+                              ? Color(0xFF00E244).withOpacity(0.2)
+                              : Colors.red.withOpacity(0.2),
                           spreadRadius: 4,
                           blurRadius: 8,
                         ),
                       ],
                     ),
                   ),
-
                   const SizedBox(width: 8),
-                  if(isRecording) ...[
+                  if (isRecording) ...[
                     Text(
                       'Live',
                       style: TextStyle(
@@ -85,8 +88,7 @@ class _OngoingCallHeader extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-
-               ] else ...[
+                  ] else ...[
                     Text(
                       'Offline',
                       style: TextStyle(
@@ -95,8 +97,6 @@ class _OngoingCallHeader extends StatelessWidget {
                       ),
                     ),
                   ],
-
-
                 ],
               ),
             ),
@@ -121,7 +121,7 @@ class _OngoingCallHeader extends StatelessWidget {
 /// ——————— The main widget ———————
 class LiveNudgeSection extends StatefulWidget {
   final bool isRecording;
-   LiveNudgeSection({Key? key,required this.isRecording} ) : super(key: key);
+  LiveNudgeSection({Key? key, required this.isRecording}) : super(key: key);
 
   @override
   _LiveNudgeSectionState createState() => _LiveNudgeSectionState();
@@ -150,15 +150,14 @@ class _LiveNudgeSectionState extends State<LiveNudgeSection> {
     //   ctl.disconnect();
     // }
 
-
-    // Recording just started:
+    // Recording just stopped:
     if (oldWidget.isRecording && !widget.isRecording) {
-      ctl.nudges.clear();       // ← clear the list
+      ctl.nudges.clear(); // ← clear the list
       ctl.resetController();
       ctl.disconnect();
     }
 
-    // Recording just stopped:
+    // Recording just started:
     else if (!oldWidget.isRecording && widget.isRecording) {
       Future.delayed(Duration(milliseconds: 500), () {
         ctl.connect();
@@ -166,29 +165,21 @@ class _LiveNudgeSectionState extends State<LiveNudgeSection> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         const SizedBox(height: 12),
-
-
         _OngoingCallHeader(
           isOpen: isOpen,
           onToggle: () => setState(() => isOpen = !isOpen),
           isRecording: widget.isRecording,
-
         ),
-
         const SizedBox(height: 12),
-
-        if(widget.isRecording) ...[
+        if (widget.isRecording) ...[
           // ② Carousel + dots only when open
           if (isOpen)
             Obx(() {
-
               if (ctl.nudges.isEmpty) {
                 return const SizedBox(
                   height: 120,
@@ -219,7 +210,8 @@ class _LiveNudgeSectionState extends State<LiveNudgeSection> {
                                 'asset/icons/lightbulb.svg',
                                 // If you want to tint your SVG the same way you did with `color: border`,
                                 // use colorFilter:
-                                colorFilter: ColorFilter.mode(border, BlendMode.srcIn),
+                                colorFilter:
+                                    ColorFilter.mode(border, BlendMode.srcIn),
                                 width: 200,
                                 height: 200,
                                 // semanticsLabel is optional but good for accessibility:
@@ -265,9 +257,6 @@ class _LiveNudgeSectionState extends State<LiveNudgeSection> {
                                     //     AlwaysStoppedAnimation(border),
                                     //   ),
                                     // ),
-
-
-
                                   ],
                                 ),
 
@@ -279,8 +268,7 @@ class _LiveNudgeSectionState extends State<LiveNudgeSection> {
                                   final cur = ctl.currentPage.value;
                                   return Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children:
-                                    List.generate(count, (dotIndex) {
+                                    children: List.generate(count, (dotIndex) {
                                       final isActive = dotIndex == cur;
                                       return Container(
                                         margin: const EdgeInsets.symmetric(
@@ -292,7 +280,7 @@ class _LiveNudgeSectionState extends State<LiveNudgeSection> {
                                               ? Colors.black87
                                               : Colors.grey,
                                           borderRadius:
-                                          BorderRadius.circular(4),
+                                              BorderRadius.circular(4),
                                         ),
                                       );
                                     }),
@@ -308,24 +296,14 @@ class _LiveNudgeSectionState extends State<LiveNudgeSection> {
                 ),
               );
             }),
-
         ] else ...[
-          if(isOpen)
-       const SizedBox(
-      height: 60,
-      child: Center(child: Text('No ongoing call')),
-    ),
-
+          if (isOpen)
+            const SizedBox(
+              height: 60,
+              child: Center(child: Text('No ongoing call')),
+            ),
         ]
-
       ],
     );
   }
 }
-
-
-
-
-
-
-

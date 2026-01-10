@@ -66,14 +66,14 @@ class HomeController extends GetxController {
     await _loadUserData();
     await _audioService.initialize();
     await _fetchStatistics();
-    _startDeviceMonitoring();
+    //_startDeviceMonitoring();
   }
 
   /// Load user data from SharedPreferences
   Future<void> _loadUserData() async {
     username = await SharedPrefHelper.getpref("username") ?? "";
-    empName.value = await SharedPrefHelper.getpref("email") ?? "";
-    email.value = await SharedPrefHelper.getpref("emp_name") ?? "";
+    empName.value = await SharedPrefHelper.getpref("emp_name") ?? "";
+    email.value = await SharedPrefHelper.getpref("email") ?? "";
     storeName = await SharedPrefHelper.getpref("store_name") ?? "";
     empType = await SharedPrefHelper.getpref("emp_type") ?? "";
     companyId = await SharedPrefHelper.getpref("company_id") ?? "NA";

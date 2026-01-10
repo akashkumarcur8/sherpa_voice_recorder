@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../../core/services/storage/sharedPrefHelper.dart';
+
 class Nudge {
   final String text;
   final bool positive;
@@ -147,9 +148,6 @@ class Nudge {
 //   // }
 // }
 
-
-
-
 class NudgeController extends GetxController {
   final nudges = <Nudge>[].obs;
   final currentPage = 0.obs;
@@ -165,12 +163,13 @@ class NudgeController extends GetxController {
   bool _manuallyClosed = false;
 
   // ← ADDED: how many seconds between retries
-  final int _retrySeconds = 5;
+  final int _retrySeconds = 10;
 
   /// Call this when recording starts
   void connect() {
+    print('🔌 NudgeController.connect() called');
     if (_channel != null) return; // already connected
-    _manuallyClosed = false;      // ← ADDED: allow reconnects
+    _manuallyClosed = false; // ← ADDED: allow reconnects
     _connectWebSocket();
     // give the PageView time to attach
     Future.delayed(const Duration(milliseconds: 100), _startAutoScroll);
@@ -178,9 +177,11 @@ class NudgeController extends GetxController {
 
   /// Call this when recording stops
   void disconnect() {
-    _manuallyClosed = true;       // ← ADDED: prevent further reconnects
+    _manuallyClosed = true; // ← ADDED: prevent further reconnects
     _autoScrollTimer?.cancel();
-    try { _channel?.sink.close(); } catch (_) {}
+    try {
+      _channel?.sink.close();
+    } catch (_) {}
     _channel = null;
   }
 
@@ -205,20 +206,23 @@ class NudgeController extends GetxController {
 
   // ← CHANGED: added retry loop + onDone/onError hooks
   void _connectWebSocket() async {
-    final teamId    = await SharedPrefHelper.getpref("team_id");
+    print('connecting WebSocket.....');
+    final teamId = await SharedPrefHelper.getpref("team_id");
     final managerId = await SharedPrefHelper.getpref("manager_id");
-    final emailId   = await SharedPrefHelper.getpref("email");
+    final emailId = await SharedPrefHelper.getpref("email");
     final companyId = await SharedPrefHelper.getpref("company_id");
+    print(
+        'teamId $teamId, managerId $managerId, emailId $emailId, companyId $companyId');
 
     final url = Uri(
       scheme: 'wss',
       host: 'devreal.darwix.ai',
       path: '/ws/live-results',
       queryParameters: {
-        'user_id':     emailId,
-        'manager_id':  managerId,
-        'company_id':  companyId,
-        'team_id':     teamId,
+        'user_id': emailId,
+        'manager_id': managerId,
+        'company_id': companyId,
+        'team_id': teamId,
       },
     ).toString();
 
@@ -229,23 +233,22 @@ class NudgeController extends GetxController {
         _channel = IOWebSocketChannel.connect(url);
 
         _channel!.stream.listen(
-              (raw) {
+          (raw) {
             final msg = json.decode(raw);
             print('sfksjabfsk $msg');
             if (msg['action'] == 'analysis') {
               _parseNudges(msg['analysis_result']['response']);
             }
           },
-          onError: _handleSocketError,  // ← ADDED
-          onDone:  _handleSocketDone,   // ← ADDED
+          onError: _handleSocketError, // ← ADDED
+          onDone: _handleSocketDone, // ← ADDED
         );
 
         print('WebSocket connected!');
-        break;  // exit retry loop on success
-
+        break; // exit retry loop on success
       } catch (err) {
         print('WS connect failed: $err. Retrying in $_retrySeconds seconds…');
-        //await Future.delayed(Duration(seconds: _retrySeconds));
+        await Future.delayed(Duration(seconds: _retrySeconds));
       }
     }
   }
@@ -255,7 +258,7 @@ class NudgeController extends GetxController {
     print('WS connection closed by server');
     _channel = null;
     if (!_manuallyClosed) {
-     // Future.delayed(Duration(seconds: _retrySeconds), _connectWebSocket);
+      Future.delayed(Duration(seconds: _retrySeconds), _connectWebSocket);
     }
   }
 
@@ -264,7 +267,7 @@ class NudgeController extends GetxController {
     print('WS error: $error');
     _channel = null;
     if (!_manuallyClosed) {
-     // Future.delayed(Duration(seconds: _retrySeconds), _connectWebSocket);
+      Future.delayed(Duration(seconds: _retrySeconds), _connectWebSocket);
     }
   }
 
@@ -274,7 +277,8 @@ class NudgeController extends GetxController {
       (cat['content'] as Map).forEach((_, sub) {
         final text = (sub['nudges'] ?? '').toString().trim();
         if (text.isNotEmpty) {
-          final positive = (sub['value'] ?? '').toString().toLowerCase().contains('yes');
+          final positive =
+              (sub['value'] ?? '').toString().toLowerCase().contains('yes');
           parsed.add(Nudge(text: text, positive: positive));
         }
       });
@@ -288,7 +292,7 @@ class NudgeController extends GetxController {
   void _startAutoScroll() {
     _autoScrollTimer = Timer.periodic(
       const Duration(seconds: 10),
-          (_) {
+      (_) {
         if (nudges.isEmpty) return;
         if (pageCtrl.hasClients && nudges.isNotEmpty) {
           final next = (currentPage.value + 1) % nudges.length;
@@ -311,7 +315,3 @@ class NudgeController extends GetxController {
     Future.delayed(const Duration(milliseconds: 100), _startAutoScroll);
   }
 }
-
-
-
-

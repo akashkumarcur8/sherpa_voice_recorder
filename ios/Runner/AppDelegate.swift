@@ -19,7 +19,7 @@ import AVFoundation
 import CoreAudio
 import ExternalAccessory
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
 
     private let recorderChannel = "com.sherpa/record"
