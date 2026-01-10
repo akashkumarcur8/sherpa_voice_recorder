@@ -3,7 +3,7 @@ name: mice_activeg
 description: "Sherpa Voice Recorder."
 publish_to: 'none' # Prevents accidental publication to pub.dev
 
-version: 1.1.7+31
+version: 1.1.8+32
 
 environment:
   sdk: '>=3.4.1 <4.0.0'

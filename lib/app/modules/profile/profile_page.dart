@@ -13,11 +13,11 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String activeTab = 'badge';
-  String username="";
-  String email="";
-  String emp_name ="";
-  String storeName="";
-  String designation="";
+  String username = "";
+  String email = "";
+  String emp_name = "";
+  String storeName = "";
+  String designation = "";
 
   @override
   void initState() {
@@ -33,20 +33,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var fetchstorename = await SharedPrefHelper.getpref("store_name");
     var fetchdesignation = await SharedPrefHelper.getpref("designation");
 
-
-
-
     setState(() {
-     username = fetchedUsername;
+      username = fetchedUsername;
       email = fetchEmail;
       emp_name = fetchempname;
       storeName = fetchstorename;
       designation = fetchdesignation;
-
     });
   }
-
-
 
   void handleTabClick(String tab) {
     if (tab == 'leaderboard') {
@@ -71,11 +65,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
         children: [
-          _buildBadgeItem(Icons.access_time, Color(0xFF5EDEC3), Color(0xFFC9F2E9)),
-          _buildBadgeItem(Icons.bar_chart, Color(0xFFFFC93D), Color(0xFFFFF9C2)),
+          _buildBadgeItem(
+              Icons.access_time, Color(0xFF5EDEC3), Color(0xFFC9F2E9)),
+          _buildBadgeItem(
+              Icons.bar_chart, Color(0xFFFFC93D), Color(0xFFFFF9C2)),
           _buildBadgeItem(Icons.public, Color(0xFF6BB8FF), Color(0xFFD6F0FF)),
-          _buildBadgeItem(Icons.emoji_events, Color(0xFFFF6B84), Color(0xFFFFD6DD)),
-          _buildBadgeItem(Icons.extension, Color(0xFF6A5AE0), Color(0xFFC4D0FB)),
+          _buildBadgeItem(
+              Icons.emoji_events, Color(0xFFFF6B84), Color(0xFFFFD6DD)),
+          _buildBadgeItem(
+              Icons.extension, Color(0xFF6A5AE0), Color(0xFFC4D0FB)),
           _buildBadgeItem(Icons.lock, Color(0xFF7B7676), Color(0xFFEBEBEB)),
         ],
       ),
@@ -140,7 +138,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     value: 27 / 30,
                     strokeWidth: 8,
                     backgroundColor: Color(0xFFEBEBEB),
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF565ADD)),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xFF565ADD)),
                   ),
                 ),
                 Text(
@@ -210,7 +209,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: EdgeInsets.all(16),
                         child: Column(
                           children: [
-                            Icon(Icons.phone_disabled, color: Colors.white, size: 24),
+                            Icon(Icons.phone_disabled,
+                                color: Colors.white, size: 24),
                             SizedBox(height: 8),
                             Text(
                               "21",
@@ -290,10 +290,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
 
-
       body: Column(
         children: [
-
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -412,7 +410,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  Icon(Icons.star, color: Colors.white, size: 24),
+                                  Icon(Icons.star,
+                                      color: Colors.white, size: 24),
                                   SizedBox(height: 4),
                                   Text(
                                     "POINTS",
@@ -435,7 +434,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  Icon(Icons.public, color: Colors.white, size: 24),
+                                  Icon(Icons.public,
+                                      color: Colors.white, size: 24),
                                   SizedBox(height: 4),
                                   Text(
                                     "TOTAL RANK",
@@ -458,7 +458,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  Icon(Icons.bar_chart, color: Colors.white, size: 24),
+                                  Icon(Icons.bar_chart,
+                                      color: Colors.white, size: 24),
                                   SizedBox(height: 4),
                                   Text(
                                     "STOREWISE RANK",
@@ -504,15 +505,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // User Details
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 28,vertical: 32),
+                    padding: EdgeInsets.symmetric(horizontal: 28, vertical: 32),
                     child: Align(
-                      alignment: Alignment.centerLeft, // Explicitly aligning to the left
+                      alignment: Alignment
+                          .centerLeft, // Explicitly aligning to the left
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start, // Keep this for the left alignment of the text
+                        crossAxisAlignment: CrossAxisAlignment
+                            .start, // Keep this for the left alignment of the text
                         children: [
                           _buildUserDetail("Name", emp_name),
-                          SizedBox(height: 8,),
-
+                          SizedBox(
+                            height: 8,
+                          ),
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
                             thickness: 0.2, // Thin line
@@ -521,8 +525,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           SizedBox(height: 16),
                           _buildUserDetail("Email", email),
-                          SizedBox(height: 8,),
-
+                          SizedBox(
+                            height: 8,
+                          ),
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
                             thickness: 0.2, // Thin line
@@ -531,8 +536,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           SizedBox(height: 16),
                           _buildUserDetail("Company Name", storeName),
-                          SizedBox(height: 8,),
-
+                          SizedBox(
+                            height: 8,
+                          ),
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
                             thickness: 0.2, // Thin line
@@ -541,7 +547,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           SizedBox(height: 16),
                           _buildUserDetail("Position", designation),
-                          SizedBox(height: 8,),
+                          SizedBox(
+                            height: 8,
+                          ),
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
                             thickness: 0.2, // Thin line
@@ -553,41 +561,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
 
-
                   // Sign Out Button
 
-                   Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                      child: SizedBox(
-                        
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () async{
-                            await SharedPrefHelper.setIsloginValue(false);
-                            Get.offAll(Routes.login);                          },
-                          style: OutlinedButton.styleFrom(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: () async {
+                          // Clear all user data
+                          await SharedPrefHelper.setIsloginValue(false);
+                          await SharedPrefHelper.removeValue("username");
+                          await SharedPrefHelper.removeValue("email");
+                          await SharedPrefHelper.removeValue("emp_name");
+                          await SharedPrefHelper.removeValue("store_name");
+                          await SharedPrefHelper.removeValue("designation");
+
+                          // Navigate to login screen
+                          Get.offAllNamed(Routes.login);
+                        },
+                        style: OutlinedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 16),
                             side: BorderSide(color: Color(0xFFEBEBEB)),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
-
-
                             ),
-                            backgroundColor: Color(0XFFF6F6F6)
-
-                          ),
-                          child: Text(
-                            "Sign Out",
-                            style: TextStyle(
+                            backgroundColor: Color(0XFFF6F6F6)),
+                        child: Text(
+                          "Sign Out",
+                          style: TextStyle(
                               color: Color(0xFF1A1A1A),
                               fontWeight: FontWeight.w600,
-                              fontSize: 18
-                            ),
-                          ),
+                              fontSize: 18),
                         ),
                       ),
                     ),
-
+                  ),
 
                   const SizedBox(height: 80), // Space for bottom navigation
                 ],
@@ -676,5 +685,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
-
 }
