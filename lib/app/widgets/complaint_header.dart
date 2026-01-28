@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../core/constants/app_text_styles.dart';
 
 /// A reusable app header widget with back button and title
@@ -57,7 +56,7 @@ class AppHeader extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Get.back(),
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
         Text(
