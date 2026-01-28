@@ -1,34 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import '../../models/complaint_model.dart';
-import '../../../../core/constants/app_text_styles.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../core/constants/app_text_styles.dart';
+import '../core/constants/app_colors.dart';
 
 class TicketDetailsBottomSheet extends StatelessWidget {
-  final ComplaintModel complaint;
+  final String ticketId;
+  final DateTime dateTime;
+  final String issueRaised;
+  final String description;
+  final String status;
+  final String agentId;
+  final String? agentName; // Optional for user tickets
 
   const TicketDetailsBottomSheet({
     super.key,
-    required this.complaint,
+    required this.ticketId,
+    required this.dateTime,
+    required this.issueRaised,
+    required this.description,
+    required this.status,
+    required this.agentId,
+    this.agentName,
   });
 
-  static void show(BuildContext context, ComplaintModel complaint) {
+  static void show(BuildContext context, {
+    required String ticketId,
+    required DateTime dateTime,
+    required String issueRaised,
+    required String description,
+    required String status,
+    required String agentId,
+    String? agentName,
+  }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => TicketDetailsBottomSheet(complaint: complaint),
+      builder: (context) => TicketDetailsBottomSheet(
+        ticketId: ticketId,
+        dateTime: dateTime,
+        issueRaised: issueRaised,
+        description: description,
+        status: status,
+        agentId: agentId,
+        agentName: agentName,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final statusLower = complaint.status.toLowerCase();
+    final statusLower = status.toLowerCase();
     final isPending = statusLower == 'pending';
 
     return DraggableScrollableSheet(
-      initialChildSize: 0.5,
+      initialChildSize: 0.5, // 50% of screen
       minChildSize: 0.3,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
@@ -61,7 +88,7 @@ class TicketDetailsBottomSheet extends StatelessWidget {
                         color: const Color(0xFF1A1A1A),
                       ),
                     ),
-                    _buildStatusBadge(complaint.status, isPending),
+                    _buildStatusBadge(status, isPending),
                   ],
                 ),
               ),
@@ -76,48 +103,56 @@ class TicketDetailsBottomSheet extends StatelessWidget {
                       _buildDetailRow(
                         iconPath: 'asset/icons/agentId.svg',
                         label: 'Agent ID',
-                        value: complaint.agentId,
+                        value: agentId,
                       ),
                       const SizedBox(height: 16),
-                      // Agent Name and Ticket ID in a row
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: _buildDetailRow(
-                              iconPath: 'asset/icons/person.svg',
-                              label: 'Agent Name',
-                              value: complaint.agentName,
+                      // Agent Name and Ticket ID in a row (if agentName is provided)
+                      if (agentName != null)
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: _buildDetailRow(
+                                iconPath: 'asset/icons/person.svg',
+                                label: 'Agent Name',
+                                value: agentName!,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: _buildDetailRow(
-                              iconPath: 'asset/icons/ticket1.svg',
-                              label: 'Ticket ID',
-                              value: complaint.complaintId,
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: _buildDetailRow(
+                                iconPath: 'asset/icons/ticket1.svg',
+                                label: 'Ticket ID',
+                                value: ticketId,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        )
+                      else
+                        // Only Ticket ID if no agent name
+                        _buildDetailRow(
+                          iconPath: 'asset/icons/ticket1.svg',
+                          label: 'Ticket ID',
+                          value: ticketId,
+                        ),
                       const SizedBox(height: 16),
                       _buildDetailRow(
                         iconPath: 'asset/icons/calender.svg',
                         label: 'Date & Time',
-                        value: DateFormat('dd MMM yyyy, hh:mm a').format(complaint.dateTime),
+                        value: DateFormat('dd MMM yyyy, hh:mm a').format(dateTime),
                       ),
                       const SizedBox(height: 24),
-                      // Complaint Subject
+                      // Issue Title
                       Text(
-                        complaint.issueRaised,
+                        issueRaised,
                         style: AppTextStyles.interSemiBold14.copyWith(
                           color: const Color(0xFF1A1A1A),
                         ),
                       ),
                       const SizedBox(height: 12),
-                      // Complaint Description
+                      // Issue Description
                       Text(
-                        complaint.description,
+                        description,
                         style: AppTextStyles.interRegular12.copyWith(
                           color: Colors.grey.shade700,
                           height: 1.5,
@@ -218,4 +253,5 @@ class TicketDetailsBottomSheet extends StatelessWidget {
     );
   }
 }
+
 

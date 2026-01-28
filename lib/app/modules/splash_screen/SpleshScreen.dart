@@ -11,6 +11,7 @@ class SpleshScreen extends StatefulWidget {
   @override
   State<SpleshScreen> createState() => SpleshScreenState();
 }
+
 class SpleshScreenState extends State<SpleshScreen> {
   static const String KEYLOGIN = "login";
 
@@ -22,25 +23,23 @@ class SpleshScreenState extends State<SpleshScreen> {
     setState(() {});
   }
 
-
   // Future<void> Screengoto() async {
   //   Timer(const Duration(seconds: 5), () {
   //     Get.to(CheifTrainerRegistration());
   //   },);
   // }
 
-
   Future<void> requestPermissions() async {
     // Request both microphone and location permissions
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.microphone,
-      Permission.location
-    ].request();
+    Map<Permission, PermissionStatus> statuses =
+        await [Permission.microphone, Permission.location].request();
 
     // Check the status of each permission
     if (statuses[Permission.microphone]?.isGranted ?? false) {
     } else {
       if (statuses[Permission.microphone]?.isPermanentlyDenied ?? false) {
+        print(
+            "Microphone permission is permanently denied. Please enable it in settings.");
         openAppSettings(); // Opens app settings for the user to enable permissions
       }
     }
@@ -48,35 +47,40 @@ class SpleshScreenState extends State<SpleshScreen> {
     if (statuses[Permission.location]?.isGranted ?? false) {
     } else {
       if (statuses[Permission.location]?.isPermanentlyDenied ?? false) {
+        print(
+            "Location permission is permanently denied. Please enable it in settings.");
         openAppSettings();
       }
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Stack(
           children: <Widget>[
             Center(
               child: SizedBox(
                 width: double.infinity,
-                child: Image.asset("asset/images/newsplash.png", fit: BoxFit.cover,),
+                child: Image.asset(
+                  "asset/images/newsplash.png",
+                  fit: BoxFit.cover,
+                ),
                 // fit: BoxFit.cover,
               ),
             ),
             const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 130,),
+                SizedBox(
+                  height: 130,
+                ),
                 Center(
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: 0.0, left:0.0),
-                    child: SizedBox(
+                    padding: const EdgeInsets.only(bottom: 0.0, left: 0.0),
+                    child: Container(
                       height: 40,
                       width: 40,
                       child: CircularProgressIndicator(
@@ -121,16 +125,13 @@ class SpleshScreenState extends State<SpleshScreen> {
     bool isLoggedIn = await SharedPrefHelper.getIsLoginValue();
     await Future.delayed(const Duration(seconds: 3));
     if (isLoggedIn) {
-      if(designation.toLowerCase() == 'manager'){
+      if (designation.toLowerCase() == 'manager') {
         Get.toNamed(Routes.deliveryTracker);
-      }
-      else{
+      } else {
         Get.toNamed(Routes.home);
       }
     } else {
       Get.to(OnboardingScreen());
     }
-
-
   }
 }

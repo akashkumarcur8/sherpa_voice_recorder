@@ -17,8 +17,8 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/view/login_view.dart';
 import '../modules/home/onboarding/onboarding_screen.dart';
 import '../modules/profile/profile_page.dart';
-import '../modules/raise_ticket/bindings/raise_ticket_binding.dart';
-import '../modules/raise_ticket/views/raise_ticket_screen.dart';
+import '../modules/raise_ticket/bindings/user_tickets_binding.dart';
+import '../modules/raise_ticket/views/user_tickets_screen.dart';
 import '../modules/splash_screen/SpleshScreen.dart';
 import 'app_routes.dart';
 
@@ -49,8 +49,8 @@ class AppPages {
     ),
     GetPage(
       name: Routes.raiseTicket,
-      page: () => const RaiseTicketScreen(),
-      binding: RaiseTicketBinding(),
+      page: () => const UserTicketsScreen(),
+      binding: UserTicketsBinding(),
     ),
     GetPage(
       name: Routes.complaintcenter,

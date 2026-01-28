@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/delivery_tracker_controller.dart';
@@ -12,7 +11,7 @@ class FilterDropdownWidget extends StatelessWidget {
     final controller = Get.find<DeliveryTrackerController>();
 
     return Obx(
-          () => PopupMenuButton<String>(
+      () => PopupMenuButton<String>(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
@@ -40,7 +39,7 @@ class FilterDropdownWidget extends StatelessWidget {
           ),
         ),
         onSelected: (value) {
-          controller.filterAgents(value);
+          controller.handleFilterSelection(value);
         },
         itemBuilder: (BuildContext context) => [
           _buildMenuItem('Select Option'),

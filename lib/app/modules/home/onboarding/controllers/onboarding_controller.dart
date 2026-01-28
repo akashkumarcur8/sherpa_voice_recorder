@@ -10,7 +10,8 @@ class OnboardingController extends GetxController {
 
   void nextPage() {
     if (currentPage.value < 4) {
-      pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+      pageController.nextPage(
+          duration: const Duration(milliseconds: 300), curve: Curves.ease);
     } else {
       finishOnboarding();
     }
@@ -18,7 +19,8 @@ class OnboardingController extends GetxController {
 
   void finishOnboarding() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboardingCompleted', true); // Mark onboarding as completed
+    await prefs.setBool(
+        'onboardingCompleted', true); // Mark onboarding as completed
     Get.toNamed(Routes.login); // Navigate to home screen
   }
 

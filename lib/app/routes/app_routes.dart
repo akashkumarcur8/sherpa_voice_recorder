@@ -7,6 +7,7 @@ class Routes {
   static const home = '/home';
   static const agentDetail = '/agent-detail';
   static const String raiseTicket = '/raise-ticket';
+  static const String createTicket = '/create-ticket';
   static const String complaintcenter = '/complaint-center';
   static const String settings = '/settings';
   static const String faq = '/faq';
