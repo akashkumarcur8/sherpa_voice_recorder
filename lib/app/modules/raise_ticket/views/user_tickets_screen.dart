@@ -120,8 +120,7 @@ class UserTicketsScreen extends StatelessWidget {
           const AppHeader(
             title: 'Complaint Center',
             useGradient: true,
-            useSafeArea: false,
-            height: 60,
+            useSafeArea: true,
           ),
           Obx(() => FilterBar(
                 filters: _buildFilterOptions(),

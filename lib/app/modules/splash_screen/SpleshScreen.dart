@@ -71,7 +71,7 @@ class SpleshScreenState extends State<SpleshScreen> {
                 // fit: BoxFit.cover,
               ),
             ),
-            const Column(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(

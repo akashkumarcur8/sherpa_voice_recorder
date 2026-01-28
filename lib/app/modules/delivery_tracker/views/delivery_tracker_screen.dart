@@ -392,7 +392,7 @@ class DeliveryTrackerScreen extends GetView<DeliveryTrackerController> {
             elevation: isButtonEnabled ? 2 : 0,
             disabledForegroundColor: AppColors.grey,
           ),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Stack(

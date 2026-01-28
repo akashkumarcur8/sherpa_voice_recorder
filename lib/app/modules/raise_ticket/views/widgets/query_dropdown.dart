@@ -38,7 +38,7 @@ class QueryDropdown extends GetView<RaiseTicketController> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: controller.queryError.value.isEmpty
-                      ? AppColors.borderColor
+                      ? AppColors.border
                       : AppColors.borderError,
                 ),
                 color: AppColors.cardBackground,

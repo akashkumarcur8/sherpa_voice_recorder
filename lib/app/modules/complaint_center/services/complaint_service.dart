@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/complaint_response.dart';
+import '../models/complaint_model.dart';
 
 class ComplaintService {
   final String baseUrl = 'http://35.154.144.116:8000/api';

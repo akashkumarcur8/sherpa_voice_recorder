@@ -70,7 +70,7 @@ class AppHeader extends StatelessWidget {
 
     if (useSafeArea) {
       return Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         decoration: decoration,
         child: SafeArea(
           bottom: false,

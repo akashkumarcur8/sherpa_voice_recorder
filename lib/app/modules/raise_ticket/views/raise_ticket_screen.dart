@@ -14,11 +14,11 @@ class RaiseTicketScreen extends GetView<RaiseTicketController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: _buildAppBar(context),
-      body: SafeArea(
-        child: _buildBody(context),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: _buildAppBar(context),
+        body: _buildBody(context),
       ),
     );
   }
@@ -26,7 +26,7 @@ class RaiseTicketScreen extends GetView<RaiseTicketController> {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.primaryPurple,
-      elevation: 0,
+      elevation: 100,
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back,
