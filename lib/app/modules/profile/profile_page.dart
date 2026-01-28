@@ -560,7 +560,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: OutlinedButton(
                           onPressed: () async{
                             await SharedPrefHelper.setIsloginValue(false);
-                            Get.offAll(Routes.login);                          },
+                            Get.offAllNamed(Routes.login);
+                          },
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             side: const BorderSide(color: Color(0xFFEBEBEB)),
