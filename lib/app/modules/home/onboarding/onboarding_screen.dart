@@ -38,6 +38,8 @@ class OnboardingScreen extends StatelessWidget {
     }
   ];
 
+  OnboardingScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +67,7 @@ class OnboardingScreen extends StatelessWidget {
             position: controller.currentPage.value.toInt(),
             decorator: DotsDecorator(
               activeColor: const Color(0xFF565ADD),
-              color: Color(0xFFAFB0B0),
+              color: const Color(0xFFAFB0B0),
               size: const Size(8.0, 8.0),
               activeSize: const Size(20.0, 10.0),
               activeShape: RoundedRectangleBorder(
@@ -86,7 +88,7 @@ class OnboardingPage extends StatelessWidget {
   final String buttonText;
   final VoidCallback onNext;
 
-  const OnboardingPage({
+  const OnboardingPage({super.key, 
     required this.title,
     required this.subtitle,
     required this.buttonText,

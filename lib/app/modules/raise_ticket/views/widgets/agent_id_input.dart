@@ -5,7 +5,7 @@ import '../../../../core/constants/app_strings.dart';
 import '../../controllers/raise_ticket_controller.dart';
 
 class AgentIdInput extends GetView<RaiseTicketController> {
-  const AgentIdInput({Key? key}) : super(key: key);
+  const AgentIdInput({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,14 +13,14 @@ class AgentIdInput extends GetView<RaiseTicketController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
-          text: TextSpan(
+          text: const TextSpan(
             text: AppStrings.agentId,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: AppColors.textPrimary,
             ),
-            children: const [
+            children: [
               TextSpan(
                 text: AppStrings.requiredField,
                 style: TextStyle(
@@ -35,7 +35,7 @@ class AgentIdInput extends GetView<RaiseTicketController> {
           controller: controller.agentIdController,
           decoration: InputDecoration(
             hintText: AppStrings.enterYourAgentId,
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               color: AppColors.textHint,
               fontSize: 14,
             ),
@@ -48,14 +48,14 @@ class AgentIdInput extends GetView<RaiseTicketController> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(
-                color: AppColors.borderColor,
+                color: AppColors.border,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
                 color: controller.agentIdError.value.isEmpty
-                    ? AppColors.borderColor
+                    ? AppColors.border
                     : AppColors.borderError,
               ),
             ),

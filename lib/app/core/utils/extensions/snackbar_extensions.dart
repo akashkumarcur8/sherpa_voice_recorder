@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 extension ContextSnackbar on BuildContext {
   /// Shows a standard success snackbar
@@ -20,7 +19,7 @@ extension ContextSnackbar on BuildContext {
     _showSnackBar(
       message,
       duration: duration,
-      backgroundColor: Color(0XFFFFFFFF),
+      backgroundColor: const Color(0XFFFFFFFF),
       icon: const Icon(Icons.error_outline,
           color: Color(0xFFFF2222),size: 30),
       borderColor: const Color(0XFF6B7071),
@@ -34,7 +33,7 @@ extension ContextSnackbar on BuildContext {
     _showSnackBar(
       message,
       duration: duration,
-      backgroundColor: Color(0XFFFFFFFF),
+      backgroundColor: const Color(0XFFFFFFFF),
       icon: const Icon(Icons.error_outline,
           color: Color(0xFFFF2222),size: 30),
       borderColor: const Color(0XFF6B7071),

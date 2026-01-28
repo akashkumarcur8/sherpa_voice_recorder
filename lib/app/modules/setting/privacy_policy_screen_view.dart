@@ -3,7 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 
 
 class PrivacyPolicyPage extends StatelessWidget {
-  const PrivacyPolicyPage({Key? key}) : super(key: key);
+  const PrivacyPolicyPage({super.key});
 
   static const String _policyText = """
 # Privacy Policy for Sherpa Voice Recorder

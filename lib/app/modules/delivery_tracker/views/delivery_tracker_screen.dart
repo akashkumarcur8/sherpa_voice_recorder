@@ -15,7 +15,7 @@ import '../../../core/utils/responsive_helper.dart';
 import '../../../core/services/storage/sharedPrefHelper.dart';
 
 class DeliveryTrackerScreen extends GetView<DeliveryTrackerController> {
-  const DeliveryTrackerScreen({Key? key}) : super(key: key);
+  const DeliveryTrackerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +96,7 @@ class DeliveryTrackerScreen extends GetView<DeliveryTrackerController> {
             ),
             title: const Text('Geo-Tracking'),
             onTap: () {
-              Get.to(() => GeoTrackingScreen());
+              Get.to(() => const GeoTrackingScreen());
             },
           ),
           ListTile(
@@ -184,9 +184,9 @@ class DeliveryTrackerScreen extends GetView<DeliveryTrackerController> {
   }
 
   Widget _buildActivityHeader() {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const [
+      children: [
         Text(
           'Recent Activity',
           style: TextStyle(
@@ -205,11 +205,11 @@ class DeliveryTrackerScreen extends GetView<DeliveryTrackerController> {
       final agents = controller.filteredAgents;
 
       if (agents.isEmpty) {
-        return Center(
+        return const Center(
           child: Padding(
-            padding: const EdgeInsets.all(40),
+            padding: EdgeInsets.all(40),
             child: Column(
-              children: const [
+              children: [
                 Icon(
                   Icons.inbox_outlined,
                   size: 64,
@@ -261,9 +261,9 @@ class DeliveryTrackerScreen extends GetView<DeliveryTrackerController> {
             ),
             elevation: 2,
           ),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Icon(Icons.notifications_active, color: AppColors.white),
               SizedBox(width: 8),
               Text(

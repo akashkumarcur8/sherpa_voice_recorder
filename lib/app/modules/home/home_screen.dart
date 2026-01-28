@@ -14,7 +14,7 @@ import '../setting/setting_screen_view.dart';
 import '../../core/services/storage/sharedPrefHelper.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({super.key});
 
   final HomeController controller = Get.put(HomeController());
   final LocationController locationController = Get.put(LocationController());
@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               //Live Nudge Section (if applicable)
-              LiveNudgeSection(isRecording: controller.isRecording.value),
+              Obx(() => LiveNudgeSection(isRecording: controller.isRecording.value)),
               const SizedBox(height: 20),
 
               // Statistics Header
@@ -131,7 +131,7 @@ class HomeScreen extends StatelessWidget {
               height: 22,
             ),
             title: const Text('Settings'),
-            onTap: () => Get.to(() => SettingsPage()),
+            onTap: () => Get.to(() => const SettingsPage()),
           ),
           ListTile(
             leading: const Icon(Icons.logout,weight: 22,),
@@ -184,13 +184,11 @@ class HomeScreen extends StatelessWidget {
     DateTime finalDate = pickedDate ?? DateTime.now();
     var userId = await SharedPrefHelper.getpref("user_id");
 
-    if (userId != null) {
-      await controller.statsController.fetchUserAudioStats(
-        userId: int.parse(userId),
-        selectedDate: finalDate,
-      );
+    await controller.statsController.fetchUserAudioStats(
+      userId: int.parse(userId),
+      selectedDate: finalDate,
+    );
     }
-  }
 
   void _showConversationDialog(BuildContext context) async {
     final conversationController = Get.put(ConversationController());

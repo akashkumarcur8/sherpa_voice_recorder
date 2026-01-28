@@ -61,6 +61,7 @@ dependencies:
 
 
 #  speech_to_text: ^7.0.0
+  package_info_plus: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -32,7 +32,7 @@ class ConversationSession {
     }
 
     // Helper that returns null on null, else tries ISO → time-only
-    DateTime? _parseDate(dynamic raw) {
+    DateTime? parseDate(dynamic raw) {
       if (raw == null) return null;
       var s = raw.toString().trim();
 
@@ -62,8 +62,8 @@ class ConversationSession {
     return ConversationSession(
       clientId: clientIdRaw?.toString() ?? '',
       productNames: productNames,
-      startTime: _parseDate(json['conversation_start_time']),
-      endTime:   _parseDate(json['conversation_end_time']),
+      startTime: parseDate(json['conversation_start_time']),
+      endTime:   parseDate(json['conversation_end_time']),
       isMarked:  isMarked,
     );
   }

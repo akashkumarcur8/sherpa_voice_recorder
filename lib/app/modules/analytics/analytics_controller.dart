@@ -63,9 +63,6 @@ class AnalyticsController extends GetxController {
       );
 
       final resp = await https.get(uri);
-      print('▶️ Requesting: $uri');
-      print('▶️ Status: ${resp.statusCode}');
-      print('▶️ Body:   ${resp.body}');
 
       // 1️⃣ HTTP‐status check
       if (resp.statusCode != 200) {
@@ -108,7 +105,6 @@ class AnalyticsController extends GetxController {
       avgProductScore.value  = data.overall.avgProductScore;
       avgBehaviorScore.value = data.overall.avgBehaviorScore;
     } catch (e) {
-      print('Error fetching analytics: $e');
     } finally {
       isLoading.value = false;
     }
@@ -127,7 +123,7 @@ class AnalyticsController extends GetxController {
       final Uri uri;
       final now     = DateTime.now();
       final dtEnd   = now;
-      final dtStart =  now.subtract(Duration(days: 6));
+      final dtStart =  now.subtract(const Duration(days: 6));
 
       final startStr = DateFormat('yyyy-MM-dd').format(dtStart);
       final endStr   = DateFormat('yyyy-MM-dd').format(dtEnd);
@@ -167,9 +163,6 @@ class AnalyticsController extends GetxController {
         }
 
       final resp = await https.get(uri);
-      print('▶️ Requesting: $uri');
-      print('▶️ Status: ${resp.statusCode}');
-      print('▶️ Body:   ${resp.body}');
 
       // 1️⃣ HTTP‐status check
       if (resp.statusCode != 200) {
@@ -212,7 +205,6 @@ class AnalyticsController extends GetxController {
       avgProductScore.value  = data.overall.avgProductScore;
       avgBehaviorScore.value = data.overall.avgBehaviorScore;
     } catch (e) {
-      print('Error fetching analytics: $e');
     } finally {
       isLoading.value = false;
     }

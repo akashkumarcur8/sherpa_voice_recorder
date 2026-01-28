@@ -25,7 +25,6 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final data = response.data;
-        print('userer data $data');
 
         return StatisticsDataModel(
           userId: userId,

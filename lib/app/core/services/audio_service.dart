@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../modules/home/notification_helper.dart';
+import '../isolates/file_io_isolate.dart';
 
 class AudioService {
   static final AudioService _instance = AudioService._internal();
@@ -44,7 +45,6 @@ class AudioService {
       await WakelockPlus.enable();
     }
 
-    print('✅ Both recorders initialized');
   }
 
   /// Start file recording for uploads
@@ -68,7 +68,6 @@ class AudioService {
       // Reset silence detection
       _resetSilenceDetection();
 
-      print('🎙️ Starting FILE recording (AAC)');
       await _fileRecorder!.startRecorder(
         toFile: _filePath,
         codec: Codec.aacADTS,
@@ -79,10 +78,8 @@ class AudioService {
 
       await WakelockPlus.enable();
 
-      print('✅ File recording started: $_filePath');
       return _filePath;
     } catch (e) {
-      print('❌ Error starting file recording: $e');
       return null;
     }
   }
@@ -100,7 +97,6 @@ class AudioService {
 
       await _streamRecorder!.openRecorder();
 
-      print('🌐 Starting STREAM recording (PCM16)');
       await _streamRecorder!.startRecorder(
         codec: Codec.pcm16,
         numChannels: 1,
@@ -108,10 +104,8 @@ class AudioService {
         toStream: streamSink,
       );
 
-      print('✅ Stream recording started');
       return true;
     } catch (e) {
-      print('❌ Error starting stream recording: $e');
       return false;
     }
   }
@@ -121,9 +115,7 @@ class AudioService {
     try {
       _amplitudeSubscription?.cancel();
       await _fileRecorder?.stopRecorder();
-      print('🛑 File recording stopped');
     } catch (e) {
-      print('❌ Error stopping file recording: $e');
     }
   }
 
@@ -131,9 +123,7 @@ class AudioService {
   Future<void> stopStreamRecording() async {
     try {
       await _streamRecorder?.stopRecorder();
-      print('🛑 Stream recording stopped');
     } catch (e) {
-      print('❌ Error stopping stream recording: $e');
     }
   }
 
@@ -142,7 +132,6 @@ class AudioService {
     await stopFileRecording();
     await stopStreamRecording();
     await WakelockPlus.disable();
-    print('✅ All recordings stopped');
   }
 
   /// Start monitoring audio amplitude for silence detection
@@ -204,22 +193,33 @@ class AudioService {
   Future<List<int>> readFileBytes(int lastPosition) async {
     if (_filePath == null) return [];
 
-    File file = File(_filePath!);
-    int totalFileSize = await file.length();
-
-    if (totalFileSize > lastPosition) {
-      List<int> fileBytes = await file.readAsBytes();
-      return fileBytes.sublist(lastPosition);
+    try {
+      // Get file size in isolate
+      final totalFileSize = await FileIoIsolate.getFileSize(_filePath!);
+      
+      if (totalFileSize > lastPosition) {
+        // Read file range in isolate (HEAVY OPERATION - offloaded from main thread)
+        final bytes = await FileIoIsolate.readFileRange(
+          FileRangeParams(
+            filePath: _filePath!,
+            start: lastPosition,
+          ),
+        );
+        return bytes;
+      }
+      
+      return [];
+    } catch (e) {
+      print('Error reading file bytes: $e');
+      return [];
     }
-
-    return [];
   }
 
   /// Get current file size
   Future<int> getCurrentFileSize() async {
     if (_filePath == null) return 0;
-    File file = File(_filePath!);
-    return await file.length();
+    // Get file size in isolate (offloaded from main thread)
+    return await FileIoIsolate.getFileSize(_filePath!);
   }
 
   /// Dispose resources
@@ -229,6 +229,5 @@ class AudioService {
     await _streamRecorder?.closeRecorder();
     _fileRecorder = null;
     _streamRecorder = null;
-    print('🧹 All recorders disposed');
   }
 }

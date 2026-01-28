@@ -6,7 +6,7 @@ import '../../controllers/raise_ticket_controller.dart';
 import '../../models/ticket_query_model.dart';
 
 class QueryDropdown extends GetView<RaiseTicketController> {
-  const QueryDropdown({Key? key}) : super(key: key);
+  const QueryDropdown({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,14 +14,14 @@ class QueryDropdown extends GetView<RaiseTicketController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
-          text: TextSpan(
+          text: const TextSpan(
             text: AppStrings.selectYourQuery,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: AppColors.textPrimary,
             ),
-            children: const [
+            children: [
               TextSpan(
                 text: AppStrings.requiredField,
                 style: TextStyle(
@@ -37,7 +37,7 @@ class QueryDropdown extends GetView<RaiseTicketController> {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: controller.queryError.value.isEmpty
-                  ? AppColors.borderColor
+                  ? AppColors.border
                   : AppColors.borderError,
             ),
             color: AppColors.cardBackground,
@@ -45,8 +45,8 @@ class QueryDropdown extends GetView<RaiseTicketController> {
           child: DropdownButtonHideUnderline(
             child: DropdownButton<TicketQuery>(
               value: controller.selectedQuery.value,
-              hint: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+              hint: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   AppStrings.chooseYourQuery,
                   style: TextStyle(

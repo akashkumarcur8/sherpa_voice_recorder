@@ -33,7 +33,7 @@ class QualityAnalyzer {
   double _peakValue = 0.0;
   int _nonZeroSamples = 0;
   int _significantSamples = 0;
-  List<double> _volumeLevels = [];
+  final List<double> _volumeLevels = [];
 
   /// Feed **PCM16 LE mono** bytes (no WAV header).
   void feedPcm16(Uint8List bytes) {
@@ -92,17 +92,6 @@ class QualityAnalyzer {
     String reason = '';
     bool passed = true;
 
-    print('Audio Quality Analysis:');
-    print('- Total Samples: $_totalSamples');
-    print('- Sample Rate: $sampleRate Hz');
-    print('- Duration: ${totalSeconds.toStringAsFixed(1)}s');
-    print('- Average Volume: ${averageVolume.toStringAsFixed(6)} (${(averageVolume * 100).toStringAsFixed(3)}%)');
-    print('- Peak Volume: ${_peakValue.toStringAsFixed(6)} (${(_peakValue * 100).toStringAsFixed(3)}%)');
-    print('- RMS Volume: ${rms.toStringAsFixed(6)} (${(rms * 100).toStringAsFixed(3)}%)');
-    print('- Activity Ratio: ${(activityRatio * 100).toStringAsFixed(1)}%');
-    print('- Significant Activity: ${(significantRatio * 100).toStringAsFixed(1)}%');
-    print('- Non-zero samples: $_nonZeroSamples / $_totalSamples');
-    print('- Significant samples: $_significantSamples / $_totalSamples');
 
     // Very sensitive mute detection
     if (averageVolume < 0.0001) { // Extremely low average volume
@@ -124,8 +113,6 @@ class QualityAnalyzer {
       reason = 'Microphone test passed - clear audio detected';
     }
 
-    print('- Result: ${passed ? 'PASSED' : 'FAILED'} - $reason');
-    print('');
 
     return AudioQualityReport(
       averageVolume: averageVolume,

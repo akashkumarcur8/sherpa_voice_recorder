@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'dart:math' as math;
-import 'package:get/get_core/src/get_main.dart';
-import '../leaderboard/leaderboard_dashboard.dart';
+import '../../routes/app_routes.dart';
+
 import 'analytics_controller.dart';
 
 class AnalyticsDashboard extends StatefulWidget {
@@ -61,7 +60,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     right: 20,
                     bottom: MediaQuery.of(context).viewInsets.bottom + 20,
                   ),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                   ),
@@ -71,9 +70,9 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       Container(
                         width: 40,
                         height: 4,
-                        margin: EdgeInsets.only(bottom: 16),
+                        margin: const EdgeInsets.only(bottom: 16),
                         decoration: BoxDecoration(
-                          color: Color(0xFFD7D7D7),
+                          color: const Color(0xFFD7D7D7),
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -82,18 +81,18 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             'Filter Analytics',
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           IconButton(
-                            icon: Icon(Icons.close, color: Color(0xFF9D9D9D)),
+                            icon: const Icon(Icons.close, color: Color(0xFF9D9D9D)),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
                         ],
                       ),
 
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
                       // Date range options
                       Expanded(
@@ -106,17 +105,17 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                             return GestureDetector(
                               onTap: () => setModalState(() => selectedRange = range),
                               child: Container(
-                                margin: EdgeInsets.only(bottom: 8),
-                                padding: EdgeInsets.all(16),
+                                margin: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? Color(0xFF565ADD).withOpacity(0.1)
-                                      : Color(0xFFF8F9FC),
+                                      ? const Color(0xFF565ADD).withOpacity(0.1)
+                                      : const Color(0xFFF8F9FC),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                     color: isSelected
-                                        ? Color(0xFF565ADD)
-                                        : Color(0xFFEBEBEB),
+                                        ? const Color(0xFF565ADD)
+                                        : const Color(0xFFEBEBEB),
                                     width: isSelected ? 2 : 1,
                                   ),
                                 ),
@@ -124,20 +123,20 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                                   children: [
                                     Icon(
                                       Icons.calendar_today,
-                                      color: isSelected ? Color(0xFF565ADD) : Color(0xFF9D9D9D),
+                                      color: isSelected ? const Color(0xFF565ADD) : const Color(0xFF9D9D9D),
                                       size: 20,
                                     ),
-                                    SizedBox(width: 12),
+                                    const SizedBox(width: 12),
                                     Text(
                                       range,
                                       style: TextStyle(
-                                        color: isSelected ? Color(0xFF565ADD) : Color(0xFF1A1A1A),
+                                        color: isSelected ? const Color(0xFF565ADD) : const Color(0xFF1A1A1A),
                                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                                       ),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     if (isSelected)
-                                      Icon(Icons.check_circle, color: Color(0xFF565ADD), size: 20),
+                                      const Icon(Icons.check_circle, color: Color(0xFF565ADD), size: 20),
                                   ],
                                 ),
                               ),
@@ -155,13 +154,13 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                             Navigator.of(context).pop();
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF565ADD),
-                            padding: EdgeInsets.symmetric(vertical: 16),
+                            backgroundColor: const Color(0xFF565ADD),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Apply Filter',
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,color: Colors.white),
                           ),
@@ -199,13 +198,13 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
           });
         },
         child: Container(
-          margin: EdgeInsets.only(bottom: 8),
-          padding: EdgeInsets.all(16),
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isSelected ? Color(0xFF565ADD).withOpacity(0.1) : Color(0xFFF8F9FC),
+            color: isSelected ? const Color(0xFF565ADD).withOpacity(0.1) : const Color(0xFFF8F9FC),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? Color(0xFF565ADD) : Color(0xFFEBEBEB),
+              color: isSelected ? const Color(0xFF565ADD) : const Color(0xFFEBEBEB),
               width: isSelected ? 2 : 1,
             ),
           ),
@@ -213,20 +212,20 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
             children: [
               Icon(
                 Icons.calendar_today,
-                color: isSelected ? Color(0xFF565ADD) : Color(0xFF9D9D9D),
+                color: isSelected ? const Color(0xFF565ADD) : const Color(0xFF9D9D9D),
                 size: 20,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Text(
                 range,
                 style: TextStyle(
-                  color: isSelected ? Color(0xFF565ADD) : Color(0xFF1A1A1A),
+                  color: isSelected ? const Color(0xFF565ADD) : const Color(0xFF1A1A1A),
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               if (isSelected)
-                Icon(
+                const Icon(
                   Icons.check_circle,
                   color: Color(0xFF565ADD),
                   size: 20,
@@ -263,8 +262,8 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
   Widget _buildSuggestionCard(String title, String description, IconData icon, Color color) {
     return Container(
-      margin: EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
@@ -273,7 +272,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: color.withOpacity(0.2),
               borderRadius: BorderRadius.circular(8),
@@ -284,21 +283,21 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
               size: 20,
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF1A1A1A),
                   ),
                 ),
                 Text(
                   description,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF9D9D9D),
                     fontSize: 12,
                   ),
@@ -462,15 +461,15 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
         child: Material(
           color: Colors.transparent,
           child: Container(
-            padding: EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Color(0xFF1A1A1A),
+              color: const Color(0xFF1A1A1A),
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.2),
                   blurRadius: 8,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -480,27 +479,27 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
               children: [
                 Text(
                   day,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     Container(
                       width: 8,
                       height: 8,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Color(0xFF565ADD),
                         shape: BoxShape.circle,
                       ),
                     ),
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Text(
                       'Score: $score',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ],
                 ),
@@ -513,7 +512,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
     overlay.insert(overlayEntry);
 
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       overlayEntry.remove();
     });
   }
@@ -560,23 +559,23 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Color(0xFF565ADD),
+      appBar: AppBar(backgroundColor: const Color(0xFF565ADD),
       iconTheme: const IconThemeData(color: Colors.white),
      ),
       body: Obx(() {
         if (c.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         return SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeaderCard(),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 _buildTodaysAnalytics(),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 _buildAgentAnalytics(),
               ],
             ),
@@ -590,14 +589,14 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [Color(0xFF565ADD), Color(0xFFD4B2FB)],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       child: Row(
         children: [
           Expanded(
@@ -612,8 +611,8 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 //     fontWeight: FontWeight.w600,
                 //   ),
                 // ),
-                SizedBox(height: 8),
-                Text(
+                const SizedBox(height: 8),
+                const Text(
                   'Leaderboard Live',
                   style: TextStyle(
                     color: Color(0xFFFFD51A),
@@ -621,7 +620,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
+                const Text(
                   'See Your Score Now.',
                   style: TextStyle(
                     color: Color(0xFFFFD51A),
@@ -629,14 +628,14 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton.icon(
                   onPressed: () {
-                    Get.to(LeaderboardScreen());
+                    Get.toNamed(Routes.leaderboard);
                     // Add this delay if needed
                   },
-                  icon: Text('📊', style: TextStyle(fontSize: 14)),
-                  label: Text(
+                  icon: const Text('📊', style: TextStyle(fontSize: 14)),
+                  label: const Text(
                     'View Details',
                     style: TextStyle(
                       color: Color(0xFF565ADD),
@@ -645,17 +644,17 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor: Color(0xFF565ADD),
+                    foregroundColor: const Color(0xFF565ADD),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           _buildTrophyIcon(),
         ],
       ),
@@ -743,12 +742,12 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Today\'s Analytics', style: TextStyle(
+        const Text('Today\'s Analytics', style: TextStyle(
                       color: Color(0xFF565ADD),
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Row(
           children: [
             Expanded(
@@ -758,7 +757,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 Icons.phone,
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: _buildMetricCard(
                 'Today\'s Avg Score',
@@ -782,7 +781,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Agent Analytics',
                   style: TextStyle(
                     color: Color(0xFF565ADD),
@@ -792,7 +791,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 ),
                 Text(
                   '($currentDateRange)',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF9D9D9D),
                     fontSize: 14,
                   ),
@@ -806,12 +805,12 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
               },
               borderRadius: BorderRadius.circular(8),
               child: Container(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Color(0xFF565ADD).withOpacity(0.1),
+                  color: const Color(0xFF565ADD).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.tune,
                   color: Color(0xFF565ADD),
                   size: 20,
@@ -820,7 +819,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Row(
           children: [
             Expanded(
@@ -830,7 +829,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 Icons.phone,
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: _buildMetricCard(
                 'Avg Score',
@@ -840,9 +839,9 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
          _buildChartCard(),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _buildScoreCards(),
       ],
     );
@@ -850,9 +849,9 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
   Widget _buildMetricCard(String title, String value, IconData icon) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFFEBEBEB),
+        color: const Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -860,18 +859,18 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF9D9D9D),
               fontSize: 12,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 value,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFF1A1A1A),
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -879,7 +878,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
               ),
               Icon(
                 icon,
-                color: Color(0xFF565ADD),
+                color: const Color(0xFF565ADD),
                 size: 32,
               ),
             ],
@@ -891,9 +890,9 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
   Widget _buildChartCard() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFFEBEBEB),
+        color: const Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -904,13 +903,13 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
               Container(
                 width: 8,
                 height: 8,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFF565ADD),
                   shape: BoxShape.circle,
                 ),
               ),
-              SizedBox(width: 8),
-              Text(
+              const SizedBox(width: 8),
+              const Text(
                 'AGENT\'S SCORE',
                 style: TextStyle(
                   color: Color(0xFF1A1A1A),
@@ -918,8 +917,8 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              Spacer(),
-              Text(
+              const Spacer(),
+              const Text(
                 'Tap points for details',
                 style: TextStyle(
                   color: Color(0xFF9D9D9D),
@@ -929,12 +928,12 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
               ),
             ],
           ),
-          SizedBox(height: 16),
-          Container(
+          const SizedBox(height: 16),
+          SizedBox(
             height: 120,
             child: LineChart(
               LineChartData(
-                gridData: FlGridData(show: false),
+                gridData: const FlGridData(show: false),
                 titlesData: FlTitlesData(
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
@@ -943,7 +942,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       getTitlesWidget: (value, meta) {
                         return Text(
                           value.toInt().toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xFF9D9D9D),
                             fontSize: 10,
                           ),
@@ -970,27 +969,27 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       getTitlesWidget: (v, _) {
                         final i = v.toInt();
                         return i < c.chartLabels.length
-                            ? Text(c.chartLabels[i], style: TextStyle(fontSize: 10, color: Color(0xFF9D9D9D)))
-                            : Text('');
+                            ? Text(c.chartLabels[i], style: const TextStyle(fontSize: 10, color: Color(0xFF9D9D9D)))
+                            : const Text('');
                       },
                     ),
                   ),
-                  rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
                   LineChartBarData(
                     spots: c.chartSpots,
                     isCurved: true,
-                    color: Color(0xFF565ADD),
+                    color: const Color(0xFF565ADD),
                     barWidth: 2,
                     belowBarData: BarAreaData(
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          Color(0xFFB1BFFF).withOpacity(0.8),
-                          Color(0xFFB1BFFF).withOpacity(0.1),
+                          const Color(0xFFB1BFFF).withOpacity(0.8),
+                          const Color(0xFFB1BFFF).withOpacity(0.1),
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -1001,7 +1000,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       getDotPainter: (spot, percent, barData, index) {
                         return FlDotCirclePainter(
                           radius: 6,
-                          color: Color(0xFF565ADD),
+                          color: const Color(0xFF565ADD),
                           strokeWidth: 2,
                           strokeColor: Colors.white,
                         );
@@ -1058,18 +1057,18 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
   Widget _buildScoreCards() => Column(
     children: [
       _buildScoreCard('Agent\'s Score',      c.agentScore.value.toString()),
-      SizedBox(height: 12),
+      const SizedBox(height: 12),
       _buildScoreCard('Avg Product Score',  c.avgProductScore.value.toString()),
-      SizedBox(height: 12),
+      const SizedBox(height: 12),
       _buildScoreCard('Avg Behavior Score', c.avgBehaviorScore.value.toString()),
     ],
   );
 
   Widget _buildScoreCard(String title, String score) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFFEBEBEB),
+        color: const Color(0xFFEBEBEB),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -1077,7 +1076,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF1A1A1A),
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -1085,7 +1084,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
           ),
           Text(
             score,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF1A1A1A),
               fontSize: 24,
               fontWeight: FontWeight.bold,

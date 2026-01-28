@@ -77,10 +77,9 @@ import '../../../data/providers/ApiService.dart';
           );
 
 
-          // print('Fetched from API: $stats');
 
           if (stats != null) {
-            _setStats(stats!);
+            _setStats(stats);
              DatabaseHelper.insertOrUpdateStats(stats);
           }
         } else {
@@ -91,7 +90,6 @@ import '../../../data/providers/ApiService.dart';
 
         }
       } catch (e) {
-        print("Error: $e");
       }
     }
 

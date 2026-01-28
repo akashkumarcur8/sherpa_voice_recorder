@@ -10,7 +10,7 @@ import 'widgets/description_input.dart';
 import 'widgets/submit_button.dart';
 
 class RaiseTicketScreen extends GetView<RaiseTicketController> {
-  const RaiseTicketScreen({Key? key}) : super(key: key);
+  const RaiseTicketScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class RaiseTicketScreen extends GetView<RaiseTicketController> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.primaryPurple,
       elevation: 0,
       leading: IconButton(
         icon: const Icon(
@@ -74,9 +74,9 @@ class RaiseTicketScreen extends GetView<RaiseTicketController> {
           ),
 
           // Fixed bottom Submit button
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: const SubmitButton(),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: SubmitButton(),
           ),
         ],
       ),

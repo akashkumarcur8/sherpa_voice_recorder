@@ -10,14 +10,11 @@ class _OngoingCallHeader extends StatelessWidget {
   final VoidCallback onToggle;
   final bool isRecording;
 
-
-
   const _OngoingCallHeader({
-    Key? key,
     required this.isOpen,
     required this.onToggle,
     required this.isRecording
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +28,7 @@ class _OngoingCallHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(
+          const Text(
             'Ongoing Call',
             style: TextStyle(
               fontSize: 16,
@@ -39,15 +36,15 @@ class _OngoingCallHeader extends StatelessWidget {
               color: Colors.black87,
             ),
           ),
-          Spacer(),
+          const Spacer(),
 
           // Live pill
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: isRecording? Color(0xFFE2FFE9):Color(0xFFFFEFEF),
+              color: isRecording? const Color(0xFFE2FFE9):const Color(0xFFFFEFEF),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: isRecording? Color(0xFF0EC16E) :Color(0xFFFF4444),width: .2),
+              border: Border.all(color: isRecording? const Color(0xFF0EC16E) :const Color(0xFFFF4444),width: .2),
               boxShadow: [
                 BoxShadow(
                   color: isRecording? Colors.green.withOpacity(0.2):Colors.red.withOpacity(0.2),
@@ -68,7 +65,7 @@ class _OngoingCallHeader extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: isRecording? Color(0xFF00E244).withOpacity(0.2):Colors.red.withOpacity(0.2),
+                          color: isRecording? const Color(0xFF00E244).withOpacity(0.2):Colors.red.withOpacity(0.2),
                           spreadRadius: 4,
                           blurRadius: 8,
                         ),
@@ -78,7 +75,7 @@ class _OngoingCallHeader extends StatelessWidget {
 
                   const SizedBox(width: 8),
                   if(isRecording) ...[
-                    Text(
+                    const Text(
                       'Live',
                       style: TextStyle(
                         color: Color(0xFF1A1A1A),
@@ -87,7 +84,7 @@ class _OngoingCallHeader extends StatelessWidget {
                     ),
 
                ] else ...[
-                    Text(
+                    const Text(
                       'Offline',
                       style: TextStyle(
                         color: Color(0xFF1A1A1A),
@@ -121,48 +118,31 @@ class _OngoingCallHeader extends StatelessWidget {
 /// ——————— The main widget ———————
 class LiveNudgeSection extends StatefulWidget {
   final bool isRecording;
-   LiveNudgeSection({Key? key,required this.isRecording} ) : super(key: key);
+   const LiveNudgeSection({super.key,required this.isRecording} );
 
   @override
   _LiveNudgeSectionState createState() => _LiveNudgeSectionState();
 }
 
 class _LiveNudgeSectionState extends State<LiveNudgeSection> {
-  final NudgeController ctl = Get.put(NudgeController());
+  late final NudgeController ctl;
   bool isOpen = true;
 
   @override
   void initState() {
     super.initState();
-    if (widget.isRecording) {
-      Future.delayed(Duration(milliseconds: 500), () {
-        ctl.connect();
-      });
-    }
+    // Use Get.find() to get the existing instance created by HomeController
+    ctl = Get.find<NudgeController>();
   }
 
   @override
   void didUpdateWidget(covariant LiveNudgeSection oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // // if we just transitioned from recording → not recording, reset
-    // if (oldWidget.isRecording && !widget.isRecording) {
-    //   ctl.resetController();
-    //   ctl.disconnect();
-    // }
-
-
-    // Recording just started:
+    
+    // Recording just stopped:
     if (oldWidget.isRecording && !widget.isRecording) {
       ctl.nudges.clear();       // ← clear the list
       ctl.resetController();
-      ctl.disconnect();
-    }
-
-    // Recording just stopped:
-    else if (!oldWidget.isRecording && widget.isRecording) {
-      Future.delayed(Duration(milliseconds: 500), () {
-        ctl.connect();
-      });
     }
   }
 
@@ -271,7 +251,7 @@ class _LiveNudgeSectionState extends State<LiveNudgeSection> {
                                   ],
                                 ),
 
-                                Spacer(),
+                                const Spacer(),
 
                                 // bottom row: dots indicator
                                 Obx(() {
@@ -322,9 +302,6 @@ class _LiveNudgeSectionState extends State<LiveNudgeSection> {
     );
   }
 }
-
-
-
 
 
 

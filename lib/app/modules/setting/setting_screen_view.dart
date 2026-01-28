@@ -6,6 +6,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 
 class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
+
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
@@ -32,7 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
   void _showQualityBottomSheet() {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
       ),
       builder: (context) {
@@ -42,9 +44,9 @@ class _SettingsPageState extends State<SettingsPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Audio quality", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text("Audio quality", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ListTile(
-                title: Text("High (257 Kbps, 48 kHz)"),
+                title: const Text("High (257 Kbps, 48 kHz)"),
                 leading: Radio(
                   value: "High (257 Kbps, 48 kHz)",
                   groupValue: selectedQuality,
@@ -57,7 +59,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               ListTile(
-                title: Text("Default (128 Kbps, 44.1 kHz)"),
+                title: const Text("Default (128 Kbps, 44.1 kHz)"),
                 leading: Radio(
                   value: "Default (128 Kbps, 44.1 kHz)",
                   groupValue: selectedQuality,
@@ -70,7 +72,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               ListTile(
-                title: Text("Low (64 Kbps, 44.1 kHz)"),
+                title: const Text("Low (64 Kbps, 44.1 kHz)"),
                 leading: Radio(
                   value: "Low (64 Kbps, 44.1 kHz)",
                   groupValue: selectedQuality,
@@ -92,7 +94,7 @@ class _SettingsPageState extends State<SettingsPage> {
   void _showFormatBottomSheet() {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
       ),
       builder: (context) {
@@ -102,9 +104,9 @@ class _SettingsPageState extends State<SettingsPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Recording format", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text("Recording format", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ListTile(
-                title: Text("M4a"),
+                title: const Text("M4a"),
                 leading: Radio(
                   value: "M4a",
                   groupValue: selectedFormat,
@@ -117,7 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               ListTile(
-                title: Text("WAV"),
+                title: const Text("WAV"),
                 leading: Radio(
                   value: "WAV",
                   groupValue: selectedFormat,
@@ -130,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               ListTile(
-                title: Text("AAC"),
+                title: const Text("AAC"),
                 leading: Radio(
                   value: "AAC",
                   groupValue: selectedFormat,
@@ -163,10 +165,10 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ),
         body: ListView(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           children: [
             ListTile(
-              title: Text("Quality"),
+              title: const Text("Quality"),
               subtitle: Text(selectedQuality),
               onTap: _showQualityBottomSheet,
             ),
@@ -176,12 +178,12 @@ class _SettingsPageState extends State<SettingsPage> {
             //   onTap: () {},
             // ),
             ListTile(
-              title: Text("Recording format"),
+              title: const Text("Recording format"),
               subtitle: Text(selectedFormat),
               onTap: _showFormatBottomSheet,
             ),
             SwitchListTile(
-              title: Text("Keep screen on while recording"),
+              title: const Text("Keep screen on while recording"),
               value: keepScreenOn,
               onChanged: (value) {
                 setState(() {
@@ -194,9 +196,9 @@ class _SettingsPageState extends State<SettingsPage> {
             //   subtitle: Text("Audio recorder + other apps"),
             //   onTap: () {},
             // ),
-            Divider(),
+            const Divider(),
             ListTile(
-              title: Text("Privacy Policy"),
+              title: const Text("Privacy Policy"),
               onTap: () {
                 Get.to(const PrivacyPolicyPage());
               },
@@ -213,7 +215,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
 
             ListTile(
-              title: Text("Sherpa Help Center"),
+              title: const Text("Sherpa Help Center"),
               onTap: () {
                 Get.to(HelpForm());
 

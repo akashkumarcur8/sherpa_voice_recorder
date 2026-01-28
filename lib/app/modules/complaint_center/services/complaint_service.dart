@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/complaint_model.dart';
 import '../models/complaint_response.dart';
 
 class ComplaintService {

@@ -6,8 +6,8 @@ import 'package:sqflite/sqflite.dart';
 import '../../../data/model/statistics_data_model.dart';
 class DatabaseHelper {
   /// Database configuration
-  static final String _databaseName = "sherpa.db";
-  static final int _databaseVersion = 1;
+  static const String _databaseName = "sherpa.db";
+  static const int _databaseVersion = 1;
 
   /// Singleton instance
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -23,7 +23,7 @@ class DatabaseHelper {
     // Get the path to the document directory
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = dbPath.join(documentsDirectory.path, _databaseName);
-    print("Database path: $path"); // 👈 Add this line
+
 
     // Open the database
     _database = await openDatabase(
@@ -69,7 +69,6 @@ class DatabaseHelper {
         where: 'userId = ? AND date = ?',
         whereArgs: [stats.userId, stats.date],
       );
-      print('Updated $count row(s)');
     } else {
       // If not found, insert a new row
       int id = await db.insert(
@@ -77,7 +76,6 @@ class DatabaseHelper {
         stats.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      print('Inserted row ID: $id');
     }
   }
 

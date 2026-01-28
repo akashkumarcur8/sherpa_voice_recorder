@@ -1,24 +1,17 @@
 //  Leaderboard Screenwith filter icon
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
-import 'LeaderboardController.dart';
-import '../../widgets/filter_bottom_sheet_widget.dart';
+
+import '../controllers/leaderboard_controller.dart';
+import '../../../widgets/filter_bottom_sheet_widget.dart';
 
 // Updated Leaderboard Screen with filter icon
-class LeaderboardScreen extends StatelessWidget {
-  const LeaderboardScreen({super.key});
+class LeaderboardView extends GetView<LeaderboardController> {
+  const LeaderboardView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(
-      LeaderboardController(
-        startDate: DateFormat('yyyy-MM-dd')
-            .format(DateTime.now().subtract(const Duration(days: 7))),
-        endDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-      ),
-    );
 
     return Scaffold(
       body: Column(

@@ -25,6 +25,7 @@ class AuthService extends GetxService {
         '$_baseUrl/login/',
         data: request.toJson(),
       );
+    
 
       if (response.statusCode == 200) {
         final resData = response.data;
@@ -61,7 +62,7 @@ class AuthService extends GetxService {
       );
 
       return ManagerInfoResponse.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException {
       // If manager info fails, return default values
       return ManagerInfoResponse();
     } catch (e) {
@@ -84,7 +85,7 @@ class AuthService extends GetxService {
         },
       );
       return ManagerUserIdResponse.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException {
       // If manager info fails, return default values
       return ManagerUserIdResponse();
     } catch (e) {

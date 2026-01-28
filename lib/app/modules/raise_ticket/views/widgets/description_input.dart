@@ -5,7 +5,7 @@ import '../../../../core/constants/app_strings.dart';
 import '../../controllers/raise_ticket_controller.dart';
 
 class DescriptionInput extends GetView<RaiseTicketController> {
-  const DescriptionInput({Key? key}) : super(key: key);
+  const DescriptionInput({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +18,14 @@ class DescriptionInput extends GetView<RaiseTicketController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RichText(
-            text: TextSpan(
+            text: const TextSpan(
               text: AppStrings.description,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: AppColors.textPrimary,
               ),
-              children: const [
+              children: [
                 TextSpan(
                   text: AppStrings.requiredField,
                   style: TextStyle(
@@ -41,7 +41,7 @@ class DescriptionInput extends GetView<RaiseTicketController> {
             maxLines: 5,
             decoration: InputDecoration(
               hintText: AppStrings.enterDescription,
-              hintStyle: TextStyle(
+              hintStyle: const TextStyle(
                 color: AppColors.textHint,
                 fontSize: 14,
               ),
@@ -54,14 +54,14 @@ class DescriptionInput extends GetView<RaiseTicketController> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(
-                  color: AppColors.borderColor,
+                  color: AppColors.border,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(
                   color: controller.descriptionError.value.isEmpty
-                      ? AppColors.borderColor
+                      ? AppColors.border
                       : AppColors.borderError,
                 ),
               ),

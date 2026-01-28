@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../../../../core/constants/app_text_styles.dart';
 
 class ComplaintHeader extends StatelessWidget {
-  const ComplaintHeader({Key? key}) : super(key: key);
+  const ComplaintHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

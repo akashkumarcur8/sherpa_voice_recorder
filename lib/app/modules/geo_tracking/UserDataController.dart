@@ -43,18 +43,15 @@ class UserLocationController extends GetxController {
 
       if (response.statusCode == 200) {
         var data = response.data; // Get response data
-        print('loacation Data $data');
 
         // Loop through the response and reverse geocode the coordinates
         var userList = <UserLocation>[];
         for (var item in data) {
           double latitude = item['latitude'];
           double longitude = item['longitude'];
-          print('long.. $latitude');
 
           // Fetch the address using the latitude and longitude
           List<Placemark> placemarks = await geocodeCoordinates(latitude, longitude);
-          print('plamarks.. $placemarks');
 
           // Assuming you get the first placemark, you can modify based on your needs
           String address = placemarks.isNotEmpty
@@ -66,7 +63,6 @@ class UserLocationController extends GetxController {
           ].join(", ")
               : "Unknown address";
 
-          print('address $address');
 
           // Create a UserLocation instance with the fetched address
           userList.add(UserLocation.fromJson({
@@ -81,7 +77,6 @@ class UserLocationController extends GetxController {
         }
 
         users.value = userList;  // Update the users list with the new data
-        print('user_value $userList');
       } else {
         // Handle the error if the API fails
         Get.snackbar('Error', 'Failed to load data');

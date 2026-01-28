@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:mice_activeg/app/modules/realtime_conversation/realtime_conversation_controller.dart';
 import 'package:mice_activeg/app/modules/realtime_conversation/realtime_conversation_model.dart';
 import '../../widgets/filter_bottom_sheet_widget.dart';
@@ -52,7 +49,7 @@ class SessionListScreen extends GetView<RealtimeConvesationController> {
               children: [
                 const SizedBox(height: 20),
                 Container(
-                  margin: EdgeInsets.only(left: 3.0),
+                  margin: const EdgeInsets.only(left: 3.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -305,9 +302,9 @@ class SessionListScreen extends GetView<RealtimeConvesationController> {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: w * 0.04,
                                           vertical: w * 0.025),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFE8F0FF),
-                                        borderRadius: const BorderRadius.only(
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFFE8F0FF),
+                                        borderRadius: BorderRadius.only(
                                           bottomLeft: Radius.circular(15),
                                           bottomRight: Radius.circular(15),
                                         ),
@@ -427,7 +424,7 @@ class SessionDetailScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: borderColor, width: 1),
                     borderRadius: BorderRadius.circular(12),
-                    color: Color(0xffF8FFF9),
+                    color: const Color(0xffF8FFF9),
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(w * 0.04),
@@ -480,7 +477,7 @@ class SessionDetailScreen extends StatelessWidget {
                               ? Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
+                                    const Text(
                                       "• ",
                                       style: TextStyle(
                                         // fontSize: w * 0.045,

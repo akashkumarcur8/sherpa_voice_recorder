@@ -2,8 +2,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:flutter_sound/flutter_sound.dart';
 import 'package:web_socket_channel/io.dart';
+import '../isolates/audio_stream_isolate.dart';
 
 class WebSocketService {
   static final WebSocketService _instance = WebSocketService._internal();
@@ -12,6 +12,7 @@ class WebSocketService {
 
   IOWebSocketChannel? _channel;
   StreamController<Uint8List>? _audioController;
+  StreamSubscription<Uint8List>? _isolateStreamSubscription;
 
   // Remove separate recorder - we'll use AudioService's recorder
   bool get isConnected => _channel != null;
@@ -33,33 +34,42 @@ class WebSocketService {
           '&team_id=$teamId'
           '&full_name=$fullName'
           '&region=east';
-
+        
       _channel = IOWebSocketChannel.connect(wsUrl);
 
       if (_channel == null) {
-        print('❌ Failed to create WebSocket channel');
         return false;
       }
-
-      print('🌐 WebSocket connected successfully');
 
       // Create stream controller for audio chunks
       _audioController = StreamController<Uint8List>();
 
-      // Listen to audio chunks and send via WebSocket
-      _audioController!.stream.listen(
-            (data) {
-          print('📤 Sending ${data.length} bytes to WebSocket');
-          _channel!.sink.add(data);
+      // Start audio stream processing isolate
+      final processedStream = await AudioStreamIsolate.spawn();
+      
+      // Listen to processed audio chunks from isolate and send via WebSocket
+      _isolateStreamSubscription = processedStream.listen(
+        (processedData) {
+          _channel!.sink.add(processedData);
+          print("Sending processed audio chunk: ${processedData.lengthInBytes} bytes");
         },
         onError: (e) {
-          print('❌ Stream error: $e');
+          print('Error in audio stream isolate: $e');
+        },
+      );
+      
+      // Listen to raw audio chunks and send to isolate for processing
+      _audioController!.stream.listen(
+        (rawData) {
+          AudioStreamIsolate.processChunk(rawData);
+        },
+        onError: (e) {
+          print('Error receiving audio chunk: $e');
         },
       );
 
       return true;
     } catch (e) {
-      print('❌ Error connecting to WebSocket: $e');
       return false;
     }
   }
@@ -76,7 +86,18 @@ class WebSocketService {
     required String fullName,
   }) async {
     try {
-      // Send disconnect payload if channel is open
+      // 1. FIRST: Cancel audio stream subscription to stop new chunks
+      await _isolateStreamSubscription?.cancel();
+      _isolateStreamSubscription = null;
+
+      // 2. SECOND: Dispose audio stream isolate
+      AudioStreamIsolate.dispose();
+
+      // 3. THIRD: Close stream controller
+      await _audioController?.close();
+      _audioController = null;
+
+      // 4. FINALLY: Send disconnect payload and close WebSocket
       if (_channel != null) {
         final disconnectPayload = jsonEncode({
           "user_id": email,
@@ -88,11 +109,9 @@ class WebSocketService {
         });
 
         try {
-          print('📤 Sending disconnect payload...');
           _channel!.sink.add(disconnectPayload);
-          print('✅ Disconnect payload sent');
         } catch (e) {
-          print('❌ Failed to send disconnect payload: $e');
+          // Ignore if already closed
         }
 
         // Wait briefly to ensure server receives the message
@@ -101,15 +120,9 @@ class WebSocketService {
         // Close WebSocket
         await _channel!.sink.close();
         _channel = null;
-        print('🔒 WebSocket channel closed');
       }
-
-      // Close stream controller
-      await _audioController?.close();
-      _audioController = null;
-      print('🧹 StreamController closed');
     } catch (e) {
-      print('❌ Error disconnecting from WebSocket: $e');
+      print('Error in disconnect: $e');
     }
   }
 

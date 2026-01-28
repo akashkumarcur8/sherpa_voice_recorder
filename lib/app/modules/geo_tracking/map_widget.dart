@@ -8,6 +8,8 @@ import 'package:mice_activeg/app/modules/geo_tracking/user_postion_widget.dart';
 import 'UserDataController.dart';
 
 class GeoTrackingScreen extends StatefulWidget {
+  const GeoTrackingScreen({super.key});
+
   @override
   _GeoTrackingScreenState createState() => _GeoTrackingScreenState();
 }
@@ -27,8 +29,8 @@ class _GeoTrackingScreenState extends State<GeoTrackingScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF565ADD),
         iconTheme: const IconThemeData(color: Colors.white),
-        title: Center(
-          child: const Text(
+        title: const Center(
+          child: Text(
             'Geo Tracking',
             style: TextStyle(color: Colors.white),
           ),
@@ -48,7 +50,7 @@ class _GeoTrackingScreenState extends State<GeoTrackingScreen> {
       body: Obx(() {
         // Display loading indicator while the data is being fetched
         if (_controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else {
           // Create markers for each user location
           final markers = _controller.users.map((u) {
@@ -75,7 +77,7 @@ class _GeoTrackingScreenState extends State<GeoTrackingScreen> {
                 initialCameraPosition: CameraPosition(
                   target: _controller.users.isNotEmpty
                       ? _controller.users.first.latLng
-                      : LatLng(0.0, 0.0),
+                      : const LatLng(0.0, 0.0),
                   zoom: 12,
                 ),
                 markers: markers,
@@ -86,7 +88,7 @@ class _GeoTrackingScreenState extends State<GeoTrackingScreen> {
                 minChildSize: 0.10,
                 maxChildSize: 0.4,
                 builder: (ctx, sc) => Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.vertical(top: Radius.circular(12))),
                   child: ListView.builder(

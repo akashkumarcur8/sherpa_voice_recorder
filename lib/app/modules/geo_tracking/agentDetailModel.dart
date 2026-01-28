@@ -104,7 +104,6 @@ class CallSummary {
       try {
         callSummary = jsonDecode(callSummaryStr);
       } catch (e) {
-        print('Error decoding call_summary: $e');
       }
     }
 

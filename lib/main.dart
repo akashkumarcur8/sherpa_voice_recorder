@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,6 +7,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'app/config/firebase/firebase_options.dart';
 import 'app/core/services/foreground_service.dart';
+import 'app/core/services/storage/shared_pref_cache.dart';
 import 'app/modules/login/services/auth_service.dart';
 import 'app/routes/app_pages.dart';
 import 'app/routes/app_routes.dart';
@@ -57,11 +57,16 @@ void main() async{
     onDidReceiveNotificationResponse: (NotificationResponse response) {
     },
   );
-    runApp(MyApp());
+
+  // Initialize SharedPreferences cache (eliminates 60+ repeated disk I/O operations)
+  await SharedPrefCache().initialize();
+
+  runApp(const MyApp());
 
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(

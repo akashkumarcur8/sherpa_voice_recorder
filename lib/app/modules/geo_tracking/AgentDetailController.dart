@@ -28,20 +28,16 @@ class AgentController extends GetxController {
         // Ensure `data` is not null and contains valid fields
         if (data != null && data['latitude'] != null && data['longitude'] != null) {
           agentDetail.value = AgentLocationDetail.fromJson(data);
-          print('Agent Detail: ${agentDetail.value}');
 
           // Fetch addresses for each history entry
           await fetchAddressesForHistory();
           // Fetch addresses for each destination
           await fetchAddressesForDestinations();
         } else {
-          print("Invalid data: Missing latitude or longitude");
         }
       } else {
-        print("Failed to load agent details");
       }
     } catch (e) {
-      print("Error: $e");
     } finally {
       isLoading(false);
     }
@@ -53,16 +49,11 @@ class AgentController extends GetxController {
     if (agentDetail.value?.history != null && agentDetail.value?.history.isNotEmpty == true) {
       for (var history in agentDetail.value!.history) {
         // Ensure that lat and lng are not null
-        if (history.lat != null && history.lng != null) {
-          String address = await fetchAddressFromLatLng(history.lat!, history.lng!);
-          // Set the fetched address in the history model
-          history.address = address;
-        } else {
-          history.address = "Unknown address";
-        }
-      }
+        String address = await fetchAddressFromLatLng(history.lat, history.lng);
+        // Set the fetched address in the history model
+        history.address = address;
+            }
     } else {
-      print("No history available or history is empty.");
     }
   }
 
@@ -84,7 +75,6 @@ class AgentController extends GetxController {
         return "Unknown address";
       }
     } catch (e) {
-      print("Error in reverse geocoding: $e");
       return "Unknown address";
     }
   }
@@ -95,16 +85,11 @@ class AgentController extends GetxController {
     if (agentDetail.value?.destinations != null && agentDetail.value?.destinations.isNotEmpty == true) {
       for (var destination in agentDetail.value!.destinations) {
         // Ensure that lat and lng are not null
-        if (destination.lat != null && destination.lng != null) {
-          String address = await fetchAddressFromLatLng(destination.lat!, destination.lng!);
-          // Set the fetched address in the destination model
-          destination.address = address;
-        } else {
-          destination.address = "Unknown address";
-        }
-      }
+        String address = await fetchAddressFromLatLng(destination.lat, destination.lng);
+        // Set the fetched address in the destination model
+        destination.address = address;
+            }
     } else {
-      print("No destinations available or destinations are empty.");
     }
   }
 }

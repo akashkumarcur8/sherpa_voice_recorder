@@ -138,7 +138,7 @@ class RealtimeConvesationController extends GetxController {
       } else {
         throw Exception('Server error: ${resp.data}');
       }
-    } on DioError catch (dioErr) {
+    } on DioException catch (dioErr) {
       final msg = dioErr.response != null
           ? 'HTTP ${dioErr.response?.statusCode}: ${dioErr.response?.statusMessage}'
           : 'Network error: ${dioErr.message}';
@@ -183,6 +183,5 @@ class RealtimeConvesationController extends GetxController {
   //     ...detailed,
   //   ]);
   //
-  //   print('Synced ${unmarked.length + detailed.length} rows.');
   // }
 }

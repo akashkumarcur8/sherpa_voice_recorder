@@ -79,13 +79,13 @@ class MarkConversationDialog extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                             text: 'Enter Product Name',
                             style: TextStyle(
                               color: AppColors.textLabel,
                               fontSize: 14,
                             ),
-                            children: const [
+                            children: [
                               TextSpan(
                                 text: ' *',
                                 style: TextStyle(
@@ -209,7 +209,7 @@ class MarkConversationDialog extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Customer ID',
                           style: TextStyle(
                             color: AppColors.textLabel,
@@ -259,13 +259,13 @@ class MarkConversationDialog extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                             text: 'Choose Start Time & End Time',
                             style: TextStyle(
                               color: AppColors.textLabel,
                               fontSize: 14,
                             ),
-                            children: const [
+                            children: [
                               TextSpan(
                                 text: ' *',
                                 style: TextStyle(
@@ -285,7 +285,7 @@ class MarkConversationDialog extends StatelessWidget {
                           ),
                           decoration: InputDecoration(
                             hintText: 'hh:mm to hh:mm',
-                            hintStyle: TextStyle(
+                            hintStyle: const TextStyle(
                               color: AppColors.textHint,
                               fontSize: 14,
                             ),

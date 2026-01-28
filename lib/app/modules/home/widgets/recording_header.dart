@@ -14,14 +14,14 @@ class RecordingHeader extends StatelessWidget {
   MiceBlinkingController miceBlinkingController = Get.find<MiceBlinkingController>();
 
    RecordingHeader({
-    Key? key,
+    super.key,
     required this.isRecording,
     required this.seconds,
     required this.empName,
     required this.onMenuPressed,
     required this.onConversationPressed,
     required this.conversationCount,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +50,10 @@ class RecordingHeader extends StatelessWidget {
                  height: 20,
                  decoration: BoxDecoration(
                    shape: BoxShape.circle,
-                   color: Color(0XFFF8FFF7), // icon color
+                   color: const Color(0XFFF8FFF7), // icon color
                    boxShadow: [
                      BoxShadow(
-                       color: Color(0xFF00E244).withOpacity(0.6),
+                       color: const Color(0xFF00E244).withOpacity(0.6),
                        spreadRadius: 4,
                        blurRadius: 8,
                      ),
@@ -179,11 +179,11 @@ class StatisticsGrid extends StatelessWidget {
   final int disconnects;
 
   const StatisticsGrid({
-    Key? key,
+    super.key,
     required this.recordingHours,
     required this.qualityAudioHours,
     required this.disconnects,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -267,10 +267,10 @@ class CustomBottomNavigation extends StatelessWidget {
   final VoidCallback onMicPressed;
 
   const CustomBottomNavigation({
-    Key? key,
+    super.key,
     required this.isRecording,
     required this.onMicPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,7 @@ import '../../../../core/constants/app_strings.dart';
 import '../../controllers/raise_ticket_controller.dart';
 
 class SubmitButton extends GetView<RaiseTicketController> {
-  const SubmitButton({Key? key}) : super(key: key);
+  const SubmitButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class SubmitButton extends GetView<RaiseTicketController> {
             ? null
             : () => controller.submitTicket(),
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: AppColors.primaryPurple,
           disabledBackgroundColor: AppColors.disabledBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),

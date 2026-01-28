@@ -1,5 +1,7 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:mice_activeg/app/modules/home/home_screen.dart';
+import '../modules/leaderboard/bindings/leaderboard_binding.dart';
+import '../modules/leaderboard/views/leaderboard_view.dart';
 import '../modules/analytics/analytics_widget.dart';
 import '../modules/analytics/bindings/analytics_binding.dart';
 import '../modules/complaint_center/bindings/complaint_center_binding.dart';
@@ -28,7 +30,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.onboarding,
-      page: () => OnboardingScreen(),
+      page: () =>  OnboardingScreen(),
     ),
     GetPage(
       name: Routes.home,
@@ -73,6 +75,11 @@ class AppPages {
       name: Routes.login,
       page: () => const LoginView(),
       binding: LoginBinding(),
+    ),
+    GetPage(
+      name: Routes.leaderboard,
+      page: () => const LeaderboardView(),
+      binding: LeaderboardBinding(),
     ),
   ];
 }

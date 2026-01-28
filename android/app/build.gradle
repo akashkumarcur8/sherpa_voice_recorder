@@ -38,6 +38,14 @@ android {
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
+    // Add packaging options for 16 KB page size support
+    // Required for Google Play compliance with Android 15+ (deadline: May 31, 2026)
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

@@ -13,4 +13,5 @@ class Routes {
   static const String conversationView = '/conversation-view';
   static const String analyticsDashboard = '/analytics-dashboard';
   static const String profile = '/profile';
+  static const String leaderboard = '/leaderboard';
 }

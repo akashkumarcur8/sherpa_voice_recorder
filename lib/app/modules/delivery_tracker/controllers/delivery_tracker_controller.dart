@@ -52,7 +52,6 @@ class DeliveryTrackerController extends GetxController {
       email.value = fetchEmail ?? 'No Email';
       empName.value = fetchEmpName ?? 'No Name';
     } catch (e) {
-      print('Error loading user data: $e');
       email.value = 'No Email';
       empName.value = 'No Name';
     }
@@ -60,7 +59,6 @@ class DeliveryTrackerController extends GetxController {
 
   // Load data from API (single API call)
   Future<void> loadData() async {
-    print("Loading data...");
     try {
       isLoading.value = true;
       var managerId = await SharedPrefHelper.getpref("manager_id");
@@ -71,14 +69,12 @@ class DeliveryTrackerController extends GetxController {
 
       // Update stats
       stats.value = data['stats'];
-      print('Fetched stats: ${data['stats']}');
 
       // Update all agent lists
       pendingAgents.value = data['pendingAgents'];
       deliveredAgents.value = data['deliveredAgents'];
       allAgents.value = data['allAgents'];
 
-      print('Pending: ${pendingAgents.length}, Delivered: ${deliveredAgents.length}, Total: ${allAgents.length}');
 
       // Set filtered agents to all by default
       filteredAgents.value = allAgents;
@@ -122,7 +118,6 @@ class DeliveryTrackerController extends GetxController {
       filteredAgents.value = allAgents;
     }
 
-    print('Filter applied: $filter, Showing ${filteredAgents.length} agents');
   }
 
   // Send reminder to pending agents

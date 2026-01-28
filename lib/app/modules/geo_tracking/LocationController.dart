@@ -15,7 +15,6 @@ class LocationController extends GetxController {
 
     // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    print('serviceEnabled $serviceEnabled');
     if (!serviceEnabled) {
       statusMessage.value = 'Location services are disabled.';
       return null;
@@ -23,7 +22,6 @@ class LocationController extends GetxController {
 
     // Check and request for location permission
     permission = await Geolocator.checkPermission();
-    print('permission $permission');
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
@@ -69,7 +67,6 @@ class LocationController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        print('nsjndsjcs $statusMessage');
         statusMessage.value = 'Location Sent Successfully';
       } else {
         statusMessage.value = 'Error: ${response.statusMessage}';
@@ -83,11 +80,9 @@ class LocationController extends GetxController {
 
   // Method to start periodic updates (every 5 minutes)
   void startPeriodicUpdates() {
-    print('startPeriodicUpdates');
     // Start a Timer to fetch and send the location every 5 minutes
     _timer = Timer.periodic(const Duration(minutes: 5), (timer) async {
       Position? position = await getCurrentLocation();
-      print('position $position');
 
       if (position != null) {
         String lat = position.latitude.toString();
@@ -107,7 +102,6 @@ class LocationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('oninit');
     // Start sending location data as soon as the controller is created
     startPeriodicUpdates();
   }

@@ -29,7 +29,7 @@ class _AudioQualityTestScreenState extends State<AudioQualityTestScreen> {
   int _seconds = 0;
   Timer? _timer;
   String? _wavPath;
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   int _currentIndex = 0;
 
   // Real-time audio monitoring
@@ -62,7 +62,6 @@ class _AudioQualityTestScreenState extends State<AudioQualityTestScreen> {
     } catch (e) {
       _recReady = false;
       setState(() {});
-      print('Error initializing recorder: $e');
     }
   }
 
@@ -156,7 +155,6 @@ class _AudioQualityTestScreenState extends State<AudioQualityTestScreen> {
       }
 
       final fileSize = await file.length();
-      print('Recording file size: $fileSize bytes');
 
       if (fileSize < 1000) {
         await closeProcessing();
@@ -164,7 +162,6 @@ class _AudioQualityTestScreenState extends State<AudioQualityTestScreen> {
       }
 
       final bytes = await file.readAsBytes();
-      print('Read ${bytes.length} bytes from recording file');
 
       // Parse WAV header to skip to PCM data
       int pcmStart = _findPcmDataStart(bytes);
@@ -173,9 +170,7 @@ class _AudioQualityTestScreenState extends State<AudioQualityTestScreen> {
         throw Exception('Invalid WAV file format');
       }
 
-      print('PCM data starts at byte: $pcmStart');
       final pcmData = Uint8List.sublistView(bytes, pcmStart);
-      print('PCM data length: ${pcmData.length} bytes');
 
       if (pcmData.length < 100) {
         await closeProcessing();
@@ -200,7 +195,6 @@ class _AudioQualityTestScreenState extends State<AudioQualityTestScreen> {
       });
 
     } catch (e) {
-      print('Error processing recording: $e');
       setState(() => _isRecording = false);
 
       // Close processing dialog if open
@@ -227,7 +221,6 @@ class _AudioQualityTestScreenState extends State<AudioQualityTestScreen> {
       // Fallback: assume standard 44-byte header if "data" not found
       return bytes.length > 44 ? 44 : -1;
     } catch (e) {
-      print('Error parsing WAV header: $e');
       return -1;
     }
   }
@@ -258,9 +251,9 @@ class _AudioQualityTestScreenState extends State<AudioQualityTestScreen> {
           width: 220,
           height: 120,
           padding: const EdgeInsets.all(20),
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               CircularProgressIndicator(),
               SizedBox(height: 16),
               Text('Analyzing audio...', style: TextStyle(fontSize: 14)),
@@ -398,9 +391,9 @@ class _AudioQualityTestScreenState extends State<AudioQualityTestScreen> {
               ),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Repeat exact test phrase to verify mic:',
                   style: TextStyle(
@@ -495,7 +488,6 @@ class _AudioQualityTestScreenState extends State<AudioQualityTestScreen> {
               child: Center(
                 child: GestureDetector(
                   onTap: () {
-                    print('Microphone button tapped! Ready: $_recReady, Recording: $_isRecording');
                     if (!_recReady) {
                       _showErrorDialog('Microphone not ready. Please check permissions.');
                       return;

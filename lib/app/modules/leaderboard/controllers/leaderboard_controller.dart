@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as https;
 import 'package:intl/intl.dart';
-import 'dart:convert';
 
-import '../../core/services/storage/sharedPrefHelper.dart';
+import '../services/leaderboard_service.dart';
+
 class LeaderboardController extends GetxController {
+  final LeaderboardService _leaderboardService;
   String startDate;
   String endDate;
 
   LeaderboardController({
     required this.startDate,
     required this.endDate,
-  });
+    required LeaderboardService leaderboardService,
+  }) : _leaderboardService = leaderboardService;
 
   // Observable variables
   final RxList<dynamic> leaderboardData = <dynamic>[].obs;
@@ -57,32 +58,17 @@ class LeaderboardController extends GetxController {
 
   Future<void> fetchLeaderboardData() async {
     try {
-
       isLoading.value = true;
       error.value = null;
-      final companyId = await SharedPrefHelper.getpref("company_id");
 
-      final response = await https.post(
-        Uri.parse('https://leaderboard.darwix.ai/leaderboard'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer sherpaleaderboard123',
-        },
-        body: json.encode({
-          'companyId': companyId,
-          'startDate': startDate,
-          'endDate': endDate,
-        }),
+      final responseData = await _leaderboardService.fetchLeaderboardData(
+        startDate: startDate,
+        endDate: endDate,
       );
 
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        leaderboardData.value = responseData['data'] ?? [];
-        currentUserRank.value = _findCurrentUserRank();
-        isLoading.value = false;
-      } else {
-        throw Exception('Failed to load leaderboard data');
-      }
+      leaderboardData.value = responseData['data'] ?? [];
+      currentUserRank.value = _findCurrentUserRank();
+      isLoading.value = false;
     } catch (e) {
       error.value = e.toString();
       isLoading.value = false;

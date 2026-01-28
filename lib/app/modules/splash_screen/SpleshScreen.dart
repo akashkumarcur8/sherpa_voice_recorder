@@ -14,6 +14,7 @@ class SpleshScreen extends StatefulWidget {
 class SpleshScreenState extends State<SpleshScreen> {
   static const String KEYLOGIN = "login";
 
+  @override
   void initState() {
     super.initState();
     requestPermissions();
@@ -38,21 +39,15 @@ class SpleshScreenState extends State<SpleshScreen> {
 
     // Check the status of each permission
     if (statuses[Permission.microphone]?.isGranted ?? false) {
-      print("Microphone permission granted");
     } else {
-      print("Microphone permission denied");
       if (statuses[Permission.microphone]?.isPermanentlyDenied ?? false) {
-        print("Microphone permission is permanently denied. Please enable it in settings.");
         openAppSettings(); // Opens app settings for the user to enable permissions
       }
     }
 
     if (statuses[Permission.location]?.isGranted ?? false) {
-      print("Location permission granted");
     } else {
-      print("Location permission denied");
       if (statuses[Permission.location]?.isPermanentlyDenied ?? false) {
-        print("Location permission is permanently denied. Please enable it in settings.");
         openAppSettings();
       }
     }
@@ -68,23 +63,23 @@ class SpleshScreenState extends State<SpleshScreen> {
         child: Stack(
           children: <Widget>[
             Center(
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 child: Image.asset("asset/images/newsplash.png", fit: BoxFit.cover,),
                 // fit: BoxFit.cover,
               ),
             ),
-            Column(
+            const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: 130,),
                 Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 0.0, left:0.0),
-                    child: Container(
+                    padding: EdgeInsets.only(bottom: 0.0, left:0.0),
+                    child: SizedBox(
                       height: 40,
                       width: 40,
-                      child: const CircularProgressIndicator(
+                      child: CircularProgressIndicator(
                         strokeWidth: 5,
                         // child: LinearProgressIndicator(
                         backgroundColor: Colors.blue,
@@ -96,7 +91,7 @@ class SpleshScreenState extends State<SpleshScreen> {
                 ),
               ],
             ),
-            Column(
+            const Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

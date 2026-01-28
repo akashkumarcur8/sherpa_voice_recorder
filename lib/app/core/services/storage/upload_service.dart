@@ -3,6 +3,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../../../modules/home/notification_helper.dart';
 import '../audio_service.dart';
+import '../../isolates/upload_isolate.dart';
 
 class UploadService {
   static final UploadService _instance = UploadService._internal();
@@ -59,28 +60,24 @@ class UploadService {
     bool isDisconnection = false,
   }) async {
     if (_audioService.currentFilePath == null) {
-      print('⚠️ No file path available for upload');
       return;
     }
 
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final totalFileSize = await _audioService.getCurrentFileSize();
+    
+    // Prepare upload data in isolate (HEAVY OPERATION - offloaded from main thread)
+    final preparedData = await UploadIsolate.prepareUploadData(
+      UploadParams(
+        filePath: _audioService.currentFilePath!,
+        lastPosition: _lastUploadedPosition,
+      ),
+    );
 
-    // Check if there's new data to upload
-    if (totalFileSize <= _lastUploadedPosition) {
-      print('📝 No new data to upload');
+    if (preparedData.isEmpty) {
       return;
     }
 
-    // Read new bytes
-    final newBytes = await _audioService.readFileBytes(_lastUploadedPosition);
-
-    if (newBytes.isEmpty) {
-      print('⚠️ No bytes read from file');
-      return;
-    }
-
-    // Prepare form data
+    // Prepare form data (lightweight operation on main thread)
     final formDataMap = {
       'user_id': userId,
       'recording_name': '$timestamp/_$userId',
@@ -90,7 +87,7 @@ class UploadService {
       'end_time': timestamp,
       'disconnection': isDisconnection ? 1 : 0,
       'file': dio.MultipartFile.fromBytes(
-        newBytes,
+        preparedData.bytes,
         filename: '${timestamp}_$userId.mp3',
       ),
     };
@@ -107,17 +104,15 @@ class UploadService {
         );
 
         if (response.statusCode == 201) {
-          print('✅ Upload successful: ${response.data}');
-          _lastUploadedPosition = totalFileSize;
+          _lastUploadedPosition = preparedData.totalFileSize;
         }
 
         _isUploading = false;
-      } on dio.DioError catch (e) {
-        print('❌ Upload failed: $e');
+      } on dio.DioException catch (e) {
         _isUploading = false;
         // Save locally if upload fails
         await _saveDataLocally(
-          newBytes,
+          preparedData.bytes,
           startTimeStamp,
           timestamp,
           userId,
@@ -125,9 +120,8 @@ class UploadService {
         );
       }
     } else {
-      print('📴 No internet, saving locally');
       await _saveDataLocally(
-        newBytes,
+        preparedData.bytes,
         startTimeStamp,
         timestamp,
         userId,
@@ -148,7 +142,7 @@ class UploadService {
       timestamp: endTime.toString(),
       data: {
         'user_id': userId,
-        'recording_name': '${endTime}/_$userId',
+        'recording_name': '$endTime/_$userId',
         'employee_id': userId,
         'start_time': startTime,
         'company_id': companyId,
@@ -163,7 +157,6 @@ class UploadService {
   /// Attempt to upload locally saved data
   Future<void> uploadLocalData() async {
     if (!await InternetConnectionChecker().hasConnection) {
-      print('📴 No internet connection');
       return;
     }
 
@@ -177,13 +170,18 @@ class UploadService {
       if (data == null) continue;
 
       try {
+        // Prepare bytes in isolate (HEAVY OPERATION - offloaded from main thread)
+        final bytes = await UploadIsolate.prepareLocalDataBytes(
+          List<int>.from(data['file_bytes']),
+        );
+        
         final formData = dio.FormData.fromMap({
           'user_id': data['user_id'],
           'recording_name': data['recording_name'],
           'employee_id': data['employee_id'],
           'company_id': data['company_id'],
           'file': dio.MultipartFile.fromBytes(
-            List<int>.from(data['file_bytes']),
+            bytes,
             filename: '${data['recording_name']}.mp3',
           ),
         });
@@ -194,11 +192,9 @@ class UploadService {
         );
 
         if (response.statusCode == 201) {
-          print('✅ Local upload successful: ${data['recording_name']}');
           await _storageService.deleteUploadData(key);
         }
       } catch (e) {
-        print('❌ Error uploading ${data['recording_name']}: $e');
       }
     }
 

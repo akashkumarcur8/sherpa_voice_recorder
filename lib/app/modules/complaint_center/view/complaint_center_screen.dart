@@ -8,7 +8,7 @@ import 'widgets/complaint_filter_bar.dart';
 import 'widgets/complaint_search_bar.dart';
 
 class ComplaintCenterScreen extends StatelessWidget {
-  const ComplaintCenterScreen({Key? key}) : super(key: key);
+  const ComplaintCenterScreen({super.key});
 
   FilterType _mapFilterType(ComplaintFilter filter) {
     switch (filter) {
@@ -209,7 +209,7 @@ class ComplaintCenterScreen extends StatelessWidget {
                       else
                         ...controller.displayedComplaints.map((complaint) {
                           return ComplaintListItem(complaint: complaint);
-                        }).toList(),
+                        }),
                     ],
                   ),
                 ),

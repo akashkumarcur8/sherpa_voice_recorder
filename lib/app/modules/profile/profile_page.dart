@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/services/storage/sharedPrefHelper.dart';
 import '../../routes/app_routes.dart';
-import '../leaderboard/leaderboard_dashboard.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -50,10 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void handleTabClick(String tab) {
     if (tab == 'leaderboard') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const LeaderboardScreen()),
-      );
+      Get.toNamed(Routes.leaderboard);
     } else {
       setState(() {
         activeTab = tab;
@@ -63,20 +59,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget renderBadgeView() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: GridView.count(
         crossAxisCount: 3,
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
         children: [
-          _buildBadgeItem(Icons.access_time, Color(0xFF5EDEC3), Color(0xFFC9F2E9)),
-          _buildBadgeItem(Icons.bar_chart, Color(0xFFFFC93D), Color(0xFFFFF9C2)),
-          _buildBadgeItem(Icons.public, Color(0xFF6BB8FF), Color(0xFFD6F0FF)),
-          _buildBadgeItem(Icons.emoji_events, Color(0xFFFF6B84), Color(0xFFFFD6DD)),
-          _buildBadgeItem(Icons.extension, Color(0xFF6A5AE0), Color(0xFFC4D0FB)),
-          _buildBadgeItem(Icons.lock, Color(0xFF7B7676), Color(0xFFEBEBEB)),
+          _buildBadgeItem(Icons.access_time, const Color(0xFF5EDEC3), const Color(0xFFC9F2E9)),
+          _buildBadgeItem(Icons.bar_chart, const Color(0xFFFFC93D), const Color(0xFFFFF9C2)),
+          _buildBadgeItem(Icons.public, const Color(0xFF6BB8FF), const Color(0xFFD6F0FF)),
+          _buildBadgeItem(Icons.emoji_events, const Color(0xFFFF6B84), const Color(0xFFFFD6DD)),
+          _buildBadgeItem(Icons.extension, const Color(0xFF6A5AE0), const Color(0xFFC4D0FB)),
+          _buildBadgeItem(Icons.lock, const Color(0xFF7B7676), const Color(0xFFEBEBEB)),
         ],
       ),
     );
@@ -100,11 +96,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget renderStatisticsView() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: Column(
         children: [
           // Congratulations Message
-          Column(
+          const Column(
             children: [
               Text(
                 "You've handled a total of",
@@ -124,10 +120,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           // Circular Progress
-          Container(
+          const SizedBox(
             width: 128,
             height: 128,
             child: Stack(
@@ -154,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           // Stats Cards
           Row(
@@ -164,9 +160,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: Color(0xFFEBEBEB)),
+                    side: const BorderSide(color: Color(0xFFEBEBEB)),
                   ),
-                  child: Padding(
+                  child: const Padding(
                     padding: EdgeInsets.all(16),
                     child: Column(
                       children: [
@@ -193,11 +189,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [Color(0xFF565ADD), Color(0xFF6A5AE0)],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
@@ -206,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   child: Stack(
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.all(16),
                         child: Column(
                           children: [
@@ -237,11 +233,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Container(
                           width: 24,
                           height: 24,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Color(0xFFFF6B84),
                             shape: BoxShape.circle,
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               "8",
                               style: TextStyle(
@@ -301,7 +297,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Header with background
                   Container(
                     height: 192,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       // color: Color(0xFF565ADD),
                       gradient: LinearGradient(
                         colors: [Color(0xFF565ADD), Color(0xFF6A5AE0)],
@@ -330,23 +326,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // Profile Avatar
                   Transform.translate(
-                    offset: Offset(0, -48),
+                    offset: const Offset(0, -48),
                     child: Container(
                       width: 96,
                       height: 96,
                       decoration: BoxDecoration(
-                        color: Color(0xFFDFDFDF),
+                        color: const Color(0xFFDFDFDF),
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 4),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.1),
                             blurRadius: 8,
-                            offset: Offset(0, 4),
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.person,
                         color: Color(0xFF7B7676),
                         size: 40,
@@ -356,33 +352,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // User Info
                   Transform.translate(
-                    offset: Offset(0, -32),
+                    offset: const Offset(0, -32),
                     child: Column(
                       children: [
                         Text(
                           emp_name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF1A1A1A),
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
                               width: 8,
                               height: 8,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Color(0xFF565ADD),
                                 shape: BoxShape.circle,
                               ),
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Text(
                               storeName,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: Color(0xFF565ADD),
                               ),
@@ -395,17 +391,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // Stats Card
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [Color(0xFF565ADD), Color(0xFF6A5AE0)],
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Padding(
+                      child: const Padding(
                         padding: EdgeInsets.all(16),
                         child: Row(
                           children: [
@@ -484,14 +480,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
 
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
                   // Navigation Tabs
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _buildTab("Badge", "badge"),
-                      SizedBox(width: 32),
+                      const SizedBox(width: 32),
                       // _buildTab("Statistics", "statistics"),
                       // SizedBox(width: 32),
                       _buildTab("Leaderboard", "leaderboard"),
@@ -504,14 +500,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // User Details
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 28,vertical: 32),
+                    padding: const EdgeInsets.symmetric(horizontal: 28,vertical: 32),
                     child: Align(
                       alignment: Alignment.centerLeft, // Explicitly aligning to the left
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start, // Keep this for the left alignment of the text
                         children: [
                           _buildUserDetail("Name", emp_name),
-                          SizedBox(height: 8,),
+                          const SizedBox(height: 8,),
 
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
@@ -519,9 +515,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             indent: 0, // Left indentation
                             endIndent: 0, // Right indentation
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           _buildUserDetail("Email", email),
-                          SizedBox(height: 8,),
+                          const SizedBox(height: 8,),
 
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
@@ -529,9 +525,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             indent: 0, // Left indentation
                             endIndent: 0, // Right indentation
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           _buildUserDetail("Company Name", storeName),
-                          SizedBox(height: 8,),
+                          const SizedBox(height: 8,),
 
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
@@ -539,9 +535,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             indent: 0, // Left indentation
                             endIndent: 0, // Right indentation
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           _buildUserDetail("Position", designation),
-                          SizedBox(height: 8,),
+                          const SizedBox(height: 8,),
                           const Divider(
                             color: Color(0XFFEBEBEB), // Line color
                             thickness: 0.2, // Thin line
@@ -557,7 +553,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Sign Out Button
 
                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
                       child: SizedBox(
                         
                         width: double.infinity,
@@ -566,17 +562,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             await SharedPrefHelper.setIsloginValue(false);
                             Get.offAll(Routes.login);                          },
                           style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            side: BorderSide(color: Color(0xFFEBEBEB)),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            side: const BorderSide(color: Color(0xFFEBEBEB)),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
 
 
                             ),
-                            backgroundColor: Color(0XFFF6F6F6)
+                            backgroundColor: const Color(0XFFF6F6F6)
 
                           ),
-                          child: Text(
+                          child: const Text(
                             "Sign Out",
                             style: TextStyle(
                               color: Color(0xFF1A1A1A),
@@ -638,15 +634,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title,
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              color: isActive ? Color(0xFF565ADD) : Color(0xFF9D9D9D),
+              color: isActive ? const Color(0xFF565ADD) : const Color(0xFF9D9D9D),
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           if (isActive)
             Container(
               width: 20,
               height: 2,
-              color: Color(0xFF565ADD),
+              color: const Color(0xFF565ADD),
             ),
         ],
       ),
@@ -659,16 +655,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: Color(0xFF565ADD),
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w500,
             color: Color(0xFF1A1A1A),
           ),

@@ -5,7 +5,7 @@ import '../../controllers/delivery_tracker_controller.dart';
 import '../../../../core/constants/app_colors.dart';
 
 class FilterDropdownWidget extends StatelessWidget {
-  const FilterDropdownWidget({Key? key}) : super(key: key);
+  const FilterDropdownWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

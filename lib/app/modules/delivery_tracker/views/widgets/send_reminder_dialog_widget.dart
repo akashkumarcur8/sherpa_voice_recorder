@@ -5,7 +5,7 @@ import '../../controllers/delivery_tracker_controller.dart';
 import '../../../../core/constants/app_colors.dart';
 
 class SendReminderDialog extends StatelessWidget {
-  const SendReminderDialog({Key? key}) : super(key: key);
+  const SendReminderDialog({super.key});
 
   static void show() {
     Get.dialog(

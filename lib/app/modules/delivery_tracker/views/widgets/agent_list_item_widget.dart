@@ -8,9 +8,9 @@ class AgentListItemWidget extends StatelessWidget {
   final AgentModel agent;
 
   const AgentListItemWidget({
-    Key? key,
+    super.key,
     required this.agent,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

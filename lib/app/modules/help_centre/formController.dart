@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'dart:io';
 import '../../routes/app_routes.dart';
-import '../home/home.dart';
 import '../../core/services/storage/sharedPrefHelper.dart';
 import 'audio_quality_test_screen.dart';
 import 'formWidget.dart';
@@ -274,7 +273,7 @@ class HelpFormController extends GetxController   {
       var managerId = await SharedPrefHelper.getpref("manager_id");
       var companyId = await SharedPrefHelper.getpref("company_id");
 
-      if (userId == null || userId.isEmpty) {
+      if (userId.isEmpty) {
         throw Exception('User ID not found. Please login again.');
       }
 
@@ -358,15 +357,15 @@ class HelpFormController extends GetxController   {
           "", // Title
           "", // Message
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Color(0xFFFFFFFF),
-          duration: Duration(seconds: 3),
-          margin: EdgeInsets.only(left: 10, right: 10, bottom: 30),
+          backgroundColor: const Color(0xFFFFFFFF),
+          duration: const Duration(seconds: 3),
+          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
           borderRadius: 12,
-          borderColor: Color(0xFF6B7071),
+          borderColor: const Color(0xFF6B7071),
           borderWidth: 1,
-          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          icon: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          icon: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
             child: Icon(
               Icons.check_circle,
               color: Color(0xFF00E244),
@@ -374,12 +373,12 @@ class HelpFormController extends GetxController   {
             ),
           ),
           shouldIconPulse: false,
-          titleText: Column(
+          titleText: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 2),
+                padding: EdgeInsets.only(left: 2),
                 child: Text(
                   "Congratulations🎉",
                   style: TextStyle(
@@ -400,7 +399,7 @@ class HelpFormController extends GetxController   {
               ),
             ],
           ),
-          messageText: SizedBox(), // Prevents default spacing
+          messageText: const SizedBox(), // Prevents default spacing
         );
         _resetForm();
         Get.toNamed(Routes.home);

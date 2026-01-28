@@ -1,14 +1,16 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mice_activeg/app/core/utils/extensions/snackbar_extensions.dart';
 import 'package:mice_activeg/app/modules/home/controllers/statistics_data_controller.dart';
 import '../../../core/services/audio_service.dart';
-import '../../../core/services/storage/sharedPrefHelper.dart';
+import '../../../core/services/storage/shared_pref_cache.dart';
 import '../../../core/services/websocket_service.dart';
 import '../../../core/services/storage/upload_service.dart';
 import '../notification_helper.dart';
 import 'mice_blinking_controller.dart';
+import '../../live_nudges/live_nudegs_controller.dart';
 
 class HomeController extends GetxController {
   // Services
@@ -20,6 +22,7 @@ class HomeController extends GetxController {
   late final StatisticsDataController statsController;
   final MiceBlinkingController miceBlinkingController =
       Get.put(MiceBlinkingController());
+  final NudgeController nudgeController = Get.put(NudgeController());
 
   // Platform channels
   static const platform2 = MethodChannel('audio_device_channel');
@@ -69,45 +72,47 @@ class HomeController extends GetxController {
     _startDeviceMonitoring();
   }
 
-  /// Load user data from SharedPreferences
+  /// Load user data from SharedPreferences cache
   Future<void> _loadUserData() async {
-    username = await SharedPrefHelper.getpref("username") ?? "";
-    empName.value = await SharedPrefHelper.getpref("email") ?? "";
-    email.value = await SharedPrefHelper.getpref("emp_name") ?? "";
-    storeName = await SharedPrefHelper.getpref("store_name") ?? "";
-    empType = await SharedPrefHelper.getpref("emp_type") ?? "";
-    companyId = await SharedPrefHelper.getpref("company_id") ?? "NA";
-    managerId = await SharedPrefHelper.getpref("manager_id") ?? "NA";
-    teamId = await SharedPrefHelper.getpref("team_id") ?? "NA";
+    username = SharedPrefCache().get("username");
+    empName.value = SharedPrefCache().get("emp_name");
+    email.value = SharedPrefCache().get("email");
+    storeName = SharedPrefCache().get("store_name");
+    empType = SharedPrefCache().get("emp_type");
+    companyId = SharedPrefCache().get("company_id").isEmpty 
+        ? "NA" 
+        : SharedPrefCache().get("company_id");
+    managerId = SharedPrefCache().get("manager_id").isEmpty 
+        ? "NA" 
+        : SharedPrefCache().get("manager_id");
+    teamId = SharedPrefCache().get("team_id").isEmpty 
+        ? "NA" 
+        : SharedPrefCache().get("team_id");
+        print("User Data: $username, $empName, $email, $storeName, $empType, $companyId, $managerId, $teamId");
   }
 
   /// Fetch statistics data
   Future<void> _fetchStatistics() async {
     final DateTime selectedDate = DateTime.now();
-    var userId = await SharedPrefHelper.getpref("user_id");
+    var userId = SharedPrefCache().get("user_id");
 
-    if (userId != null) {
-      await statsController.fetchUserAudioStats(
-        userId: int.parse(userId),
-        selectedDate: selectedDate,
-      );
+    await statsController.fetchUserAudioStats(
+      userId: int.parse(userId),
+      selectedDate: selectedDate,
+    );
     }
-  }
 
   /// Start recording - MANUAL MODE (Mic button press)
   Future<void> startRecordingManually() async {
     try {
-      print('🎤 MANUAL START: User pressed mic button');
 
       await _startRecordingInternal();
 
       // Set mode to MANUAL
       recordingMode.value = "manual";
 
-      print('✅ Manual recording started - Mode: ${recordingMode.value}');
       ctx!.showSuccessSnackBar("Your call is now live.");
     } catch (e) {
-      print('❌ Error in manual start: $e');
       Get.snackbar(
         "Error",
         "Failed to start recording",
@@ -119,24 +124,20 @@ class HomeController extends GetxController {
   /// Start recording - DEVICE MODE (Auto-start on device connect)
   Future<void> _startRecordingByDevice() async {
     try {
-      print('🔌 DEVICE START: Audio device connected');
 
       await _startRecordingInternal();
 
       // Set mode to DEVICE
       recordingMode.value = "device";
 
-      print('✅ Device recording started - Mode: ${recordingMode.value}');
 
       ctx!.showSuccessSnackBar("Your call is now live.");
     } catch (e) {
-      print('❌ Error in device start: $e');
     }
   }
 
   /// Internal method - Common recording start logic
   Future<void> _startRecordingInternal() async {
-    print('🚀 Starting recording and streaming...');
 
     // Start background service
     BackgroundService().startService();
@@ -150,6 +151,7 @@ class HomeController extends GetxController {
       teamId: teamId,
       fullName: empName.value.toString(),
     );
+    print("wsConnected $wsConnected");
 
     if (!wsConnected) {
       throw Exception("WebSocket connection failed");
@@ -187,87 +189,107 @@ class HomeController extends GetxController {
 
     // Try to upload any pending local data
     await _uploadService.uploadLocalData();
+
+    // Connect to live nudges WebSocket
+    nudgeController.connect();
   }
 
   /// Stop recording - MANUAL STOP (User pressed stop button)
-  Future<void> stopRecordingManually() async {
+  void stopRecordingManually() {
+    // COMPLETELY SYNCHRONOUS - NO ASYNC AT ALL
     try {
-      print('🛑 MANUAL STOP: User pressed stop button');
-
-      await _stopRecordingInternal();
-
-      // Clear mode
+      // 1. Update state IMMEDIATELY (synchronous)
+      isRecording.value = false;
       recordingMode.value = "";
-
-      print('✅ Manual recording stopped');
+      
+      // 2. Show feedback (synchronous)
       ctx!.showSuccessSnackBar("The call has been disconnected.");
+      
+      // 3. Schedule cleanup for NEXT frame (doesn't block this frame)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _performCleanupAfterStop();
+      });
     } catch (e) {
-      print('❌ Error in manual stop: $e');
+      print('Error in stopRecordingManually: $e');
     }
   }
 
   /// Stop recording - DEVICE STOP (Device disconnected)
-  Future<void> _stopRecordingByDevice() async {
+  void _stopRecordingByDevice() {
     try {
-      print('🔌 DEVICE STOP: Audio device disconnected');
-
-      await _stopRecordingInternal();
-
-      // Clear mode
+      // COMPLETELY SYNCHRONOUS - NO ASYNC AT ALL
+      isRecording.value = false;
       recordingMode.value = "";
-
-      print('✅ Device recording stopped.');
+      
       ctx!.showSuccessSnackBar("The call has been disconnected.");
+      
       // Show notification
       NotificationHelper.showNotification(
         title: "Recording Stopped!! ⚠️",
-        body:
-            "The receiver has been disconnected. Plug it back in to resume recording seamlessly. 🚀",
+        body: "The receiver has been disconnected. Plug it back in to resume recording seamlessly. 🚀",
         sound: "plugout",
         channelId: "3",
       );
+      
+      // Schedule cleanup for NEXT frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _performCleanupAfterStop();
+      });
     } catch (e) {
-      print('❌ Error in device stop: $e');
+      print('Error in _stopRecordingByDevice: $e');
     }
   }
 
-  /// Internal method - Common recording stop logic
-  Future<void> _stopRecordingInternal() async {
-    print('🛑 Stopping recording and streaming...');
+  /// Perform cleanup after stop - runs AFTER frame is rendered
+  void _performCleanupAfterStop() async {
+    try {
+      // Cancel timers
+      _recordingTimer?.cancel();
+      _uploadService.stopPeriodicUpload();
+      
+      // Stop services in background
+      Future.wait([
+        Future(() => BackgroundService().stopService()),
+        Future(() => miceBlinkingController.stopAnimation()),
+        Future(() => nudgeController.disconnect()),
+        _webSocketService.disconnect(
+          email: email.toString(),
+          managerId: managerId,
+          companyId: companyId,
+          teamId: teamId,
+          fullName: empName.toString(),
+        ),
+        _audioService.stopRecording(),
+      ]);
+      
+      // Final upload (fire and forget)
+      _performFinalUploadInBackground();
+      
+      // Fetch statistics later
+      Future.delayed(Duration(seconds: 1), () {
+        _fetchStatistics();
+      });
+    } catch (e) {
+      print('Error in cleanup: $e');
+    }
+  }
 
-    // Stop background service
-    BackgroundService().stopService();
-    miceBlinkingController.stopAnimation();
-    // Stop WebSocket streaming
-    await _webSocketService.disconnect(
-      email: email.toString(),
-      managerId: managerId,
-      companyId: companyId,
-      teamId: teamId,
-      fullName: empName.toString(),
-    );
-
-    // Stop both audio recordings
-    await _audioService.stopRecording();
-
-    // Stop timers
-    _recordingTimer?.cancel();
-    _uploadService.stopPeriodicUpload();
-
-    // Final upload
-    final userId = await SharedPrefHelper.getpref("user_id");
-    await _uploadService.uploadAudioData(
-      DateTime.now().millisecondsSinceEpoch - 30 * 60 * 1000,
-      userId: userId,
-      companyId: companyId,
-      isDisconnection: true,
-    );
-
-    // Update state
-    isRecording.value = false;
-
-    // Refresh statistics
-    await _fetchStatistics();
+  /// Perform final upload in background without blocking UI
+  void _performFinalUploadInBackground() async {
+    try {
+      final userId = SharedPrefCache().get("user_id");
+      
+      // This runs in background, won't block the stop button
+      await _uploadService.uploadAudioData(
+        DateTime.now().millisecondsSinceEpoch - 30 * 60 * 1000,
+        userId: userId,
+        companyId: companyId,
+        isDisconnection: true,
+      );
+    } catch (e) {
+      print('Background final upload failed: $e');
+      // Failure is OK - periodic upload will retry
+    }
   }
 
   /// Start recording timer
@@ -313,7 +335,6 @@ class HomeController extends GetxController {
           // Recording already chal rahi hai
 
           if (recordingMode.value == "manual") {
-            print('ℹ️ Manual mode active - Device connection ignored');
           }
           // Device mode mein already hai - Continue recording
         }
@@ -321,10 +342,9 @@ class HomeController extends GetxController {
         if (isRecording.value) {
           if (recordingMode.value == "device") {
             // DEVICE mode mein hai - Device disconnect pe STOP KARO
-            await _stopRecordingByDevice();
+            _stopRecordingByDevice();
           } else if (recordingMode.value == "manual") {
             // MANUAL mode mein hai - Device disconnect pe STOP NAHI KARO
-            print('ℹ️ Manual mode active - Device disconnection ignored');
           }
         }
       }

@@ -221,13 +221,10 @@
 //
 //        // await _recorder.openRecorder();
 //
-//       // print('✅ Recorder opened.');
 //
 //       // Debug: Check if WebSocket is connected
 //       if (_channel != null && _channel?.sink != null) {
-//          print('🌐 WebSocket channel exists.');
 //       } else {
-//          print('❌ WebSocket channel is null.');
 //       }
 //
 //
@@ -237,11 +234,9 @@
 //
 //       // Listen to audio chunks and send via WebSocket
 //       //  _audioController!.stream.listen((Uint8List data) async{
-//       //   print('📤 Sending audio chunk of size: ${data.length}');
 //       //   try {
 //       //      _channel?.sink.add(data);
 //       //   } catch (e) {
-//       //     print('❌ Failed to send chunk: $e');
 //       //   }
 //       // });
 //
@@ -250,12 +245,9 @@
 //       // 2) Create controller & pipe chunks to socket
 //       _audioController = StreamController<Uint8List>();
 //       _audioController!.stream.listen((data) {
-//          print('📤 Sending ${data.length} bytes');
 //         _channel!.sink.add(data);
-//          print('✅ Chunk sent');
 //
 //       }, onError: (e) {
-//          print('❌ Stream error: $e');
 //       });
 //
 //
@@ -277,7 +269,6 @@
 //       });
 //
 //       // Start recording with audio going to the StreamSink
-//       // print('🎙️ Starting audio stream...');
 //       // await _recorder.startRecorder(
 //       //   codec: Codec.pcm16,
 //       //   numChannels: 1,
@@ -293,14 +284,12 @@
 //         sampleRate: 16000,
 //         toStream: _audioController!.sink,
 //       );
-//       print('🚀 Audio streaming started.');
 //       if(mounted){
 //         context.showSuccessSnackBar("Your call is now live.");
 //
 //       }
 //
 //     } catch (e) {
-//       // print('❌ Error starting streaming: $e');
 //       if(mounted){
 //         context.showErrorSnackBar("The call was disconnected. Please try again.");
 //       }
@@ -318,9 +307,7 @@
 //
 //       await _streamRecorder.stopRecorder();
 //
-//       print('🔒 Streaming stopped');
 //       // await _recorder.stopRecorder();
-//       print('🛑 Recorder stopped.');
 //
 //       _timer?.cancel();
 //       setState(() {
@@ -338,26 +325,20 @@
 //           "status": "disconnect",
 //         });
 //         try {
-//           print('📤 Sending disconnect payload...');
 //           _channel!.sink.add(disconnectPayload);
-//           print('✅ Disconnect payload sent.');
 //         } catch (e) {
-//           print('❌ Failed to send disconnect payload: $e');
 //         }
 //
 //         // 3) Close the WebSocket sink (optional: wait a fraction to ensure server receives the JSON)
 //         await Future.delayed(const Duration(milliseconds: 200));
 //         await _channel!.sink.close();
 //         _channel = null;
-//         print('🔒 WebSocket channel closed.');
 //       }
 //
 //       // 4) Close the stream to clean up resources
 //       await _audioController?.close();
 //       _audioController = null;
-//       print('🧹 StreamController closed.');
 //     } catch (e) {
-//       print('❌ Error stopping streaming: $e');
 //     }
 //   }
 //
@@ -468,7 +449,6 @@
 //
 //       }
 //     } catch (e) {
-//       print("Error: An error occurred - $e");
 //     }
 //   }
 //
@@ -571,11 +551,9 @@
 //       double amplitudeDb = e.decibels ?? 0;
 //
 //       // Log amplitude values for debugging
-//       print("Amplitude: $amplitudeDb dB");
 //
 //       if (initialBuffer) {
 //         // Ignore values during the initial buffer
-//         print("Initial buffer: Ignoring amplitude");
 //         return;
 //       }
 //
@@ -591,7 +569,6 @@
 //       // First warning at 1 minute (60 seconds)
 //       if (silentIntervals == 60 && !firstNotificationTriggered) {
 //         firstNotificationTriggered = true;
-//         // print("Triggering 1-minute warning notification");
 //         showNotification(
 //           title: "Silence Detected!! ⚠️",
 //           body:
@@ -603,7 +580,6 @@
 //
 //       // Stop recording after 15 minutes (900 seconds)
 //       if (silentIntervals >= 120) {
-//         // print("Triggering 5-minute stop recording notification");
 //         showNotification(
 //           title: "Silence detected for 15 minutes!! ⚠️",
 //           body:
@@ -808,7 +784,6 @@
 //           );
 //
 //           if (response.statusCode == 201) {
-//             print('Response data: ${response.data}');
 //             await trace.stop();
 //
 //             // Update the last uploaded position to the current file size
@@ -820,11 +795,9 @@
 //
 //         }
 //       } else {
-//         //print('No internet connection, data saved locally.');
 //         saveDataLocally();
 //       }
 //     } else {
-//       print('No new data to upload.');
 //     }
 //   }
 //
@@ -866,7 +839,6 @@
 //
 //       // startTimeStamp=  await DateTime.now().millisecondsSinceEpoch;
 //     } else {
-//       print('No new data to save.');
 //     }
 //   }
 //
@@ -910,15 +882,14 @@
 //         );
 //
 //         if (response.statusCode == 201) {
-//           print(
+
 //               'Upload successful local data to the server for ${data['recording_name']}');
 //           await _uploadBox.delete(key); // Remove the data from local storage
 //         } else {
-//           print(
+
 //               'Upload failed for ${data['recording_name']} with status: ${response.statusCode}');
 //         }
 //       } catch (e) {
-//         print('Error uploading ${data['recording_name']}: $e');
 //       }
 //     }
 //     setState(() {

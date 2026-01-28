@@ -81,7 +81,6 @@ void onStart(ServiceInstance service) async {
       }
     }
 
-    // print("background service running");
     service.invoke('update');
   });
 // Timer.periodic

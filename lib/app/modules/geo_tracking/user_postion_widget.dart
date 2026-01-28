@@ -6,7 +6,7 @@ import 'AgentDetailController.dart';
 class AgentLocationDetailScreen extends StatefulWidget {
   var userId;
 
-  AgentLocationDetailScreen({required this.userId});
+  AgentLocationDetailScreen({super.key, required this.userId});
 
   @override
   _AgentLocationDetailScreenState createState() => _AgentLocationDetailScreenState();
@@ -63,11 +63,11 @@ class _AgentLocationDetailScreenState extends State<AgentLocationDetailScreen> {
 
         final agent = controller.agentDetail.value;
         if (agent == null) {
-          return Center(child: Text('Agent details not available.'));
+          return const Center(child: Text('Agent details not available.'));
         }
 
         final historyPolyline = Polyline(
-          polylineId: PolylineId('history'),
+          polylineId: const PolylineId('history'),
           points: agent.history.map((h) => h.position).toList(),
           width: 4,
           color: Colors.blueAccent,
@@ -101,7 +101,7 @@ class _AgentLocationDetailScreenState extends State<AgentLocationDetailScreen> {
               initialCameraPosition: CameraPosition(
                 target: agent.history.isNotEmpty
                     ? agent.history.last.position
-                    : LatLng(0.0, 0.0),
+                    : const LatLng(0.0, 0.0),
                 zoom: 14,
               ),
               polylines: {historyPolyline},
@@ -122,17 +122,17 @@ class _AgentLocationDetailScreenState extends State<AgentLocationDetailScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text("Last Call Summary"),
+                          title: const Text("Last Call Summary"),
                           content: SingleChildScrollView(
                             child: Text(
                               agent.lastCallSummary.body,
-                              style: TextStyle(fontSize: 14, color: Colors.black),
+                              style: const TextStyle(fontSize: 14, color: Colors.black),
                             ),
                           ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              child: Text("Close"),
+                              child: const Text("Close"),
                             ),
                           ],
                         );
@@ -140,25 +140,25 @@ class _AgentLocationDetailScreenState extends State<AgentLocationDetailScreen> {
                     );
                   },
                   child: Padding(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Last Call Summary",
+                        const Text("Last Call Summary",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 6),
+                        const SizedBox(height: 6),
                         Padding(
-                          padding: EdgeInsets.only(left: 0),
+                          padding: const EdgeInsets.only(left: 0),
                           child: Text(
                             agent.lastCallSummary.body,
-                            style: TextStyle(fontSize: 14, color: Colors.black),
+                            style: const TextStyle(fontSize: 14, color: Colors.black),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(height: 4),
-                        Text(
+                        const SizedBox(height: 4),
+                        const Text(
                           "Read more...",
                           style: TextStyle(
                             fontSize: 14,
@@ -180,7 +180,7 @@ class _AgentLocationDetailScreenState extends State<AgentLocationDetailScreen> {
               builder: (_, sc) => Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                   border: Border.all(color: Colors.grey.shade300), // Added border around the sheet
                 ),
                 child: Padding(
@@ -192,10 +192,10 @@ class _AgentLocationDetailScreenState extends State<AgentLocationDetailScreen> {
                       final d = agent.destinations[i];
 
                       return Container(
-                        margin: EdgeInsets.only(bottom: 8.0), // Space between list items
+                        margin: const EdgeInsets.only(bottom: 8.0), // Space between list items
                         decoration: BoxDecoration(
                           color: selectedItem == d.scheduledArrival
-                              ? Color(0xFF565ADD) // Selected item color
+                              ? const Color(0xFF565ADD) // Selected item color
                               : (d.scheduledArrival == agent.destinations.first.scheduledArrival
                               ? Colors.blue.shade50 // Highlight the first destination
                               : Colors.transparent),
@@ -258,7 +258,7 @@ class _AgentLocationDetailScreenState extends State<AgentLocationDetailScreen> {
                                 );
 
                                 // Wait for animation to complete
-                                await Future.delayed(Duration(milliseconds: 800));
+                                await Future.delayed(const Duration(milliseconds: 800));
 
                                 // Show the info window for this marker using index
                                 await mapController!.showMarkerInfoWindow(
@@ -266,7 +266,6 @@ class _AgentLocationDetailScreenState extends State<AgentLocationDetailScreen> {
                                 );
                               }
                             } catch (e) {
-                              print('Error showing marker info window: $e');
                               // Fallback: Just move the camera without showing info window
                               if (mapController != null) {
                                 mapController!.animateCamera(

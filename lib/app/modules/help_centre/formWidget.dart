@@ -11,6 +11,8 @@ class HelpForm extends StatelessWidget {
   final LayerLink _infoLink = LayerLink();
   OverlayEntry? _infoTooltip;
 
+  HelpForm({super.key});
+
   void _toggleInfoTooltip(BuildContext context) {
     if (_infoTooltip == null) {
       _showInfoTooltip(context);
@@ -256,7 +258,7 @@ class HelpForm extends StatelessWidget {
               if (controller.uploadedImages.isEmpty)
                 InkWell(
                   onTap: controller.captureImage,
-                  child: Container(
+                  child: SizedBox(
                     height: 80,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -583,10 +585,10 @@ class _InfoBubble extends StatelessWidget {
             child: Container(
               width: 280,
               padding: const EdgeInsets.all(16),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Text(
                     'Complete Your Delivery Submission',
                     style: TextStyle(
@@ -725,11 +727,11 @@ class ImagePreviewDialog extends StatelessWidget {
   final VoidCallback onDelete;
 
   const ImagePreviewDialog({
-    Key? key,
+    super.key,
     required this.imageFile,
     required this.index,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -770,7 +772,7 @@ class ImagePreviewDialog extends StatelessWidget {
                   child: Container(
                     width: 40,
                     height: 40,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.black54,
                       shape: BoxShape.circle,
                     ),

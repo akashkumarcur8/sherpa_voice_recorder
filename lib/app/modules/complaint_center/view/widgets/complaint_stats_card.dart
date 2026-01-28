@@ -9,14 +9,14 @@ class ComplaintStatsCard extends StatelessWidget {
   final bool isSelected;
 
   const ComplaintStatsCard({
-    Key? key,
+    super.key,
     required this.count,
     required this.label,
     this.backgroundColor = Colors.white,
     this.textColor = Colors.black,
     this.onTap,
     this.isSelected = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

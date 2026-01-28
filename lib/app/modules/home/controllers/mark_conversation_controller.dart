@@ -114,11 +114,10 @@ class ConversationController extends GetxController {
 
   Future<dynamic> submitForm() async {
     isFormSubmitted.value = true;
-    var user_Id = await SharedPrefHelper.getpref("user_id");
+    var userId = await SharedPrefHelper.getpref("user_id");
 
 
     var connectivityResult = await Connectivity().checkConnectivity();
-    print(' connectivityResult  $connectivityResult');
     if (connectivityResult.contains(ConnectivityResult.none)) {
       Fluttertoast.showToast(
         msg: "Please connect to the internet",
@@ -148,7 +147,7 @@ class ConversationController extends GetxController {
 
 
     final requestData = {
-      "userId": user_Id,
+      "userId": userId,
       "productName": selectedProducts,
       "clientId": int.tryParse(customerIdController.text.trim()) ?? 0,
       "conversationStartTime": DateFormat("yyyy-MM-dd HH:mm:ss").format(startDate.value!),
@@ -165,11 +164,11 @@ class ConversationController extends GetxController {
 
 
 
-        var user_id = await SharedPrefHelper.getpref("user_id");
+        var userId = await SharedPrefHelper.getpref("user_id");
         final DateTime selectedDate = DateTime.now();
 
         statisticsDataController.fetchUserAudioStats(
-          userId: int.parse(user_id),
+          userId: int.parse(userId),
           selectedDate: selectedDate,
         );
 

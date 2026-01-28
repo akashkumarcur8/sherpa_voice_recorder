@@ -73,14 +73,13 @@ class LoginController extends GetxController {
     isLoading.value = true;
 
     try {
+    
       // Perform login
       final loginRequest = LoginRequest(
         username: username,
         password: password,
       );
-
       final loginResponse = await _authService.login(loginRequest);
-
       if (loginResponse.status == '1') {
         var userDetails = loginResponse.details;
 
